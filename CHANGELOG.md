@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [0.0.4](https://github.com/bchmnn/poodle/releases/tag/0.0.4) - 2023-07-07
+
+<small>[Compare with 0.0.3](https://github.com/bchmnn/poodle/compare/0.0.3...0.0.4)</small>
+
+### Fixed
+
+- fix: add checkout action ([6acf566](https://github.com/bchmnn/poodle/commit/6acf566b22c155eb8fec17fd86dd967b1bb9e5fa) by Jacob Bachmann).
+
 ## [0.0.3](https://github.com/bchmnn/poodle/releases/tag/0.0.3) - 2023-07-07
 
 <small>[Compare with 0.0.2](https://github.com/bchmnn/poodle/compare/0.0.2...0.0.3)</small>
