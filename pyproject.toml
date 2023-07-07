@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bchmnn.poodle"
+version = "0.0.29"
+description = "Moodle SDK for python"
+readme = "README.md"
+authors = [{ name = "Jacob Bachmann", email = "jacob.bachmann@posteo.de" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["moodle", "sdk", "api"]
+dependencies = [
+    "aiohttp >= 3.8.0",
+]
+requires-python = ">=3.11"
+
+[project.optional-dependencies]
+dev = ["black", "pip-tools", "bumpver", "build", "twine", "git-changelog"]
+
+[project.urls]
+Homepage = "https://github.com/bchmnn/poodle"
+
+[tool.bumpver]
+current_version = "0.0.29"
+version_pattern = "MAJOR.MINOR.PATCH"
+commit_message = "feat: release v{new_version}"
+commit = true
+tag = true
+push = false
+
+[tool.bumpver.file_patterns]
+"pyproject.toml" = [
+    'current_version = "{version}"',
+    'version = "{version}"'
+]
+"src/poodle/__init__.py" = ["{version}"]
