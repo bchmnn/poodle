@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [0.0.3](https://github.com/bchmnn/poodle/releases/tag/0.0.3) - 2023-07-07
+
+<small>[Compare with 0.0.2](https://github.com/bchmnn/poodle/compare/0.0.2...0.0.3)</small>
+
+### Fixed
+
+- fix: remove branch checking step from workflow ([d414b70](https://github.com/bchmnn/poodle/commit/d414b70f616f5886f7d8fa62acb5fc5eace08773) by Jacob Bachmann).
+
 ## [0.0.2](https://github.com/bchmnn/poodle/releases/tag/0.0.2) - 2023-07-07
 
 <small>[Compare with 0.0.1](https://github.com/bchmnn/poodle/compare/0.0.1...0.0.2)</small>
