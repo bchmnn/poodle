@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bchmnn.poodle"
-version = "0.0.29"
+version = "0.0.1"
 description = "Moodle SDK for python"
 readme = "README.md"
 authors = [{ name = "Jacob Bachmann", email = "jacob.bachmann@posteo.de" }]
@@ -29,7 +29,7 @@ dev = ["black", "pip-tools", "bumpver", "build", "twine", "git-changelog"]
 Homepage = "https://github.com/bchmnn/poodle"
 
 [tool.bumpver]
-current_version = "0.0.29"
+current_version = "0.0.1"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit_message = "feat: release v{new_version}"
 commit = true
