@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [0.1.0](https://github.com/bchmnn/poodle/releases/tag/0.1.0) - 2023-07-07
+
+<small>[Compare with 0.0.4](https://github.com/bchmnn/poodle/compare/0.0.4...0.1.0)</small>
+
 ## [0.0.4](https://github.com/bchmnn/poodle/releases/tag/0.0.4) - 2023-07-07
 
 <small>[Compare with 0.0.3](https://github.com/bchmnn/poodle/compare/0.0.3...0.0.4)</small>
