@@ -61,8 +61,8 @@ lint: install-dev
 
 .PHONY: format
 format: install-dev
-	python -m black src
-	python -m isort src
+	python -m black poodle
+	python -m isort poodle
 
 .PHONY: check
 check: build
