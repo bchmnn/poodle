@@ -1,15 +1,18 @@
 import json
 from enum import Enum
+from typing import Any
 
 
 class Jsonable:
+    value: Any
+
     def json(self):
         return json.dumps(self.__dict__, default=lambda obj: obj.__dict__, indent=4)
 
     def __repr__(self):
         if isinstance(self, Enum):
-            v = self.value
-            return f"'{v}'" if isinstance(v, str) else str(self.value)
+            value = self.value
+            return f"'{value}'" if isinstance(value, str) else str(self.value)
         return super().__repr__()
 
     def __str__(self):

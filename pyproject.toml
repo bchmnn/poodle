@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "bchmnn.poodle"
 version = "0.1.0"
-description = "Moodle SDK for python"
+description = "Python Moodle SDK"
 readme = "README.md"
 authors = [{ name = "Jacob Bachmann", email = "jacob.bachmann@posteo.de" }]
 license = { file = "LICENSE" }
@@ -23,7 +23,17 @@ dependencies = [
 requires-python = ">=3.11"
 
 [project.optional-dependencies]
-dev = ["black", "pip-tools", "bumpver", "build", "twine", "git-changelog"]
+dev = [
+    "black",
+    "pip-tools",
+    "bumpver",
+    "build",
+    "twine",
+    "git-changelog",
+    "mypy",
+    "pylint",
+    "isort"
+]
 
 [project.urls]
 Homepage = "https://github.com/bchmnn/poodle"
@@ -41,4 +51,4 @@ push = false
     'current_version = "{version}"',
     'version = "{version}"'
 ]
-"src/poodle/__init__.py" = ["{version}"]
+"poodle/__init__.py" = ["{version}"]

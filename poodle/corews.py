@@ -1,12 +1,12 @@
 import json
 import typing
-from typing import Dict
+from typing import Dict, Mapping, Optional
 from urllib import parse
 
 import aiohttp
 
-from .types.exception import CoreConnectionError, CoreWSError
 from .constants import CONTENT_TYPE, X_WWW_FORM_URLENCODED
+from .types.exception import CoreAjaxWSError, CoreConnectionError, CoreWSError
 from .util.parse_form import parse_form
 from .util.tokens import Tokens
 
@@ -27,31 +27,38 @@ class CoreWS(aiohttp.ClientSession):
     def tokens(self, value: Tokens):
         self._tokens = value
 
-    async def call(self, method: str, data={}, presets: Dict[str, typing.Any] = {}):
+    async def call(
+        self,
+        method: str,
+        data: Optional[Mapping[str, typing.Any]] = None,
+        presets: Optional[Mapping[str, typing.Any]] = None,
+    ):
         """
         ref: moodleapp/src/core/services/ws.ts::CoreWSProvider::call
         """
-        data["wsfunction"] = method
-        data["wstoken"] = self._tokens.token
+        _data = dict(data) if data is not None else {}
+        _presets = dict(presets) if presets is not None else {}
+        _data["wsfunction"] = method
+        _data["wstoken"] = self._tokens.token
 
         url = (
             self._url
             + "/webservice/rest/server.php?moodlewsrestformat=json&wsfunction="
             + method
         )
-        _data = parse_form(data)
+        __data = parse_form(_data)
         res = await self.post(
             url,
-            data=_data,
+            data=__data,
             headers={CONTENT_TYPE: X_WWW_FORM_URLENCODED},
         )
-        payload = await res.text()
-        if payload is None and not presets.get("response_expected"):
-            payload = "[{}]"
+        response = await res.text()
+        if response is None and not _presets.get("response_expected"):
+            response = "[{}]"
 
-        if payload is None:
+        if response is None:
             raise CoreConnectionError("connection error")
-        result = json.loads(payload)
+        result = json.loads(response)
 
         if "exception" in result:
             raise CoreWSError(
@@ -61,8 +68,15 @@ class CoreWS(aiohttp.ClientSession):
         return result
 
     async def call_ajax(
-        self, method: str, data: dict = {}, presets: Dict[str, bool] = {}
+        self,
+        method: str,
+        data: Optional[dict] = None,
+        presets: Optional[Dict[str, bool]] = None,
     ):
+        if data is None:
+            data = {}
+        if presets is None:
+            presets = {}
         ajax_data = [{"index": 0, "methodname": method, "args": data}]
 
         script = "service.php"
@@ -87,12 +101,14 @@ class CoreWS(aiohttp.ClientSession):
             payload = "[{}]"
 
         if payload is None:
-            raise Exception("connection error")
+            raise CoreConnectionError("connection error")
 
         result = json.loads(payload)
         result = result[0]
 
         if "error" in result and result["error"] is not False:
-            raise Exception(result["exception"])
+            raise CoreAjaxWSError(
+                result["exception"], result["errorcode"], result["message"]
+            )
 
         return result["data"]

@@ -4,13 +4,11 @@ class PoodleError(Exception):
 
 
 class CoreError(PoodleError):
-    def __init__(self, message):
-        super().__init__(message)
+    pass
 
 
 class CoreConnectionError(CoreError):
-    def __init__(self, message):
-        super().__init__(message)
+    pass
 
 
 class CoreWSError(CoreError):
@@ -21,3 +19,19 @@ class CoreWSError(CoreError):
         super().__init__(message)
         self.exception = exception
         self.errorcode = errorcode
+
+
+class CoreAjaxWSError(CoreWSError):
+    pass
+
+
+class AuthError(PoodleError):
+    pass
+
+
+class MissingPrivateAccessKeyError(PoodleError):
+    pass
+
+
+class CourseNotFoundError(PoodleError):
+    pass

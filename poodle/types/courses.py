@@ -38,7 +38,7 @@ class CoreEnrolledCourseBasicData(CoreCourseBasicData, Jsonable):
     enddate: Optional[int] = None  # Timestamp when the course end.
 
     def __init__(self, **entries):
-        self.__dict__.update(entries)
+        CoreCourseBasicData.__init__(self, **entries)
 
 
 class CoreEnrolledCourseData(CoreEnrolledCourseBasicData, Jsonable):
@@ -69,7 +69,7 @@ class CoreEnrolledCourseData(CoreEnrolledCourseBasicData, Jsonable):
     ] = None  # @since 4.0. Last time course settings were updated (timestamp).
 
     def __init__(self, **entries):
-        self.__dict__.update(entries)
+        CoreEnrolledCourseBasicData.__init__(self, **entries)
         keys = entries.keys()
         if "overviewfiles" in keys:
             overviewfiles = entries["overviewfiles"]

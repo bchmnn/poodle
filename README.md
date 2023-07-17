@@ -104,9 +104,6 @@ async def setup():
 ## Features
 
 - [ ] authentication using os browser
-  - [x] windows (callback by registering url schema using windows registry)
-  - [ ] \*nix (callback by registering url schema using ??)
-  - [ ] osx (callback by registering url schema using ??)
 - [x] caching
 - [ ] types
   - [x] core_webservice_get_site_info

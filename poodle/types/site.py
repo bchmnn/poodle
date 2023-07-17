@@ -1,8 +1,8 @@
 from enum import IntEnum
 from typing import List, Optional
 
-from .jsonable import Jsonable
-from .ws import CoreWSExternalWarning
+from poodle.types.jsonable import Jsonable
+from poodle.types.ws import CoreWSExternalWarning
 
 
 class CoreSiteQRCodeType(Jsonable, IntEnum):
