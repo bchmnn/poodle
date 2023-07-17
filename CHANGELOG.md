@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [0.2.1](https://github.com/bchmnn/poodle/releases/tag/0.2.1) - 2023-07-17
+
+<small>[Compare with 0.2.0](https://github.com/bchmnn/poodle/compare/0.2.0...0.2.1)</small>
+
+### Fixed
+
+- fix: add install missing dev dependency pip-tools target ([44f136a](https://github.com/bchmnn/poodle/commit/44f136aacf56493b5cb4457cdb6c6e43f61bbe94) by Jacob Bachmann).
+
 ## [0.2.0](https://github.com/bchmnn/poodle/releases/tag/0.2.0) - 2023-07-17
 
 <small>[Compare with 0.1.0](https://github.com/bchmnn/poodle/compare/0.1.0...0.2.0)</small>
