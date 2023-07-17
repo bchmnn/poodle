@@ -7,6 +7,11 @@ dist-dir = dist
 
 venv: .venv
 
+.targets/install-piptools:
+	python -m pip install pip-tools
+	@mkdir -p .targets
+	touch .targets/install-piptools
+
 requirements-dev.txt:
 	python -m piptools compile --extra dev -o requirements-dev.txt pyproject.toml
 	python -m pip install -r requirements-dev.txt
@@ -19,7 +24,7 @@ requirements-dev.txt:
 	@touch .targets/install-dev/$(checksum-pyproject)
 
 .PHONY: install-dev
-install-dev: .targets/install-dev/$(checksum-pyproject) requirements-dev.txt
+install-dev: .targets/install-piptools .targets/install-dev/$(checksum-pyproject) requirements-dev.txt
 
 requirements.txt:
 	python -m piptools compile -o requirements.txt pyproject.toml
@@ -33,7 +38,7 @@ requirements.txt:
 	@touch .targets/install/$(checksum-pyproject)
 
 .PHONY: install
-install: .targets/install/$(checksum-pyproject) requirements.txt
+install: .targets/install-piptools .targets/install/$(checksum-pyproject) requirements.txt
 
 .targets/build/$(checksum-sources):
 	python -m build

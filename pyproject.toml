@@ -38,6 +38,12 @@ dev = [
 [project.urls]
 Homepage = "https://github.com/bchmnn/poodle"
 
+[tool.setuptools.packages.find]
+where = ["poodle"]
+
+[tool.setuptools.package-data]
+"poodle" = ["py.typed"]
+
 [tool.bumpver]
 current_version = "0.2.0"
 version_pattern = "MAJOR.MINOR.PATCH"
