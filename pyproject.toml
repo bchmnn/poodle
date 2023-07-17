@@ -38,9 +38,6 @@ dev = [
 [project.urls]
 Homepage = "https://github.com/bchmnn/poodle"
 
-[tool.setuptools.packages.find]
-where = ["poodle"]
-
 [tool.setuptools.package-data]
 "poodle" = ["py.typed"]
 
