@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [0.2.2](https://github.com/bchmnn/poodle/releases/tag/0.2.2) - 2023-07-17
+
+<small>[Compare with 0.2.1](https://github.com/bchmnn/poodle/compare/0.2.1...0.2.2)</small>
+
+### Fixed
+
+- fix: broken check target ([f6febc3](https://github.com/bchmnn/poodle/commit/f6febc3242e25aadbf36fa99c7824ada6c886a49) by Jacob Bachmann).
+
 ## [0.2.1](https://github.com/bchmnn/poodle/releases/tag/0.2.1) - 2023-07-17
 
 <small>[Compare with 0.2.0](https://github.com/bchmnn/poodle/compare/0.2.0...0.2.1)</small>
