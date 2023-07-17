@@ -147,9 +147,8 @@ class CoreSiteInfo(Jsonable):
     userquota: Optional[
         int
     ] = None  # User quota (bytes). 0 means user can ignore the quota.
-    usermaxuploadfilesize: Optional[
-        int
-    ] = None  # User max upload file size (bytes). -1 means the user can ignore the upload file size.
+    # User max upload file size (bytes). -1 means the user can ignore the upload file size.
+    usermaxuploadfilesize: Optional[int] = None
     userhomepage: Optional[
         CoreSiteInfoUserHomepage
     ] = None  # The default home page for the user.

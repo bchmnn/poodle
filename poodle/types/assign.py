@@ -444,7 +444,8 @@ class AddonModAssignAssign(Jsonable):
     blindmarking: int  # If enabled, hide identities until reveal identities actioned.
     hidegrader: Optional[int] = None  # @since 3.7. If enabled, hide grader to student.
     revealidentities: int  # Show identities for a blind marking assignment.
-    attemptreopenmethod: AddonModAssignAttemptReopenMethodValues  # Method used to control opening new attempts.
+    # Method used to control opening new attempts.
+    attemptreopenmethod: AddonModAssignAttemptReopenMethodValues
     maxattempts: int  # Maximum number of attempts allowed.
     markingworkflow: int  # Enable marking workflow.
     markingallocation: int  # Enable marking allocation.
@@ -457,9 +458,8 @@ class AddonModAssignAssign(Jsonable):
         int
     ] = None  # Submissionstatement format (1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN).
     configs: List[AddonModAssignConfig] = []  # Configuration settings.
-    intro: Optional[
-        str
-    ] = None  # Assignment intro, not allways returned because it deppends on the activity configuration.
+    # Assignment intro, not allways returned because it deppends on the activity configuration.
+    intro: Optional[str] = None
     introformat: Optional[
         int
     ] = None  # Intro format (1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN).
@@ -552,7 +552,8 @@ class AddonModAssignParticipantCustomField(Jsonable):
     type: str  # The type of the custom field - text field, checkbox...
     value: str  # The value of the custom field.
     name: str  # The name of the custom field.
-    shortname: str  # The shortname of the custom field - to be able to build the field class in the code.
+    # The shortname of the custom field - to be able to build the field class in the code.
+    shortname: str
 
     def __init__(self, **entries):
         self.__dict__.update(entries)
@@ -642,9 +643,8 @@ class AddonModAssignParticipant(Jsonable):
     recordid: Optional[int] = None  # @since 3.7. Record id.
     groups: Optional[List[AddonModAssignParticipantGroup]] = None  # User groups.
     roles: Optional[List[AddonModAssignParticipantRole]] = None  # User roles.
-    enrolledcourses: Optional[
-        List[AddonModAssignParticipantEnrolledCourses]
-    ] = None  # Courses where the user is enrolled - limited by which courses the user is able to see.
+    # Courses where the user is enrolled - limited by which courses the user is able to see.
+    enrolledcourses: Optional[List[AddonModAssignParticipantEnrolledCourses]] = None
     submitted: bool  # Have they submitted their assignment.
     requiregrading: bool  # Is their submission waiting for grading.
     grantedextension: Optional[bool] = None  # Have they been granted an extension.

@@ -103,7 +103,7 @@ class BrowserSSOHandler(AbstractSSOHandler):
     #             [
     #                 "python.exe",
     #                 '"-c"',
-    #                 "\"import sys; f = open(sys.argv[-2], 'a'); f.write(sys.argv[-1]); f.close()\"",
+    #      "\"import sys; f = open(sys.argv[-2], 'a'); f.write(sys.argv[-1]); f.close()\"",
     #                 f'"{file}"',
     #                 '"%1"',
     #             ]
