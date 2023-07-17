@@ -53,7 +53,7 @@ dist:
 	@touch .targets/build/$(checksum-sources)
 
 .PHONY: build
-build: install .targets/build/$(checksum-sources) dist
+build: install-dev .targets/build/$(checksum-sources) dist
 
 .PHONY: install-pip
 install-pip:

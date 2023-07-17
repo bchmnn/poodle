@@ -21,7 +21,7 @@ jobs:
           python-version: "*"
 
       - name: Install dependencies
-        run: make install
+        run: make install-dev
 
       - name: Build wheel and source distributions
         run: make build
