@@ -5,12 +5,14 @@ from typing import Any, List, Optional
 
 from .auth import AbstractSSOHandler, BrowserSSOHandler
 from .corews import CoreWS
-from .types.exception import (AuthError, CourseNotFoundError,
-                              MissingPrivateAccessKeyError)
-from .types.methods import DataTypeT, MoodleMethod, MoodleMethods, ReturnTypeT
-from .types.site import CoreSitePublicConfig
+from .typedefs.exception import (AuthError, CourseNotFoundError,
+                                 MissingPrivateAccessKeyError)
+from .typedefs.methods import (DataTypeT, MoodleMethod, MoodleMethods,
+                               ReturnTypeT)
+from .typedefs.site import CoreSitePublicConfig
 from .util.cache import Cache, CacheItem
 from .util.loggable import Loggable
+from .util.parse_form import parse_form
 from .util.tokens import Tokens
 
 
@@ -72,8 +74,9 @@ class Poodle(Loggable, CoreWS):
         refetch=False,
     ) -> ReturnTypeT:
         key = method["key"]
+        cachekey = key if data is None else key + parse_form(dict(data))
         return_type = method["type"]
-        cacheitem: CacheItem = {"key": key, "type": return_type}
+        cacheitem: CacheItem = {"key": cachekey, "type": return_type}
         if usecache and not refetch:
             _item = self.cache.get(cacheitem)
             if _item is not None:
@@ -92,8 +95,9 @@ class Poodle(Loggable, CoreWS):
         refetch=False,
     ) -> List[ReturnTypeT]:
         key = method["key"]
+        cachekey = key if data is None else key + parse_form(dict(data))
         return_type = method["type"]
-        cacheitem: CacheItem = {"key": key, "type": return_type}
+        cacheitem: CacheItem = {"key": cachekey, "type": return_type}
         if usecache and not refetch:
             _item = self.cache.get(cacheitem)
             if _item is not None:
@@ -138,46 +142,52 @@ class Poodle(Loggable, CoreWS):
             )
         return await self.get(self.fix_file_url(url, token))
 
-    async def core_enrol_get_users_courses(self, userid: Optional[int] = None):
+    async def core_enrol_get_users_courses(
+        self, userid: Optional[int] = None, refetch=False
+    ):
         if userid is None:
             userid = (await self.core_webservice_get_site_info()).userid
         return await self.fetch_list(
             MoodleMethods.CORE_ENROL_GET_USERS_COURSES,
             {"userid": userid, "returnusercount": 0},
-            usecache=False,
+            refetch,
         )
 
-    async def get_user_courses(self, name: str, userid: Optional[int] = None):
-        courses = await self.core_enrol_get_users_courses(userid)
+    async def get_user_courses(
+        self, name: str, userid: Optional[int] = None, refetch=False
+    ):
+        courses = await self.core_enrol_get_users_courses(userid, refetch)
         return [item for item in courses if name.lower() in item.fullname.lower()]
 
-    async def get_user_course(self, name: str, userid: Optional[int] = None):
-        courses = await self.get_user_courses(name, userid)
+    async def get_user_course(
+        self, name: str, userid: Optional[int] = None, refetch=False
+    ):
+        courses = await self.get_user_courses(name, userid, refetch)
         if len(courses) == 0:
             raise CourseNotFoundError(f"Could not find course: '{name}'")
         return courses[0]
 
-    async def core_course_get_contents(self, courseid: int):
+    async def core_course_get_contents(self, courseid: int, refetch=False):
         return await self.fetch_list(
             MoodleMethods.CORE_COURSE_GET_CONTENTS,
             {"courseid": courseid},
-            usecache=False,
+            refetch,
         )
 
-    async def mod_assign_get_assignments(self, courseids: List[int]):
+    async def mod_assign_get_assignments(self, courseids: List[int], refetch=False):
         return await self.fetch(
-            MoodleMethods.MOD_ASSIGN_GET_ASSIGNMENTS,
-            {"courseids": courseids},
-            usecache=False,
+            MoodleMethods.MOD_ASSIGN_GET_ASSIGNMENTS, {"courseids": courseids}, refetch
         )
 
-    async def get_assignments(self, courseid: int):
+    async def get_assignments(self, courseid: int, refetch=False):
         return (
-            (await self.mod_assign_get_assignments([courseid])).courses[0].assignments
+            (await self.mod_assign_get_assignments([courseid], refetch))
+            .courses[0]
+            .assignments
         )
 
-    async def get_assignment(self, courseid: int, index: int = 0):
-        assignments = await self.get_assignments(courseid)
+    async def get_assignment(self, courseid: int, index: int = 0, refetch=False):
+        assignments = await self.get_assignments(courseid, refetch)
         if (
             index >= 0
             and index >= len(assignments)
@@ -187,30 +197,28 @@ class Poodle(Loggable, CoreWS):
             raise IndexError("Index out of bounds")
         return assignments[index]
 
-    async def mod_assign_get_submissions(self, assignmentids: List[int]):
+    async def mod_assign_get_submissions(self, assignmentids: List[int], refetch=False):
         return await self.fetch(
             MoodleMethods.MOD_ASSIGN_GET_SUBMISSIONS,
             {"assignmentids": assignmentids},
-            usecache=False,
+            refetch,
         )
 
-    async def get_submissions(self, assignmentid: int):
+    async def get_submissions(self, assignmentid: int, refetch=False):
         return (
-            (await self.mod_assign_get_submissions([assignmentid]))
+            (await self.mod_assign_get_submissions([assignmentid], refetch))
             .assignments[0]
             .submissions
         )
 
-    async def mod_assign_list_participants(self, assignid: int):
+    async def mod_assign_list_participants(self, assignid: int, refetch=False):
         return await self.fetch_list(
             MoodleMethods.MOD_ASSIGN_LIST_PARTICIPANTS,
             {"assignid": assignid, "groupid": 0, "filter": ""},
-            usecache=False,
+            refetch,
         )
 
-    async def core_group_get_course_groups(self, courseid: int):
+    async def core_group_get_course_groups(self, courseid: int, refetch=False):
         return await self.fetch_list(
-            MoodleMethods.CORE_GROUP_GET_COURSE_GROUPS,
-            {"courseid": courseid},
-            usecache=False,
+            MoodleMethods.CORE_GROUP_GET_COURSE_GROUPS, {"courseid": courseid}, refetch
         )

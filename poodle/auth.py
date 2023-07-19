@@ -7,8 +7,8 @@ from typing import List, Optional
 
 import aiohttp
 
-from .types.exception import AuthError
-from .types.site import CoreSitePublicConfig
+from .typedefs.exception import AuthError
+from .typedefs.site import CoreSitePublicConfig
 from .util.loggable import Loggable
 from .util.tokens import Tokens
 

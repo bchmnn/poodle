@@ -25,6 +25,10 @@ class CoreAjaxWSError(CoreWSError):
     pass
 
 
+class CredentialProviderError(PoodleError):
+    pass
+
+
 class AuthError(PoodleError):
     pass
 

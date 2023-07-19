@@ -55,3 +55,6 @@ push = false
     'version = "{version}"'
 ]
 "poodle/__init__.py" = ["{version}"]
+
+[tool.mypy]
+files = "poodle/**/*.py"

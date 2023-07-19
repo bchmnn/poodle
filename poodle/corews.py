@@ -6,7 +6,8 @@ from urllib import parse
 import aiohttp
 
 from .constants import CONTENT_TYPE, X_WWW_FORM_URLENCODED
-from .types.exception import CoreAjaxWSError, CoreConnectionError, CoreWSError
+from .typedefs.exception import (CoreAjaxWSError, CoreConnectionError,
+                                 CoreWSError)
 from .util.parse_form import parse_form
 from .util.tokens import Tokens
 

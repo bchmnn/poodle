@@ -1,6 +1,6 @@
 from typing import Optional
 
-from poodle.types.jsonable import Jsonable
+from poodle.typedefs.jsonable import Jsonable
 
 
 # Structure of warnings returned by WS.
