@@ -5,5 +5,6 @@ from .credentials import (CLICredentialProvider, CredentialProviderInterface,
                           GenericCredentialProviderInterface)
 from .poodle import Poodle
 from .typedefs import *
+from .util import *
 
 __version__ = "0.2.5"

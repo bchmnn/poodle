@@ -150,7 +150,7 @@ class Poodle(Loggable, CoreWS):
         return await self.fetch_list(
             MoodleMethods.CORE_ENROL_GET_USERS_COURSES,
             {"userid": userid, "returnusercount": 0},
-            refetch,
+            refetch=refetch,
         )
 
     async def get_user_courses(
@@ -171,12 +171,14 @@ class Poodle(Loggable, CoreWS):
         return await self.fetch_list(
             MoodleMethods.CORE_COURSE_GET_CONTENTS,
             {"courseid": courseid},
-            refetch,
+            refetch=refetch,
         )
 
     async def mod_assign_get_assignments(self, courseids: List[int], refetch=False):
         return await self.fetch(
-            MoodleMethods.MOD_ASSIGN_GET_ASSIGNMENTS, {"courseids": courseids}, refetch
+            MoodleMethods.MOD_ASSIGN_GET_ASSIGNMENTS,
+            {"courseids": courseids},
+            refetch=refetch,
         )
 
     async def get_assignments(self, courseid: int, refetch=False):
@@ -201,7 +203,7 @@ class Poodle(Loggable, CoreWS):
         return await self.fetch(
             MoodleMethods.MOD_ASSIGN_GET_SUBMISSIONS,
             {"assignmentids": assignmentids},
-            refetch,
+            refetch=refetch,
         )
 
     async def get_submissions(self, assignmentid: int, refetch=False):
@@ -215,10 +217,12 @@ class Poodle(Loggable, CoreWS):
         return await self.fetch_list(
             MoodleMethods.MOD_ASSIGN_LIST_PARTICIPANTS,
             {"assignid": assignid, "groupid": 0, "filter": ""},
-            refetch,
+            refetch=refetch,
         )
 
     async def core_group_get_course_groups(self, courseid: int, refetch=False):
         return await self.fetch_list(
-            MoodleMethods.CORE_GROUP_GET_COURSE_GROUPS, {"courseid": courseid}, refetch
+            MoodleMethods.CORE_GROUP_GET_COURSE_GROUPS,
+            {"courseid": courseid},
+            refetch=refetch,
         )
