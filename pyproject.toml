@@ -18,9 +18,9 @@ classifiers = [
 ]
 keywords = ["moodle", "sdk", "api"]
 dependencies = [
-    "aiohttp >= 3.8.0",
+    "aiohttp >= 3.10.10",
 ]
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 
 [project.optional-dependencies]
 dev = [

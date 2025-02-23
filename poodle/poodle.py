@@ -220,6 +220,19 @@ class Poodle(Loggable, CoreWS):
             refetch=refetch,
         )
 
+    async def core_grades_get_user_grade_items(
+        self,
+        courseid: int,
+        userid: Optional[int] = None,
+        groupid: Optional[int] = None,
+        refetch=False,
+    ):
+        return await self.fetch(
+            MoodleMethods.CORE_GRADES_GET_USER_GRADE_ITEMS,
+            {"courseid": courseid, "userid": userid, "groupid": groupid},
+            refetch=refetch,
+        )
+
     async def core_group_get_course_groups(self, courseid: int, refetch=False):
         return await self.fetch_list(
             MoodleMethods.CORE_GROUP_GET_COURSE_GROUPS,

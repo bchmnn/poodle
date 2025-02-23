@@ -7,12 +7,12 @@ from poodle.typedefs.jsonable import Jsonable
 class CoreWSExternalWarning(Jsonable):
     item: Optional[str] = None
     itemid: Optional[int] = None
-    warningcode: Optional[
-        str
-    ] = None  # The warning code can be used by the client app to implement specific behaviour.
-    message: Optional[
-        str
-    ] = None  # Untranslated english message to explain the warning.
+    warningcode: Optional[str] = (
+        None  # The warning code can be used by the client app to implement specific behaviour.
+    )
+    message: Optional[str] = (
+        None  # Untranslated english message to explain the warning.
+    )
 
     def __init__(self, **entries):
         self.__dict__.update(entries)

@@ -90,9 +90,9 @@ class AddonModAssignPlugin(Jsonable):
     type: str  # Submission plugin type.
     name: str  # Submission plugin name.
     fileareas: Optional[List[AddonModAssignPluginFileArea]] = None  # Fileareas.
-    editorfields: Optional[
-        List[AddonModAssignPluginEditorField]
-    ] = None  # Editorfields.
+    editorfields: Optional[List[AddonModAssignPluginEditorField]] = (
+        None  # Editorfields.
+    )
 
     def __init__(self, **entries):
         self.__dict__.update(entries)
@@ -167,9 +167,9 @@ class AddonModAssignGetSubmissions(Jsonable):
     Data returned by mod_assign_get_submissions WS.
     """
 
-    assignments: List[
-        AddonModAssignSubmissionsSubmission
-    ] = []  # Assignment submissions.
+    assignments: List[AddonModAssignSubmissionsSubmission] = (
+        []
+    )  # Assignment submissions.
     warnings: Optional[List[CoreWSExternalWarning]] = None
 
     def __init__(self, **entries):
@@ -195,19 +195,19 @@ class AddonModAssignSubmissionAttempt(Jsonable):
 
     submission: Optional[AddonModAssignSubmission] = None  # Submission info.
     teamsubmission: Optional[AddonModAssignSubmission] = None  # Submission info.
-    submissiongroup: Optional[
-        int
-    ] = None  # The submission group id (for group submissions only).
-    submissiongroupmemberswhoneedtosubmit: Optional[
-        List[int]
-    ] = None  # List of users who still need to submit (for group submissions only).
+    submissiongroup: Optional[int] = (
+        None  # The submission group id (for group submissions only).
+    )
+    submissiongroupmemberswhoneedtosubmit: Optional[List[int]] = (
+        None  # List of users who still need to submit (for group submissions only).
+    )
     submissionsenabled: bool  # Whether submissions are enabled or not.
     locked: bool  # Whether new submissions are locked.
     graded: bool  # Whether the submission is graded.
     canedit: bool  # Whether the user can edit the current submission.
-    caneditowner: Optional[
-        bool
-    ] = None  # Whether the owner of the submission can edit it.
+    caneditowner: Optional[bool] = (
+        None  # Whether the owner of the submission can edit it.
+    )
     cansubmit: bool  # Whether the user can submit.
     extensionduedate: int  # Extension due date.
     blindmarking: bool  # Whether blind marking is enabled.
@@ -245,9 +245,9 @@ class AddonModAssignGrade(Jsonable):
     timemodified: int  # Grade last modified time.
     grader: int  # Grader, -1 if grader is hidden.
     grade: str  # Grade.
-    gradefordisplay: Optional[
-        str
-    ] = None  # Grade rendered into a format suitable for display.
+    gradefordisplay: Optional[str] = (
+        None  # Grade rendered into a format suitable for display.
+    )
 
     def __init__(self, **entries):
         self.__dict__.update(entries)
@@ -323,9 +323,9 @@ class AddonModAssignGetSubmissionStatusAttachment(Jsonable):
 
 
 class AddonModAssignGetSubmissionStatusAssignmentData(Jsonable):
-    attachments: Optional[
-        AddonModAssignGetSubmissionStatusAttachment
-    ] = None  # Intro and activity attachments.
+    attachments: Optional[AddonModAssignGetSubmissionStatusAttachment] = (
+        None  # Intro and activity attachments.
+    )
     activity: Optional[str] = None  # Text of activity.
     activityformat: Optional[int] = None  # Format of activity.
 
@@ -346,21 +346,21 @@ class AddonModAssignGetSubmissionStatus(Jsonable):
     Result of WS mod_assign_get_submission_status.
     """
 
-    gradingsummary: Optional[
-        AddonModAssignSubmissionGradingSummary
-    ] = None  # Grading information.
-    lastattempt: Optional[
-        AddonModAssignSubmissionAttempt
-    ] = None  # Last attempt information.
-    feedback: Optional[
-        AddonModAssignSubmissionFeedback
-    ] = None  # Feedback for the last attempt.
-    previousattempts: Optional[
-        List[AddonModAssignSubmissionPreviousAttempt]
-    ] = None  # List all the previous attempts did by the user.
-    assignmentdata: Optional[
-        AddonModAssignGetSubmissionStatusAssignmentData
-    ] = None  # @since 4.0. Extra information about assignment.
+    gradingsummary: Optional[AddonModAssignSubmissionGradingSummary] = (
+        None  # Grading information.
+    )
+    lastattempt: Optional[AddonModAssignSubmissionAttempt] = (
+        None  # Last attempt information.
+    )
+    feedback: Optional[AddonModAssignSubmissionFeedback] = (
+        None  # Feedback for the last attempt.
+    )
+    previousattempts: Optional[List[AddonModAssignSubmissionPreviousAttempt]] = (
+        None  # List all the previous attempts did by the user.
+    )
+    assignmentdata: Optional[AddonModAssignGetSubmissionStatusAssignmentData] = (
+        None  # @since 4.0. Extra information about assignment.
+    )
     warnings: Optional[List[CoreWSExternalWarning]] = None
 
     def __init__(self, **entries):
@@ -435,9 +435,9 @@ class AddonModAssignAssign(Jsonable):
     timemodified: int  # Last time assignment was modified.
     completionsubmit: int  # If enabled, set activity as complete following submission.
     cutoffdate: int  # Date after which submission is not accepted without an extension.
-    gradingduedate: Optional[
-        int
-    ] = None  # The expected date for marking the submissions.
+    gradingduedate: Optional[int] = (
+        None  # The expected date for marking the submissions.
+    )
     teamsubmission: int  # If enabled, students submit as a team.
     requireallteammemberssubmit: int  # If enabled, all team members must submit.
     teamsubmissiongroupingid: int  # The grouping id for the team submission groups.
@@ -450,30 +450,30 @@ class AddonModAssignAssign(Jsonable):
     markingworkflow: int  # Enable marking workflow.
     markingallocation: int  # Enable marking allocation.
     requiresubmissionstatement: int  # Student must accept submission statement.
-    preventsubmissionnotingroup: Optional[
-        int
-    ] = None  # Prevent submission not in group.
+    preventsubmissionnotingroup: Optional[int] = (
+        None  # Prevent submission not in group.
+    )
     submissionstatement: Optional[str] = None  # Submission statement formatted.
-    submissionstatementformat: Optional[
-        int
-    ] = None  # Submissionstatement format (1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN).
+    submissionstatementformat: Optional[int] = (
+        None  # Submissionstatement format (1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN).
+    )
     configs: List[AddonModAssignConfig] = []  # Configuration settings.
     # Assignment intro, not allways returned because it deppends on the activity configuration.
     intro: Optional[str] = None
-    introformat: Optional[
-        int
-    ] = None  # Intro format (1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN).
+    introformat: Optional[int] = (
+        None  # Intro format (1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN).
+    )
     introfiles: Optional[List[CoreWSExternalFile]] = None
     introattachments: Optional[List[CoreWSExternalFile]] = None
     activity: Optional[str] = None  # @since 4.0. Description of activity.
     activityformat: Optional[int] = None  # @since 4.0. Format of activity.
-    activityattachments: Optional[
-        List[CoreWSExternalFile]
-    ] = None  # @since 4.0. Files from activity field.
+    activityattachments: Optional[List[CoreWSExternalFile]] = (
+        None  # @since 4.0. Files from activity field.
+    )
     timelimit: Optional[int] = None  # @since 4.0. Time limit to complete assigment.
-    submissionattachments: Optional[
-        int
-    ] = None  # @since 4.0. Flag to only show files during submission.
+    submissionattachments: Optional[int] = (
+        None  # @since 4.0. Flag to only show files during submission.
+    )
 
     def __init__(self, **entries):
         self.__dict__.update(entries)
@@ -620,26 +620,26 @@ class AddonModAssignParticipant(Jsonable):
     interests: Optional[str] = None  # User interests (separated by commas).
     firstaccess: Optional[int] = None  # First access to the site (0 if never).
     lastaccess: Optional[int] = None  # Last access to the site (0 if never).
-    suspended: Optional[
-        bool
-    ] = None  # Suspend user account, either false to enable user login or true to disable it.
+    suspended: Optional[bool] = (
+        None  # Suspend user account, either false to enable user login or true to disable it.
+    )
     description: Optional[str] = None  # User profile description.
-    descriptionformat: Optional[
-        int
-    ] = None  # Int format (1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN).
+    descriptionformat: Optional[int] = (
+        None  # Int format (1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN).
+    )
     city: Optional[str] = None  # Home city of the user.
     url: Optional[str] = None  # URL of the user.
     country: Optional[str] = None  # Home country code of the user, such as AU or CZ.
-    profileimageurlsmall: Optional[
-        str
-    ] = None  # User image profile URL - small version.
+    profileimageurlsmall: Optional[str] = (
+        None  # User image profile URL - small version.
+    )
     profileimageurl: Optional[str] = None  # User image profile URL - big version.
-    customfields: Optional[
-        List[AddonModAssignParticipantCustomField]
-    ] = None  # User custom fields (also known as user profile fields).
-    prefernces: Optional[
-        List[AddonModAssignParticipantPreference]
-    ] = None  # Users preferences.
+    customfields: Optional[List[AddonModAssignParticipantCustomField]] = (
+        None  # User custom fields (also known as user profile fields).
+    )
+    prefernces: Optional[List[AddonModAssignParticipantPreference]] = (
+        None  # Users preferences.
+    )
     recordid: Optional[int] = None  # @since 3.7. Record id.
     groups: Optional[List[AddonModAssignParticipantGroup]] = None  # User groups.
     roles: Optional[List[AddonModAssignParticipantRole]] = None  # User roles.

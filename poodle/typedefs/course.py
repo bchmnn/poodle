@@ -63,24 +63,24 @@ class CoreCourseModuleWSCompletionData(Jsonable):
     )  # Completion state value.
     timecompleted: int  # Timestamp for completion status.
     overrideby: Optional[int] = None  # The user id who has overriden the status.
-    valueused: Optional[
-        bool
-    ] = None  # Whether the completion status affects the availability of another activity.
-    hascompletion: Optional[
-        bool
-    ] = None  # @since 3.11. Whether this activity module has completion enabled.
-    isautomatic: Optional[
-        bool
-    ] = None  # @since 3.11. Whether this activity module instance tracks completion automatically.
-    istrackeduser: Optional[
-        bool
-    ] = None  # @since 3.11. Whether completion is being tracked for this user.
-    uservisible: Optional[
-        bool
-    ] = None  # @since 3.11. Whether this activity is visible to the user.
-    details: Optional[
-        List[CoreCourseModuleWSRuleDetails]
-    ] = None  # @since 3.11. An array of completion details.
+    valueused: Optional[bool] = (
+        None  # Whether the completion status affects the availability of another activity.
+    )
+    hascompletion: Optional[bool] = (
+        None  # @since 3.11. Whether this activity module has completion enabled.
+    )
+    isautomatic: Optional[bool] = (
+        None  # @since 3.11. Whether this activity module instance tracks completion automatically.
+    )
+    istrackeduser: Optional[bool] = (
+        None  # @since 3.11. Whether completion is being tracked for this user.
+    )
+    uservisible: Optional[bool] = (
+        None  # @since 3.11. Whether this activity is visible to the user.
+    )
+    details: Optional[List[CoreCourseModuleWSRuleDetails]] = (
+        None  # @since 3.11. An array of completion details.
+    )
 
     def __init__(self, **entries):
         self.__dict__.update(entries)
@@ -165,7 +165,9 @@ class CoreCourseGetContentsWSModule(Jsonable):
     visible: int  # Is the module visible. Cannot be undefined.
     uservisible: bool  # Is the module visible for the user?. Cannot be undefined.
     availabilityinfo: Optional[str] = None  # Availability information.
-    visibleoncoursepage: int  # Is the module visible on course page. Cannot be undefined.
+    visibleoncoursepage: (
+        int  # Is the module visible on course page. Cannot be undefined.
+    )
     modicon: str  # Activity icon url.
     modname: str  # Activity module type.
     modplural: str  # Activity module plural name.
@@ -175,18 +177,18 @@ class CoreCourseGetContentsWSModule(Jsonable):
     afterlink: Optional[str] = None  # After link info to be displayed.
     customdata: Optional[str] = None  # Custom data (JSON encoded).
     noviewlink: Optional[bool] = None  # Whether the module has no view page.
-    completion: Optional[
-        CoreCourseModuleCompletionTracking
-    ] = None  # Type of completion tracking: 0 means none, 1 manual, 2 automatic.
-    completiondata: Optional[
-        CoreCourseModuleWSCompletionData
-    ] = None  # Module completion data.
+    completion: Optional[CoreCourseModuleCompletionTracking] = (
+        None  # Type of completion tracking: 0 means none, 1 manual, 2 automatic.
+    )
+    completiondata: Optional[CoreCourseModuleWSCompletionData] = (
+        None  # Module completion data.
+    )
     contents: Optional[List[CoreCourseModuleContentFile]] = None
     downloadcontent: Optional[int] = None  # @since 4.0 The download content value.
     dates: Optional[List[CoreCourseModuleDate]] = None  # @since 3.11. Activity dates.
-    contentsinfo: Optional[
-        CoreCourseModuleContentsInfo
-    ] = None  # @since v3.7.6 Contents summary information.
+    contentsinfo: Optional[CoreCourseModuleContentsInfo] = (
+        None  # @since v3.7.6 Contents summary information.
+    )
 
     def __init__(self, **entries):
         self.__dict__.update(entries)
@@ -229,11 +231,13 @@ class CoreCourseGetContentsWSSection(Jsonable):
     name: str  # Section name.
     visible: Optional[int] = None  # Is the section visible.
     summary: str  # Section description.
-    summaryformat: int  # Summary format (1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN).
+    summaryformat: (
+        int  # Summary format (1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN).
+    )
     section: Optional[int] = None  # Section number inside the course.
-    hiddenbynumsections: Optional[
-        int
-    ] = None  # Whether is a section hidden in the course format.
+    hiddenbynumsections: Optional[int] = (
+        None  # Whether is a section hidden in the course format.
+    )
     uservisible: Optional[bool] = None  # Is the section visible for the user?.
     availabilityinfo: Optional[str] = None  # Availability information.
     modules: List[CoreCourseGetContentsWSModule] = []  # List of module.

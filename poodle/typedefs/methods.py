@@ -4,6 +4,7 @@ from .assign import (AddonModAssignGetAssignments,
                      AddonModAssignGetSubmissions, AddonModAssignParticipant)
 from .course import CoreCourseGetContentsWSSection
 from .courses import CoreEnrolledCourseData
+from .grades import CoreGradesGetUserGradeItems
 from .groups import CoreGroupGetCourseGroup
 from .site import CoreSiteInfo
 
@@ -33,6 +34,12 @@ class CoreEnrolGetUsersCoursesArgs(TypedDict):
 class CoreCourseGetContentsArgs(TypedDict):
     # TODO add missing args
     courseid: int
+
+
+class CoreGradesGetUserGradeItemsArgs(TypedDict):
+    courseid: int
+    userid: Optional[int]  # Return grades only for this user (optional).
+    groupid: Optional[int]  # Get users from this group only.
 
 
 class CoreGroupGetCourseGroupsArgs(TypedDict):
@@ -90,6 +97,12 @@ class MoodleMethods:
         container_type=List,
         return_type=CoreCourseGetContentsWSSection,
         data_type=CoreCourseGetContentsArgs,
+    )
+
+    CORE_GRADES_GET_USER_GRADE_ITEMS = __generate(
+        key="gradereport_user_get_grade_items",
+        return_type=CoreGradesGetUserGradeItems,
+        data_type=CoreGradesGetUserGradeItemsArgs,
     )
 
     CORE_GROUP_GET_COURSE_GROUPS = __generate(

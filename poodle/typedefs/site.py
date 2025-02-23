@@ -25,49 +25,49 @@ class CoreSitePublicConfig(Jsonable):
     httpswwwroot: Optional[str] = None  # Site https URL (if httpslogin is enabled).
     sitename: Optional[str] = None  # Site name.
     guestlogin: Optional[int] = None  # Whether guest login is enabled.
-    rememberusername: Optional[
-        int
-    ] = None  # Values: 0 for No, 1 for Yes, 2 for optional.
+    rememberusername: Optional[int] = (
+        None  # Values: 0 for No, 1 for Yes, 2 for optional.
+    )
     authloginviaemail: Optional[int] = None  # Whether log in via email is enabled.
     registerauth: Optional[str] = None  # Authentication method for user registration.
     forgottenpasswordurl: Optional[str] = None  # Forgotten password URL.
     authinstructions: Optional[str] = None  # Authentication instructions.
     authnoneenabled: Optional[int] = None  # Whether auth none is enabled.
     enablewebservices: Optional[int] = None  # Whether Web Services are enabled.
-    enablemobilewebservice: Optional[
-        int
-    ] = None  # Whether the Mobile service is enabled.
+    enablemobilewebservice: Optional[int] = (
+        None  # Whether the Mobile service is enabled.
+    )
     maintenanceenabled: Optional[int] = None  # Whether site maintenance is enabled.
     maintenancemessage: Optional[str] = None  # Maintenance message.
     logourl: Optional[str] = None  # The site logo URL.
     compactlogourl: Optional[str] = None  # The site compact logo URL.
-    typeoflogin: Optional[
-        int
-    ] = None  # The type of login. 1 for app, 2 for browser, 3 for embedded.
+    typeoflogin: Optional[int] = (
+        None  # The type of login. 1 for app, 2 for browser, 3 for embedded.
+    )
     launchurl: Optional[str] = None  # SSO login launch URL.
     mobilecssurl: Optional[str] = None  # Mobile custom CSS theme.
     tool_mobile_disabledfeatures: Optional[str] = None  # Disabled features in the app.
     identityproviders: List[CoreSiteIdentityProvider] = []  # Identity providers.
     country: Optional[str] = None  # Default site country.
-    agedigitalconsentverification: Optional[
-        bool
-    ] = None  # Whether age digital consent verification is enabled.
-    supportname: Optional[
-        str
-    ] = None  # Site support contact name (only if age verification is enabled).
-    supportemail: Optional[
-        str
-    ] = None  # Site support contact email (only if age verification is enabled).
-    autolang: Optional[
-        int
-    ] = None  # Whether to detect default language from browser setting.
+    agedigitalconsentverification: Optional[bool] = (
+        None  # Whether age digital consent verification is enabled.
+    )
+    supportname: Optional[str] = (
+        None  # Site support contact name (only if age verification is enabled).
+    )
+    supportemail: Optional[str] = (
+        None  # Site support contact email (only if age verification is enabled).
+    )
+    autolang: Optional[int] = (
+        None  # Whether to detect default language from browser setting.
+    )
     lang: Optional[str] = None  # Default language for the site.
     langmenu: Optional[int] = None  # Whether the language menu should be displayed.
     langlist: Optional[str] = None  # Languages on language menu.
     locale: Optional[str] = None  # Sitewide locale.
-    tool_mobile_minimumversion: Optional[
-        str
-    ] = None  # Minimum required version to access.
+    tool_mobile_minimumversion: Optional[str] = (
+        None  # Minimum required version to access.
+    )
     tool_mobile_iosappid: Optional[str] = None  # IOS app's unique identifier.
     tool_mobile_androidappid: Optional[str] = None  # Android app's unique identifier.
     tool_mobile_setuplink: Optional[str] = None  # App download page.
@@ -129,32 +129,32 @@ class CoreSiteInfo(Jsonable):
     siteurl: str  # Site url.
     userpictureurl: str  # The user profile picture.
     functions: List[CoreSiteFunction] = []
-    downloadfiles: Optional[
-        int
-    ] = None  # 1 if users are allowed to download files, 0 if not.
-    uploadfiles: Optional[
-        int
-    ] = None  # 1 if users are allowed to upload files, 0 if not.
+    downloadfiles: Optional[int] = (
+        None  # 1 if users are allowed to download files, 0 if not.
+    )
+    uploadfiles: Optional[int] = (
+        None  # 1 if users are allowed to upload files, 0 if not.
+    )
     release: Optional[str] = None  # Moodle release number.
     version: Optional[str] = None  # Moodle version number.
     mobilecssurl: Optional[str] = None  # Mobile custom CSS theme.
-    advancedfeatures: List[
-        CoreSiteAdvancedFeature
-    ] = []  # Advanced features availability.
-    usercanmanageownfiles: Optional[
-        bool
-    ] = None  # True if the user can manage his own files.
-    userquota: Optional[
-        int
-    ] = None  # User quota (bytes). 0 means user can ignore the quota.
+    advancedfeatures: List[CoreSiteAdvancedFeature] = (
+        []
+    )  # Advanced features availability.
+    usercanmanageownfiles: Optional[bool] = (
+        None  # True if the user can manage his own files.
+    )
+    userquota: Optional[int] = (
+        None  # User quota (bytes). 0 means user can ignore the quota.
+    )
     # User max upload file size (bytes). -1 means the user can ignore the upload file size.
     usermaxuploadfilesize: Optional[int] = None
-    userhomepage: Optional[
-        CoreSiteInfoUserHomepage
-    ] = None  # The default home page for the user.
-    userprivateaccesskey: Optional[
-        str
-    ] = None  # Private user access key for fetching files.
+    userhomepage: Optional[CoreSiteInfoUserHomepage] = (
+        None  # The default home page for the user.
+    )
+    userprivateaccesskey: Optional[str] = (
+        None  # Private user access key for fetching files.
+    )
     siteid: Optional[int] = None  # Site course ID.
     sitecalendartype: Optional[str] = None  # Calendar type set in the site.
     usercalendartype: Optional[str] = None  # Calendar typed used by the user.
