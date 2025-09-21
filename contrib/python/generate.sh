@@ -19,6 +19,7 @@ MOODLE_DOCKER=""
 PROJECT_NAME=""
 PACKAGE_NAME=""
 PACKAGE_VERSION=""
+PACKAGE_BUILD=""
 while [[ $# -gt 0 ]]; do
     case $1 in
     --poodle=*)
@@ -58,6 +59,10 @@ while [[ $# -gt 0 ]]; do
         ;;
     --version=*)
         PACKAGE_VERSION="${1#*=}"
+        shift
+        ;;
+    --build=*)
+        PACKAGE_BUILD="${1#*=}"
         shift
         ;;
     --methods=*)
@@ -113,6 +118,10 @@ else
         --skip-add-tags \
         -o "$SPEC" \
         "$METHODS"
+fi
+
+if [[ "$PACKAGE_BUILD" != "0" ]]; then
+    PACKAGE_VERSION="$PACKAGE_VERSION.post$PACKAGE_BUILD"
 fi
 
 "$POODLE" generate \
