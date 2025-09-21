@@ -1,0 +1,97 @@
+name: Generate Clients (PR)
+
+on:
+  pull_request:
+    branches:
+      - main
+      - '[0-9]+.[0-9]+.X'
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Load VERSION into env
+        run: cat VERSION >> $GITHUB_ENV
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.25"
+
+      - name: Build generator CLI
+        run: go build
+
+      - name: Extract methods.json
+        run: ./poodle-cli extract -d ./moodle-docker -o methods.json ./moodle
+
+      - name: Generate python-async-mini
+        run: |
+          rm -rf clients/python-async-mini
+          contrib/python/generate-mini.sh \
+            --methods=methods.json \
+            --version="$POODLE_VERSION" \
+            --build="$POODLE_BUILD" \
+            -p ./poodle-cli \
+            -m ./moodle \
+            -d ./moodle-docker \
+            clients/python-async-mini
+
+      - name: Generate python-async-full
+        run: |
+          rm -rf clients/python-async-full
+          contrib/python/generate-full.sh \
+            --methods=methods.json \
+            --version="$POODLE_VERSION" \
+            --build="$POODLE_BUILD" \
+            -p ./poodle-cli \
+            -m ./moodle \
+            -d ./moodle-docker \
+            clients/python-async-full
+
+      - name: Generate clients artifact
+        run: tar -czf clients.tgz clients
+
+      - name: Upload generated clients artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: clients
+          path: clients.tgz
+
+  commit:
+    runs-on: ubuntu-latest
+    needs: generate
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          submodules: false
+
+      - name: Download generated artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: clients
+          path: .
+
+      - name: Extract generated clients
+        run: |
+          rm -rf clients
+          tar -xzf clients.tgz
+
+      - name: Commit regenerated clients
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add clients
+          if git diff --cached --quiet; then
+            echo "No changes in clients — skipping commit."
+          else
+            git commit -m "chore: regenerate clients"
+            git push
+          fi
