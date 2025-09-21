@@ -1,0 +1,8 @@
+core_webservice_get_site_info
+core_enrol_get_users_courses
+core_course_get_contents
+gradereport_user_get_grade_items
+core_group_get_course_groups
+mod_assign_get_assignments
+mod_assign_get_submissions
+mod_assign_list_participants

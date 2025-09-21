@@ -1,0 +1,176 @@
+diff --color -Naur python.orig/api_client.mustache python/api_client.mustache
+--- python.orig/api_client.mustache	2025-09-20 07:27:20.802745622 +0200
++++ python/api_client.mustache	2025-09-06 11:27:14.139998930 +0200
+@@ -446,6 +446,25 @@
+         if data is None:
+             return None
+ 
++        # special case login
++        if isinstance(data, dict) and "error" in data:
++            raise ApiException(status=400, reason=data["error"], data=data)
++
++        # special case rest webservices
++        if isinstance(data, dict) and "exception" in data:
++            raise ApiException(status=400, reason=data["message"], data=data)
++
++        # special case ajax response
++        if isinstance(data, list) and len(data) == 1 and isinstance(data[0], dict) and "error" in data[0]:
++            _data = data[0]
++            if _data["error"]:
++                raise ApiException(
++                    status=400,
++                    reason=_data["exception"]["message"],
++                    data=_data
++                )
++            data = _data["data"]
++
+         if isinstance(klass, str):
+             if klass.startswith('List['):
+                 m = re.match(r'List\[(.*)]', klass)
+diff --color -Naur python.orig/api.mustache python/api.mustache
+--- python.orig/api.mustache	2025-09-20 07:27:20.815478555 +0200
++++ python/api.mustache	2025-09-06 11:27:14.139744473 +0200
+@@ -3,6 +3,8 @@
+ {{>partial_header}}
+ 
+ import warnings
++import json
++import re
+ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
+ from typing import Any, Dict, List, Optional, Tuple, Union
+ from typing_extensions import Annotated
+@@ -14,6 +16,46 @@
+ from {{packageName}}.api_client import ApiClient, RequestSerialized
+ from {{packageName}}.api_response import ApiResponse
+ from {{packageName}}.rest import RESTResponseType
++from {{packageName}}.exceptions import ApiException
++
++
++def fix_file_url(url: str, token: str) -> str:
++    return re.sub(
++        r"(\/webservice)?\/pluginfile\.php", f"/tokenpluginfile.php/{token}", url
++    )
++
++def is_primitive(value: Any):
++    return isinstance(value, (int, str, bool))
++
++
++def is_collection(value: Any):
++    return isinstance(value, (set, list))
++
++
++def _parse_form(data: Any, prefix: str = "") -> List[Tuple[str, str]]:
++    if data is None:
++        return []
++    if is_primitive(data):
++        value = str(data).lower() if isinstance(data, bool) else str(data)
++        return [(prefix, value)]
++    result: List[Tuple[str, str]] = []
++    if is_collection(data):
++        for i, value in enumerate(data):
++            result = result + _parse_form(
++                value, prefix + (f"{i}" if prefix == "" else f"[{i}]")
++            )
++    else:
++        dictionary = data.__dict__ if hasattr(data, "__dict__") else data
++        for key in dictionary.keys():
++            value = dictionary[key]
++            result = result + _parse_form(
++                value, prefix + (f"{key}" if prefix == "" else f"[{key}]")
++            )
++    return result
++
++
++def parse_form(data: Dict[str, Any]):
++    return _parse_form(data)
+ 
+ 
+ {{#operations}}
+@@ -28,6 +70,16 @@
+         if api_client is None:
+             api_client = ApiClient.get_default()
+         self.api_client = api_client
++
++
++    async def get_file(self, url, userprivateaccesskey: Optional[str]=None):
++        if userprivateaccesskey is None and hasattr(self, "core_webservice_get_site_info"):
++            userprivateaccesskey = (await self.core_webservice_get_site_info()).userprivateaccesskey
++        if userprivateaccesskey is None:
++            raise ApiException("Current site is missing userprivateaccesskey")
++        return await self.api_client.call_api(
++            method="GET", url=fix_file_url(url, userprivateaccesskey)
++        )
+ {{#operation}}
+ 
+ 
+@@ -101,6 +153,8 @@
+             {{/allParams}}
+         }
+ 
++        _resource_path = '{{path}}'.split('#')[0]
++
+         _path_params: Dict[str, str] = {}
+         _query_params: List[Tuple[str, str]] = []
+         _header_params: Dict[str, Optional[str]] = _headers or {}
+@@ -116,6 +170,9 @@
+             _path_params['{{baseName}}'] = {{paramName}}{{#isEnumRef}}.value{{/isEnumRef}}
+ {{/pathParams}}
+         # process the query parameters
++        if '/webservice/rest/server.php' in _resource_path:
++            _query_params.append(('moodlewsrestformat', 'json'))
++            _query_params.append(('wsfunction', '{{operationId}}'))
+ {{#queryParams}}
+         if {{paramName}} is not None:
+             {{#isDateTime}}
+@@ -148,6 +205,21 @@
+             _query_params.append(('{{baseName}}', {{paramName}}{{#isEnumRef}}.value{{/isEnumRef}}))
+             {{/isDate}}{{/isDateTime}}
+ {{/queryParams}}
++        if '/lib/ajax/service-nologin.php' in _resource_path:
++            _args_param = None
++            for _param in _query_params:
++                if _param[0] == 'args':
++                    _args_param = _param
++            if _args_param is not None:
++                _query_params.remove(_args_param)
++            else:
++                _args_param = ('args', {})
++            _new_args = ('args', json.dumps([{
++                'index': 0,
++                'methodname': '{{operationId}}',
++                'args': _args_param[1]
++            }]))
++            _query_params.append(_new_args)
+         # process the header parameters
+ {{#headerParams}}
+         if {{paramName}} is not None:
+@@ -160,7 +232,7 @@
+             _files['{{{baseName}}}'] = {{paramName}}
+             {{/isFile}}
+             {{^isFile}}
+-            _form_params.append(('{{{baseName}}}', {{paramName}}))
++            _form_params += parse_form({'{{{baseName}}}': {{paramName}}})
+             {{/isFile}}
+ {{/formParams}}
+         # process the body parameter
+@@ -226,7 +298,7 @@
+ 
+         return self.api_client.param_serialize(
+             method='{{httpMethod}}',
+-            resource_path='{{{path}}}',
++            resource_path=_resource_path,
+             path_params=_path_params,
+             query_params=_query_params,
+             header_params=_header_params,
+diff --color -Naur python.orig/pyproject.mustache python/pyproject.mustache
+--- python.orig/pyproject.mustache	2025-09-20 07:27:20.816445271 +0200
++++ python/pyproject.mustache	2025-09-20 07:27:39.441475302 +0200
+@@ -91,7 +91,7 @@
+ 
+ 
+ [build-system]
+-requires = ["setuptools"]
++requires = ["setuptools", "wheel"]
+ build-backend = "setuptools.build_meta"
+ 
+ [tool.pylint.'MESSAGES CONTROL']
