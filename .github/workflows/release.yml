@@ -1,0 +1,64 @@
+name: Release Clients
+
+on:
+  push:
+    branches:
+      - main
+      - '[0-9]+.[0-9]+.X'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build tools
+        run: pip install build twine
+
+      - name: Build async-mini
+        run: python -m build ./clients/python-async-mini
+
+      - name: Publish async-mini to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: twine upload ./clients/python-async-mini/dist/*
+
+      - name: Build async-full
+        run: python -m build ./clients/python-async-full
+
+      - name: Publish async-full to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: twine upload ./clients/python-async-full/dist/*
+
+  tag:
+    runs-on: ubuntu-latest
+    needs: release
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          submodules: false
+
+      - name: Load VERSION into env
+        run: cat VERSION >> $GITHUB_ENV
+
+      - name: Tag commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "v$POODLE_VERSION-$POODLE_BUILD"
+          git push origin "v$POODLE_VERSION-$POODLE_BUILD"
