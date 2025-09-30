@@ -23,6 +23,8 @@ from poodle_async_mini.models.core_enrol_get_users_courses_response_inner_overvi
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_mini.configuration import settings
+
 class ModAssignGetSubmissionsResponseAssignmentsInnerSubmissionsInnerPluginsInnerFileareasInner(BaseModel):
     """
     ModAssignGetSubmissionsResponseAssignmentsInnerSubmissionsInnerPluginsInnerFileareasInner
@@ -90,13 +92,16 @@ class ModAssignGetSubmissionsResponseAssignmentsInnerSubmissionsInnerPluginsInne
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModAssignGetSubmissionsResponseAssignmentsInnerSubmissionsInnerPluginsInnerFileareasInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "area": obj.get("area"),
             "files": [CoreEnrolGetUsersCoursesResponseInnerOverviewfilesInner.from_dict(_item) for _item in obj["files"]] if obj.get("files") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

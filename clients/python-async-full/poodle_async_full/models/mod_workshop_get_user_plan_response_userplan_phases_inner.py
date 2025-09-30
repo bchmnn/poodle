@@ -24,6 +24,8 @@ from poodle_async_full.models.mod_workshop_get_user_plan_response_userplan_phase
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModWorkshopGetUserPlanResponseUserplanPhasesInner(BaseModel):
     """
     ModWorkshopGetUserPlanResponseUserplanPhasesInner
@@ -111,16 +113,19 @@ class ModWorkshopGetUserPlanResponseUserplanPhasesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModWorkshopGetUserPlanResponseUserplanPhasesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "actions": [ModWorkshopGetUserPlanResponseUserplanPhasesInnerActionsInner.from_dict(_item) for _item in obj["actions"]] if obj.get("actions") is not None else None,
             "active": obj.get("active"),
             "code": obj.get("code"),
             "tasks": [ModWorkshopGetUserPlanResponseUserplanPhasesInnerTasksInner.from_dict(_item) for _item in obj["tasks"]] if obj.get("tasks") is not None else None,
             "title": obj.get("title")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

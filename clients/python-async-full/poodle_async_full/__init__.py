@@ -14,7 +14,7 @@
 """  # noqa: E501
 
 
-__version__ = "5.0.2"
+__version__ = "5.0.2.post1"
 
 # Define package exports
 __all__ = [
@@ -22,6 +22,7 @@ __all__ = [
     "ApiResponse",
     "ApiClient",
     "Configuration",
+    "settings",
     "OpenApiException",
     "ApiTypeError",
     "ApiValueError",
@@ -1155,6 +1156,7 @@ if __import__("typing").TYPE_CHECKING:
     from poodle_async_full.api_response import ApiResponse as ApiResponse
     from poodle_async_full.api_client import ApiClient as ApiClient
     from poodle_async_full.configuration import Configuration as Configuration
+    from poodle_async_full.configuration import settings as settings
     from poodle_async_full.exceptions import OpenApiException as OpenApiException
     from poodle_async_full.exceptions import ApiTypeError as ApiTypeError
     from poodle_async_full.exceptions import ApiValueError as ApiValueError
@@ -2296,6 +2298,7 @@ from poodle_async_full.api.default_api import DefaultApi as DefaultApi
 from poodle_async_full.api_response import ApiResponse as ApiResponse
 from poodle_async_full.api_client import ApiClient as ApiClient
 from poodle_async_full.configuration import Configuration as Configuration
+from poodle_async_full.configuration import settings as settings
 from poodle_async_full.exceptions import OpenApiException as OpenApiException
 from poodle_async_full.exceptions import ApiTypeError as ApiTypeError
 from poodle_async_full.exceptions import ApiValueError as ApiValueError

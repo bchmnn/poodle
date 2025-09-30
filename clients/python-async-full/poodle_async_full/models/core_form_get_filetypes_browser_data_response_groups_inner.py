@@ -23,6 +23,8 @@ from poodle_async_full.models.core_form_get_filetypes_browser_data_response_grou
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreFormGetFiletypesBrowserDataResponseGroupsInner(BaseModel):
     """
     CoreFormGetFiletypesBrowserDataResponseGroupsInner
@@ -120,10 +122,12 @@ class CoreFormGetFiletypesBrowserDataResponseGroupsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreFormGetFiletypesBrowserDataResponseGroupsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "expanded": obj.get("expanded"),
             "ext": obj.get("ext"),
             "key": obj.get("key"),
@@ -131,7 +135,8 @@ class CoreFormGetFiletypesBrowserDataResponseGroupsInner(BaseModel):
             "selectable": obj.get("selectable"),
             "selected": obj.get("selected"),
             "types": [CoreFormGetFiletypesBrowserDataResponseGroupsInnerTypesInner.from_dict(_item) for _item in obj["types"]] if obj.get("types") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

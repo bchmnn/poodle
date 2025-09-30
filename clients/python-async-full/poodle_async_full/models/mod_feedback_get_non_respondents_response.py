@@ -24,6 +24,8 @@ from poodle_async_full.models.mod_feedback_get_non_respondents_response_users_in
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModFeedbackGetNonRespondentsResponse(BaseModel):
     """
     ModFeedbackGetNonRespondentsResponse
@@ -99,14 +101,17 @@ class ModFeedbackGetNonRespondentsResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModFeedbackGetNonRespondentsResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "total": obj.get("total"),
             "users": [ModFeedbackGetNonRespondentsResponseUsersInner.from_dict(_item) for _item in obj["users"]] if obj.get("users") is not None else None,
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

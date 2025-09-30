@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreFormGetFiletypesBrowserDataParameters(BaseModel):
     """
     CoreFormGetFiletypesBrowserDataParameters
@@ -93,14 +95,17 @@ class CoreFormGetFiletypesBrowserDataParameters(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreFormGetFiletypesBrowserDataParameters" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "allowall": obj.get("allowall") if obj.get("allowall") is not None else True,
             "current": obj.get("current") if obj.get("current") is not None else '',
             "onlytypes": obj.get("onlytypes") if obj.get("onlytypes") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_forum_set_lock_state_response_times import Mod
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModForumSetLockStateResponse(BaseModel):
     """
     ModForumSetLockStateResponse
@@ -92,14 +94,17 @@ class ModForumSetLockStateResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModForumSetLockStateResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "id": obj.get("id"),
             "locked": obj.get("locked"),
             "times": ModForumSetLockStateResponseTimes.from_dict(obj["times"]) if obj.get("times") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

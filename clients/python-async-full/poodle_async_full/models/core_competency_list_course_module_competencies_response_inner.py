@@ -24,6 +24,8 @@ from poodle_async_full.models.core_competency_list_course_module_competencies_re
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCompetencyListCourseModuleCompetenciesResponseInner(BaseModel):
     """
     CoreCompetencyListCourseModuleCompetenciesResponseInner
@@ -85,13 +87,16 @@ class CoreCompetencyListCourseModuleCompetenciesResponseInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCompetencyListCourseModuleCompetenciesResponseInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "competency": CoreCompetencyListCompetenciesInTemplateResponseInner.from_dict(obj["competency"]) if obj.get("competency") is not None else None,
             "coursemodulecompetency": CoreCompetencyListCourseModuleCompetenciesResponseInnerCoursemodulecompetency.from_dict(obj["coursemodulecompetency"]) if obj.get("coursemodulecompetency") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

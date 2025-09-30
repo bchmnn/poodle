@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class AiplacementCourseassistExplainTextResponse(BaseModel):
     """
     AiplacementCourseassistExplainTextResponse
@@ -117,10 +119,12 @@ class AiplacementCourseassistExplainTextResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "AiplacementCourseassistExplainTextResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "error": obj.get("error") if obj.get("error") is not None else '',
             "errorcode": obj.get("errorcode") if obj.get("errorcode") is not None else 0,
             "finishreason": obj.get("finishreason") if obj.get("finishreason") is not None else 'stop',
@@ -128,7 +132,8 @@ class AiplacementCourseassistExplainTextResponse(BaseModel):
             "prompttext": obj.get("prompttext"),
             "success": obj.get("success"),
             "timecreated": obj.get("timecreated")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

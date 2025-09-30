@@ -23,6 +23,8 @@ from poodle_async_full.models.core_reportbuilder_conditions_add_response_availab
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreReportbuilderConditionsAddResponseAvailableconditionsInner(BaseModel):
     """
     CoreReportbuilderConditionsAddResponseAvailableconditionsInner
@@ -80,12 +82,15 @@ class CoreReportbuilderConditionsAddResponseAvailableconditionsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreReportbuilderConditionsAddResponseAvailableconditionsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "optiongroup": CoreReportbuilderConditionsAddResponseAvailableconditionsInnerOptiongroup.from_dict(obj["optiongroup"]) if obj.get("optiongroup") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

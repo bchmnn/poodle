@@ -23,6 +23,8 @@ from poodle_async_full.models.core_question_search_shared_banks_response_sharedb
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreQuestionSearchSharedBanksResponse(BaseModel):
     """
     CoreQuestionSearchSharedBanksResponse
@@ -84,12 +86,15 @@ class CoreQuestionSearchSharedBanksResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreQuestionSearchSharedBanksResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "sharedbanks": [CoreQuestionSearchSharedBanksResponseSharedbanksInner.from_dict(_item) for _item in obj["sharedbanks"]] if obj.get("sharedbanks") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

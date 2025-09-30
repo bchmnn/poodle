@@ -24,6 +24,8 @@ from poodle_async_full.models.core_calendar_get_calendar_day_view_response_event
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCalendarGetCalendarDayViewResponse(BaseModel):
     """
     CoreCalendarGetCalendarDayViewResponse
@@ -109,10 +111,12 @@ class CoreCalendarGetCalendarDayViewResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCalendarGetCalendarDayViewResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "categoryid": obj.get("categoryid") if obj.get("categoryid") is not None else 0,
             "courseid": obj.get("courseid") if obj.get("courseid") is not None else 0,
             "date": CoreCalendarGetCalendarDayViewResponseDate.from_dict(obj["date"]) if obj.get("date") is not None else None,
@@ -129,7 +133,8 @@ class CoreCalendarGetCalendarDayViewResponse(BaseModel):
             "previousperiodlink": obj.get("previousperiodlink") if obj.get("previousperiodlink") is not None else '',
             "previousperiodname": obj.get("previousperiodname") if obj.get("previousperiodname") is not None else '',
             "rarrow": obj.get("rarrow") if obj.get("rarrow") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -23,6 +23,8 @@ from poodle_async_full.models.auth_email_get_signup_settings_response_warnings_i
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModH5pactivityGetH5pactivityAccessInformationResponse(BaseModel):
     """
     ModH5pactivityGetH5pactivityAccessInformationResponse
@@ -108,16 +110,19 @@ class ModH5pactivityGetH5pactivityAccessInformationResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModH5pactivityGetH5pactivityAccessInformationResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "canaddinstance": obj.get("canaddinstance"),
             "canreviewattempts": obj.get("canreviewattempts"),
             "cansubmit": obj.get("cansubmit"),
             "canview": obj.get("canview"),
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

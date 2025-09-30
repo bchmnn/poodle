@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCohortSearchCohortsParametersContext(BaseModel):
     """
     CoreCohortSearchCohortsParametersContext
@@ -93,14 +95,17 @@ class CoreCohortSearchCohortsParametersContext(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCohortSearchCohortsParametersContext" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "contextid": obj.get("contextid") if obj.get("contextid") is not None else 0,
             "contextlevel": obj.get("contextlevel") if obj.get("contextlevel") is not None else '',
             "instanceid": obj.get("instanceid") if obj.get("instanceid") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

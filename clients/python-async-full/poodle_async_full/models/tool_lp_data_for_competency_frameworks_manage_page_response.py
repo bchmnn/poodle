@@ -23,6 +23,8 @@ from poodle_async_full.models.core_competency_list_competency_frameworks_respons
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolLpDataForCompetencyFrameworksManagePageResponse(BaseModel):
     """
     ToolLpDataForCompetencyFrameworksManagePageResponse
@@ -97,15 +99,18 @@ class ToolLpDataForCompetencyFrameworksManagePageResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolLpDataForCompetencyFrameworksManagePageResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "competencyframeworks": [CoreCompetencyListCompetencyFrameworksResponseInner.from_dict(_item) for _item in obj["competencyframeworks"]] if obj.get("competencyframeworks") is not None else None,
             "navigation": obj.get("navigation"),
             "pagecontextid": obj.get("pagecontextid"),
             "pluginbaseurl": obj.get("pluginbaseurl")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

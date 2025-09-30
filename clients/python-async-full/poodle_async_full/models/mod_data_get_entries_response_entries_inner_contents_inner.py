@@ -23,6 +23,8 @@ from poodle_async_full.models.core_blog_get_entries_response_entries_inner_attac
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModDataGetEntriesResponseEntriesInnerContentsInner(BaseModel):
     """
     ModDataGetEntriesResponseEntriesInnerContentsInner
@@ -117,10 +119,12 @@ class ModDataGetEntriesResponseEntriesInnerContentsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModDataGetEntriesResponseEntriesInnerContentsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "content": obj.get("content"),
             "content1": obj.get("content1"),
             "content2": obj.get("content2"),
@@ -130,7 +134,8 @@ class ModDataGetEntriesResponseEntriesInnerContentsInner(BaseModel):
             "files": [CoreBlogGetEntriesResponseEntriesInnerAttachmentfilesInner.from_dict(_item) for _item in obj["files"]] if obj.get("files") is not None else None,
             "id": obj.get("id") if obj.get("id") is not None else 0,
             "recordid": obj.get("recordid") if obj.get("recordid") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

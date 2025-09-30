@@ -23,6 +23,8 @@ from poodle_async_full.models.core_user_search_identity_response_list_inner_extr
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreUserSearchIdentityResponseListInner(BaseModel):
     """
     CoreUserSearchIdentityResponseListInner
@@ -96,14 +98,17 @@ class CoreUserSearchIdentityResponseListInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreUserSearchIdentityResponseListInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "extrafields": [CoreUserSearchIdentityResponseListInnerExtrafieldsInner.from_dict(_item) for _item in obj["extrafields"]] if obj.get("extrafields") is not None else None,
             "fullname": obj.get("fullname"),
             "id": obj.get("id")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -24,6 +24,8 @@ from poodle_async_full.models.core_message_get_conversation_between_users_respon
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreMessageGetConversationMessagesResponse(BaseModel):
     """
     CoreMessageGetConversationMessagesResponse
@@ -99,14 +101,17 @@ class CoreMessageGetConversationMessagesResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreMessageGetConversationMessagesResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "id": obj.get("id"),
             "members": [CoreMessageGetContactRequestsResponseInner.from_dict(_item) for _item in obj["members"]] if obj.get("members") is not None else None,
             "messages": [CoreMessageGetConversationBetweenUsersResponseMessagesInner.from_dict(_item) for _item in obj["messages"]] if obj.get("messages") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

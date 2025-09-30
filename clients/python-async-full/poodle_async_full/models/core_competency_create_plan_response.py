@@ -25,6 +25,8 @@ from poodle_async_full.models.core_competency_create_plan_response_template impo
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCompetencyCreatePlanResponse(BaseModel):
     """
     CoreCompetencyCreatePlanResponse
@@ -145,10 +147,12 @@ class CoreCompetencyCreatePlanResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCompetencyCreatePlanResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "canbeedited": obj.get("canbeedited") if obj.get("canbeedited") is not None else False,
             "canmanage": obj.get("canmanage") if obj.get("canmanage") is not None else False,
             "canrequestreview": obj.get("canrequestreview") if obj.get("canrequestreview") is not None else False,
@@ -187,7 +191,8 @@ class CoreCompetencyCreatePlanResponse(BaseModel):
             "url": obj.get("url") if obj.get("url") is not None else '',
             "userid": obj.get("userid") if obj.get("userid") is not None else 0,
             "usermodified": obj.get("usermodified") if obj.get("usermodified") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

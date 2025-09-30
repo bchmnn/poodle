@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCalendarCreateCalendarEventsParametersEventsInner(BaseModel):
     """
     event
@@ -96,10 +98,12 @@ class CoreCalendarCreateCalendarEventsParametersEventsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCalendarCreateCalendarEventsParametersEventsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "courseid": obj.get("courseid") if obj.get("courseid") is not None else 0,
             "description": obj.get("description"),
             "eventtype": obj.get("eventtype") if obj.get("eventtype") is not None else 'user',
@@ -111,7 +115,8 @@ class CoreCalendarCreateCalendarEventsParametersEventsInner(BaseModel):
             "timeduration": obj.get("timeduration") if obj.get("timeduration") is not None else 0,
             "timestart": obj.get("timestart") if obj.get("timestart") is not None else 0,
             "visible": obj.get("visible") if obj.get("visible") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

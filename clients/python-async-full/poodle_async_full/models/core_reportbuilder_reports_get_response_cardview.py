@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreReportbuilderReportsGetResponseCardview(BaseModel):
     """
     CoreReportbuilderReportsGetResponseCardview
@@ -77,13 +79,16 @@ class CoreReportbuilderReportsGetResponseCardview(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreReportbuilderReportsGetResponseCardview" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "form": obj.get("form") if obj.get("form") is not None else '',
             "helpicon": obj.get("helpicon") if obj.get("helpicon") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

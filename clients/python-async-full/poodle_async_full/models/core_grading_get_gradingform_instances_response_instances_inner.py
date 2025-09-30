@@ -24,6 +24,8 @@ from poodle_async_full.models.core_grading_get_gradingform_instances_response_in
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreGradingGetGradingformInstancesResponseInstancesInner(BaseModel):
     """
     CoreGradingGetGradingformInstancesResponseInstancesInner
@@ -133,10 +135,12 @@ class CoreGradingGetGradingformInstancesResponseInstancesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreGradingGetGradingformInstancesResponseInstancesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "feedback": obj.get("feedback"),
             "feedbackformat": obj.get("feedbackformat"),
             "guide": CoreGradingGetGradingformInstancesResponseInstancesInnerGuide.from_dict(obj["guide"]) if obj.get("guide") is not None else None,
@@ -147,7 +151,8 @@ class CoreGradingGetGradingformInstancesResponseInstancesInner(BaseModel):
             "rubric": CoreGradingGetGradingformInstancesResponseInstancesInnerRubric.from_dict(obj["rubric"]) if obj.get("rubric") is not None else None,
             "status": obj.get("status"),
             "timemodified": obj.get("timemodified")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModBigbluebuttonbnGetRecordingsResponseTabledataColumnsInner(BaseModel):
     """
     ModBigbluebuttonbnGetRecordingsResponseTabledataColumnsInner
@@ -117,10 +119,12 @@ class ModBigbluebuttonbnGetRecordingsResponseTabledataColumnsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModBigbluebuttonbnGetRecordingsResponseTabledataColumnsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "allowHTML": obj.get("allowHTML") if obj.get("allowHTML") is not None else False,
             "formatter": obj.get("formatter"),
             "key": obj.get("key"),
@@ -128,7 +132,8 @@ class ModBigbluebuttonbnGetRecordingsResponseTabledataColumnsInner(BaseModel):
             "sortable": obj.get("sortable") if obj.get("sortable") is not None else False,
             "type": obj.get("type"),
             "width": obj.get("width")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

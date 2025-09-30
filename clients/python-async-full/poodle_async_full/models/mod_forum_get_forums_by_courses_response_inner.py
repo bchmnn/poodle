@@ -23,6 +23,8 @@ from poodle_async_full.models.core_block_get_course_blocks_response_blocks_inner
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModForumGetForumsByCoursesResponseInner(BaseModel):
     """
     forum
@@ -288,10 +290,12 @@ class ModForumGetForumsByCoursesResponseInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModForumGetForumsByCoursesResponseInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "assessed": obj.get("assessed"),
             "assesstimefinish": obj.get("assesstimefinish"),
             "assesstimestart": obj.get("assesstimestart"),
@@ -327,7 +331,8 @@ class ModForumGetForumsByCoursesResponseInner(BaseModel):
             "type": obj.get("type"),
             "unreadpostscount": obj.get("unreadpostscount"),
             "warnafter": obj.get("warnafter")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

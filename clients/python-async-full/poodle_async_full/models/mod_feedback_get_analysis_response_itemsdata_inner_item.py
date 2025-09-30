@@ -23,6 +23,8 @@ from poodle_async_full.models.core_competency_read_user_evidence_response_files_
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModFeedbackGetAnalysisResponseItemsdataInnerItem(BaseModel):
     """
     ModFeedbackGetAnalysisResponseItemsdataInnerItem
@@ -121,10 +123,12 @@ class ModFeedbackGetAnalysisResponseItemsdataInnerItem(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModFeedbackGetAnalysisResponseItemsdataInnerItem" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "dependitem": obj.get("dependitem") if obj.get("dependitem") is not None else 0,
             "dependvalue": obj.get("dependvalue") if obj.get("dependvalue") is not None else '',
             "feedback": obj.get("feedback") if obj.get("feedback") is not None else 0,
@@ -143,7 +147,8 @@ class ModFeedbackGetAnalysisResponseItemsdataInnerItem(BaseModel):
             "required": obj.get("required") if obj.get("required") is not None else False,
             "template": obj.get("template") if obj.get("template") is not None else 0,
             "typ": obj.get("typ") if obj.get("typ") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

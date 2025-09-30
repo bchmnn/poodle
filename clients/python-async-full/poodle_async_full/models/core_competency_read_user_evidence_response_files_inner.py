@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCompetencyReadUserEvidenceResponseFilesInner(BaseModel):
     """
     CoreCompetencyReadUserEvidenceResponseFilesInner
@@ -94,10 +96,12 @@ class CoreCompetencyReadUserEvidenceResponseFilesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCompetencyReadUserEvidenceResponseFilesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "author": obj.get("author") if obj.get("author") is not None else '',
             "component": obj.get("component") if obj.get("component") is not None else '',
             "contextid": obj.get("contextid") if obj.get("contextid") is not None else 0,
@@ -117,7 +121,8 @@ class CoreCompetencyReadUserEvidenceResponseFilesInner(BaseModel):
             "timemodified": obj.get("timemodified") if obj.get("timemodified") is not None else 0,
             "timemodifiedformatted": obj.get("timemodifiedformatted") if obj.get("timemodifiedformatted") is not None else '',
             "url": obj.get("url") if obj.get("url") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

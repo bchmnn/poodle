@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_workshop_get_grades_report_response_report_gra
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModWorkshopGetGradesReportResponseReportGradesInner(BaseModel):
     """
     ModWorkshopGetGradesReportResponseReportGradesInner
@@ -146,10 +148,12 @@ class ModWorkshopGetGradesReportResponseReportGradesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModWorkshopGetGradesReportResponseReportGradesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "gradinggrade": obj.get("gradinggrade"),
             "reviewedby": [ModWorkshopGetGradesReportResponseReportGradesInnerReviewedbyInner.from_dict(_item) for _item in obj["reviewedby"]] if obj.get("reviewedby") is not None else None,
             "reviewerof": [ModWorkshopGetGradesReportResponseReportGradesInnerReviewedbyInner.from_dict(_item) for _item in obj["reviewerof"]] if obj.get("reviewerof") is not None else None,
@@ -161,7 +165,8 @@ class ModWorkshopGetGradesReportResponseReportGradesInner(BaseModel):
             "submissionpublished": obj.get("submissionpublished"),
             "submissiontitle": obj.get("submissiontitle"),
             "userid": obj.get("userid")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -23,6 +23,8 @@ from poodle_async_full.models.core_completion_get_activities_completion_status_r
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCompletionGetActivitiesCompletionStatusResponseStatusesInner(BaseModel):
     """
     Activity
@@ -162,10 +164,12 @@ class CoreCompletionGetActivitiesCompletionStatusResponseStatusesInner(BaseModel
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCompletionGetActivitiesCompletionStatusResponseStatusesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "cmid": obj.get("cmid"),
             "details": [CoreCompletionGetActivitiesCompletionStatusResponseStatusesInnerDetailsInner.from_dict(_item) for _item in obj["details"]] if obj.get("details") is not None else None,
             "hascompletion": obj.get("hascompletion"),
@@ -180,7 +184,8 @@ class CoreCompletionGetActivitiesCompletionStatusResponseStatusesInner(BaseModel
             "tracking": obj.get("tracking"),
             "uservisible": obj.get("uservisible"),
             "valueused": obj.get("valueused")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

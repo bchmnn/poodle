@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_assign_get_grades_response_assignments_inner_g
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModAssignGetGradesResponseAssignmentsInner(BaseModel):
     """
     ModAssignGetGradesResponseAssignmentsInner
@@ -90,13 +92,16 @@ class ModAssignGetGradesResponseAssignmentsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModAssignGetGradesResponseAssignmentsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "assignmentid": obj.get("assignmentid"),
             "grades": [ModAssignGetGradesResponseAssignmentsInnerGradesInner.from_dict(_item) for _item in obj["grades"]] if obj.get("grades") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

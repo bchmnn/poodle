@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_forum_get_discussion_posts_by_userid_response_
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModForumGetDiscussionPostsByUseridResponseDiscussionsInner(BaseModel):
     """
     ModForumGetDiscussionPostsByUseridResponseDiscussionsInner
@@ -104,16 +106,19 @@ class ModForumGetDiscussionPostsByUseridResponseDiscussionsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModForumGetDiscussionPostsByUseridResponseDiscussionsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "authorfullname": obj.get("authorfullname"),
             "id": obj.get("id"),
             "name": obj.get("name"),
             "posts": ModForumGetDiscussionPostsByUseridResponseDiscussionsInnerPosts.from_dict(obj["posts"]) if obj.get("posts") is not None else None,
             "timecreated": obj.get("timecreated")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

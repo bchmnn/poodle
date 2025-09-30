@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreMessageGetUnsentMessageResponse(BaseModel):
     """
     CoreMessageGetUnsentMessageResponse
@@ -93,14 +95,17 @@ class CoreMessageGetUnsentMessageResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreMessageGetUnsentMessageResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "conversationid": obj.get("conversationid") if obj.get("conversationid") is not None else 0,
             "message": obj.get("message") if obj.get("message") is not None else '',
             "otheruserid": obj.get("otheruserid") if obj.get("otheruserid") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

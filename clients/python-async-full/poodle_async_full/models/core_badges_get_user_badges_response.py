@@ -24,6 +24,8 @@ from poodle_async_full.models.core_badges_get_user_badge_by_hash_response_badge_
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreBadgesGetUserBadgesResponse(BaseModel):
     """
     CoreBadgesGetUserBadgesResponse
@@ -93,13 +95,16 @@ class CoreBadgesGetUserBadgesResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreBadgesGetUserBadgesResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "badges": [CoreBadgesGetUserBadgeByHashResponseBadgeInner.from_dict(_item) for _item in obj["badges"]] if obj.get("badges") is not None else None,
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

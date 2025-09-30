@@ -23,6 +23,8 @@ from poodle_async_full.models.core_reportbuilder_columns_add_response_sortableco
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreReportbuilderColumnsAddResponseSortablecolumnsInner(BaseModel):
     """
     CoreReportbuilderColumnsAddResponseSortablecolumnsInner
@@ -88,10 +90,12 @@ class CoreReportbuilderColumnsAddResponseSortablecolumnsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreReportbuilderColumnsAddResponseSortablecolumnsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "heading": obj.get("heading") if obj.get("heading") is not None else '',
             "id": obj.get("id") if obj.get("id") is not None else 0,
             "movetitle": obj.get("movetitle") if obj.get("movetitle") is not None else '',
@@ -101,7 +105,8 @@ class CoreReportbuilderColumnsAddResponseSortablecolumnsInner(BaseModel):
             "sorticon": CoreReportbuilderColumnsAddResponseSortablecolumnsInnerSorticon.from_dict(obj["sorticon"]) if obj.get("sorticon") is not None else None,
             "sortorder": obj.get("sortorder") if obj.get("sortorder") is not None else 0,
             "title": obj.get("title") if obj.get("title") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

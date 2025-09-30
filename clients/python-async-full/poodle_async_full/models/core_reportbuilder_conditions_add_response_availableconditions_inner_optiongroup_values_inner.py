@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreReportbuilderConditionsAddResponseAvailableconditionsInnerOptiongroupValuesInner(BaseModel):
     """
     CoreReportbuilderConditionsAddResponseAvailableconditionsInnerOptiongroupValuesInner
@@ -77,13 +79,16 @@ class CoreReportbuilderConditionsAddResponseAvailableconditionsInnerOptiongroupV
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreReportbuilderConditionsAddResponseAvailableconditionsInnerOptiongroupValuesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "value": obj.get("value") if obj.get("value") is not None else '',
             "visiblename": obj.get("visiblename") if obj.get("visiblename") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

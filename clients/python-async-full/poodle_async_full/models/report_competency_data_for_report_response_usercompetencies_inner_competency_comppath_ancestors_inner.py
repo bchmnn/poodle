@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ReportCompetencyDataForReportResponseUsercompetenciesInnerCompetencyComppathAncestorsInner(BaseModel):
     """
     ReportCompetencyDataForReportResponseUsercompetenciesInnerCompetencyComppathAncestorsInner
@@ -85,16 +87,19 @@ class ReportCompetencyDataForReportResponseUsercompetenciesInnerCompetencyComppa
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ReportCompetencyDataForReportResponseUsercompetenciesInnerCompetencyComppathAncestorsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "first": obj.get("first") if obj.get("first") is not None else False,
             "id": obj.get("id"),
             "last": obj.get("last") if obj.get("last") is not None else False,
             "name": obj.get("name") if obj.get("name") is not None else '',
             "position": obj.get("position") if obj.get("position") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

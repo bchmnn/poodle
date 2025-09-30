@@ -24,6 +24,8 @@ from poodle_async_full.models.core_reportbuilder_filters_add_response_activefilt
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreReportbuilderReportsGetResponseFilters(BaseModel):
     """
     CoreReportbuilderReportsGetResponseFilters
@@ -96,16 +98,19 @@ class CoreReportbuilderReportsGetResponseFilters(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreReportbuilderReportsGetResponseFilters" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "activefilters": [CoreReportbuilderFiltersAddResponseActivefiltersInner.from_dict(_item) for _item in obj["activefilters"]] if obj.get("activefilters") is not None else None,
             "availablefilters": [CoreReportbuilderConditionsAddResponseAvailableconditionsInner.from_dict(_item) for _item in obj["availablefilters"]] if obj.get("availablefilters") is not None else None,
             "hasactivefilters": obj.get("hasactivefilters") if obj.get("hasactivefilters") is not None else False,
             "hasavailablefilters": obj.get("hasavailablefilters") if obj.get("hasavailablefilters") is not None else False,
             "helpicon": obj.get("helpicon") if obj.get("helpicon") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

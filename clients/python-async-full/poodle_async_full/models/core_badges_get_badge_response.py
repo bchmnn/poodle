@@ -24,6 +24,8 @@ from poodle_async_full.models.core_badges_get_badge_response_badge import CoreBa
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreBadgesGetBadgeResponse(BaseModel):
     """
     CoreBadgesGetBadgeResponse
@@ -89,13 +91,16 @@ class CoreBadgesGetBadgeResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreBadgesGetBadgeResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "badge": CoreBadgesGetBadgeResponseBadge.from_dict(obj["badge"]) if obj.get("badge") is not None else None,
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

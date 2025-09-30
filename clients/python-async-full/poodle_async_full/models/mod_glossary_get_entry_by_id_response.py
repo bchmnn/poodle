@@ -26,6 +26,8 @@ from poodle_async_full.models.mod_glossary_get_entry_by_id_response_permissions 
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModGlossaryGetEntryByIdResponse(BaseModel):
     """
     ModGlossaryGetEntryByIdResponse
@@ -99,15 +101,18 @@ class ModGlossaryGetEntryByIdResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModGlossaryGetEntryByIdResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "entry": ModGlossaryGetEntriesByAuthorIdResponseEntriesInner.from_dict(obj["entry"]) if obj.get("entry") is not None else None,
             "permissions": ModGlossaryGetEntryByIdResponsePermissions.from_dict(obj["permissions"]) if obj.get("permissions") is not None else None,
             "ratinginfo": ModDataGetEntryResponseRatinginfo.from_dict(obj["ratinginfo"]) if obj.get("ratinginfo") is not None else None,
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

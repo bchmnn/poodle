@@ -23,6 +23,8 @@ from poodle_async_full.models.core_message_data_for_messagearea_search_messages_
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreMessageDataForMessageareaSearchMessagesResponse(BaseModel):
     """
     CoreMessageDataForMessageareaSearchMessagesResponse
@@ -84,12 +86,15 @@ class CoreMessageDataForMessageareaSearchMessagesResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreMessageDataForMessageareaSearchMessagesResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "contacts": [CoreMessageDataForMessageareaSearchMessagesResponseContactsInner.from_dict(_item) for _item in obj["contacts"]] if obj.get("contacts") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

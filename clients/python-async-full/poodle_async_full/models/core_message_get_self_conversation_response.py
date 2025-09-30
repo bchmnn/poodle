@@ -24,6 +24,8 @@ from poodle_async_full.models.core_message_get_conversation_between_users_respon
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreMessageGetSelfConversationResponse(BaseModel):
     """
     CoreMessageGetSelfConversationResponse
@@ -159,10 +161,12 @@ class CoreMessageGetSelfConversationResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreMessageGetSelfConversationResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "candeletemessagesforallusers": obj.get("candeletemessagesforallusers") if obj.get("candeletemessagesforallusers") is not None else False,
             "id": obj.get("id"),
             "imageurl": obj.get("imageurl"),
@@ -176,7 +180,8 @@ class CoreMessageGetSelfConversationResponse(BaseModel):
             "subname": obj.get("subname"),
             "type": obj.get("type"),
             "unreadcount": obj.get("unreadcount")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -24,6 +24,8 @@ from poodle_async_full.models.core_competency_read_user_evidence_response_files_
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCompetencyReadUserEvidenceResponse(BaseModel):
     """
     CoreCompetencyReadUserEvidenceResponse
@@ -112,10 +114,12 @@ class CoreCompetencyReadUserEvidenceResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCompetencyReadUserEvidenceResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "canmanage": obj.get("canmanage") if obj.get("canmanage") is not None else False,
             "competencies": [CoreCompetencyListCompetenciesInTemplateResponseInner.from_dict(_item) for _item in obj["competencies"]] if obj.get("competencies") is not None else None,
             "competencycount": obj.get("competencycount") if obj.get("competencycount") is not None else 0,
@@ -132,7 +136,8 @@ class CoreCompetencyReadUserEvidenceResponse(BaseModel):
             "urlshort": obj.get("urlshort") if obj.get("urlshort") is not None else '',
             "userid": obj.get("userid") if obj.get("userid") is not None else 0,
             "usermodified": obj.get("usermodified") if obj.get("usermodified") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

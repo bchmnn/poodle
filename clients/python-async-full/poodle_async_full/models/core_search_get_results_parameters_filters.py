@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreSearchGetResultsParametersFilters(BaseModel):
     """
     filters to apply
@@ -116,10 +118,12 @@ class CoreSearchGetResultsParametersFilters(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreSearchGetResultsParametersFilters" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "areaids": obj.get("areaids"),
             "cat": obj.get("cat") if obj.get("cat") is not None else '',
             "contextids": obj.get("contextids"),
@@ -131,7 +135,8 @@ class CoreSearchGetResultsParametersFilters(BaseModel):
             "timestart": obj.get("timestart") if obj.get("timestart") is not None else 0,
             "title": obj.get("title"),
             "userids": obj.get("userids")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -26,6 +26,8 @@ from poodle_async_full.models.mod_quiz_get_attempt_review_response_additionaldat
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModQuizGetAttemptReviewResponse(BaseModel):
     """
     ModQuizGetAttemptReviewResponse
@@ -113,16 +115,19 @@ class ModQuizGetAttemptReviewResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModQuizGetAttemptReviewResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "additionaldata": [ModQuizGetAttemptReviewResponseAdditionaldataInner.from_dict(_item) for _item in obj["additionaldata"]] if obj.get("additionaldata") is not None else None,
             "attempt": ModQuizGetAttemptDataResponseAttempt.from_dict(obj["attempt"]) if obj.get("attempt") is not None else None,
             "grade": obj.get("grade"),
             "questions": [ModQuizGetAttemptDataResponseQuestionsInner.from_dict(_item) for _item in obj["questions"]] if obj.get("questions") is not None else None,
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

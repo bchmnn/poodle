@@ -25,6 +25,8 @@ from poodle_async_full.models.report_competency_data_for_report_response_usercom
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ReportCompetencyDataForReportResponse(BaseModel):
     """
     ReportCompetencyDataForReportResponse
@@ -106,16 +108,19 @@ class ReportCompetencyDataForReportResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ReportCompetencyDataForReportResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "course": BlockStarredcoursesGetStarredCoursesResponseInner.from_dict(obj["course"]) if obj.get("course") is not None else None,
             "courseid": obj.get("courseid"),
             "pushratingstouserplans": obj.get("pushratingstouserplans"),
             "user": CoreCompetencyCreatePlanResponseReviewer.from_dict(obj["user"]) if obj.get("user") is not None else None,
             "usercompetencies": [ReportCompetencyDataForReportResponseUsercompetenciesInner.from_dict(_item) for _item in obj["usercompetencies"]] if obj.get("usercompetencies") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

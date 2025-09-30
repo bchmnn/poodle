@@ -23,6 +23,8 @@ from poodle_async_full.models.report_competency_data_for_report_response_usercom
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ReportCompetencyDataForReportResponseUsercompetenciesInnerCompetencyComppath(BaseModel):
     """
     ReportCompetencyDataForReportResponseUsercompetenciesInnerCompetencyComppath
@@ -91,16 +93,19 @@ class ReportCompetencyDataForReportResponseUsercompetenciesInnerCompetencyComppa
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ReportCompetencyDataForReportResponseUsercompetenciesInnerCompetencyComppath" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "ancestors": [ReportCompetencyDataForReportResponseUsercompetenciesInnerCompetencyComppathAncestorsInner.from_dict(_item) for _item in obj["ancestors"]] if obj.get("ancestors") is not None else None,
             "framework": ReportCompetencyDataForReportResponseUsercompetenciesInnerCompetencyComppathAncestorsInner.from_dict(obj["framework"]) if obj.get("framework") is not None else None,
             "pagecontextid": obj.get("pagecontextid") if obj.get("pagecontextid") is not None else 0,
             "pluginbaseurl": obj.get("pluginbaseurl") if obj.get("pluginbaseurl") is not None else '',
             "showlinks": obj.get("showlinks") if obj.get("showlinks") is not None else False
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

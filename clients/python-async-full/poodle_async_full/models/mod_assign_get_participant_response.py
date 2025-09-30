@@ -23,6 +23,8 @@ from poodle_async_full.models.core_enrol_get_potential_users_response_inner impo
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModAssignGetParticipantResponse(BaseModel):
     """
     ModAssignGetParticipantResponse
@@ -158,10 +160,12 @@ class ModAssignGetParticipantResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModAssignGetParticipantResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "allowsubmissionsfromdate": obj.get("allowsubmissionsfromdate"),
             "blindmarking": obj.get("blindmarking"),
             "cutoffdate": obj.get("cutoffdate"),
@@ -176,7 +180,8 @@ class ModAssignGetParticipantResponse(BaseModel):
             "submissionstatus": obj.get("submissionstatus"),
             "submitted": obj.get("submitted"),
             "user": CoreEnrolGetPotentialUsersResponseInner.from_dict(obj["user"]) if obj.get("user") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

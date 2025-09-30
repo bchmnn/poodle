@@ -24,6 +24,8 @@ from poodle_async_full.models.mod_url_get_urls_by_courses_response_urls_inner im
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModUrlGetUrlsByCoursesResponse(BaseModel):
     """
     ModUrlGetUrlsByCoursesResponse
@@ -93,13 +95,16 @@ class ModUrlGetUrlsByCoursesResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModUrlGetUrlsByCoursesResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "urls": [ModUrlGetUrlsByCoursesResponseUrlsInner.from_dict(_item) for _item in obj["urls"]] if obj.get("urls") is not None else None,
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

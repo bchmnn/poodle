@@ -23,6 +23,8 @@ from poodle_async_full.models.core_customfield_reload_template_response_categori
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCustomfieldReloadTemplateResponseCategoriesInner(BaseModel):
     """
     CoreCustomfieldReloadTemplateResponseCategoriesInner
@@ -102,15 +104,18 @@ class CoreCustomfieldReloadTemplateResponseCategoriesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCustomfieldReloadTemplateResponseCategoriesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "addfieldmenu": obj.get("addfieldmenu"),
             "fields": [CoreCustomfieldReloadTemplateResponseCategoriesInnerFieldsInner.from_dict(_item) for _item in obj["fields"]] if obj.get("fields") is not None else None,
             "id": obj.get("id"),
             "nameeditable": obj.get("nameeditable")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

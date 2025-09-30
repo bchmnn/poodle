@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModForumSetPinStateResponseUrls(BaseModel):
     """
     ModForumSetPinStateResponseUrls
@@ -81,17 +83,20 @@ class ModForumSetPinStateResponseUrls(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModForumSetPinStateResponseUrls" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "markasread": obj.get("markasread") if obj.get("markasread") is not None else '',
             "pin": obj.get("pin") if obj.get("pin") is not None else '',
             "subscribe": obj.get("subscribe") if obj.get("subscribe") is not None else '',
             "view": obj.get("view") if obj.get("view") is not None else '',
             "viewfirstunread": obj.get("viewfirstunread") if obj.get("viewfirstunread") is not None else '',
             "viewlatest": obj.get("viewlatest") if obj.get("viewlatest") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

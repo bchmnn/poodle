@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreBadgesGetUserBadgeByHashResponseBadgeInnerEndorsement(BaseModel):
     """
     CoreBadgesGetUserBadgeByHashResponseBadgeInnerEndorsement
@@ -93,10 +95,12 @@ class CoreBadgesGetUserBadgeByHashResponseBadgeInnerEndorsement(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreBadgesGetUserBadgeByHashResponseBadgeInnerEndorsement" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "badgeid": obj.get("badgeid") if obj.get("badgeid") is not None else 0,
             "claimcomment": obj.get("claimcomment"),
             "claimid": obj.get("claimid"),
@@ -105,7 +109,8 @@ class CoreBadgesGetUserBadgeByHashResponseBadgeInnerEndorsement(BaseModel):
             "issueremail": obj.get("issueremail") if obj.get("issueremail") is not None else '',
             "issuername": obj.get("issuername") if obj.get("issuername") is not None else '',
             "issuerurl": obj.get("issuerurl") if obj.get("issuerurl") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

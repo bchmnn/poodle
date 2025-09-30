@@ -29,6 +29,8 @@ from poodle_async_full.models.tool_lp_data_for_course_competencies_page_response
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolLpDataForCourseCompetenciesPageResponseCompetenciesInner(BaseModel):
     """
     ToolLpDataForCourseCompetenciesPageResponseCompetenciesInner
@@ -122,10 +124,12 @@ class ToolLpDataForCourseCompetenciesPageResponseCompetenciesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolLpDataForCourseCompetenciesPageResponseCompetenciesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "competency": CoreCompetencyListCompetenciesInTemplateResponseInner.from_dict(obj["competency"]) if obj.get("competency") is not None else None,
             "comppath": ReportCompetencyDataForReportResponseUsercompetenciesInnerCompetencyComppath.from_dict(obj["comppath"]) if obj.get("comppath") is not None else None,
             "coursecompetency": CoreCompetencyListCourseCompetenciesResponseInnerCoursecompetency.from_dict(obj["coursecompetency"]) if obj.get("coursecompetency") is not None else None,
@@ -133,7 +137,8 @@ class ToolLpDataForCourseCompetenciesPageResponseCompetenciesInner(BaseModel):
             "plans": [CoreCompetencyListUserPlansResponseInner.from_dict(_item) for _item in obj["plans"]] if obj.get("plans") is not None else None,
             "ruleoutcomeoptions": [ToolLpDataForCourseCompetenciesPageResponseCompetenciesInnerRuleoutcomeoptionsInner.from_dict(_item) for _item in obj["ruleoutcomeoptions"]] if obj.get("ruleoutcomeoptions") is not None else None,
             "usercompetencycourse": ReportCompetencyDataForReportResponseUsercompetenciesInnerUsercompetencycourse.from_dict(obj["usercompetencycourse"]) if obj.get("usercompetencycourse") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -23,6 +23,12 @@ from typing_extensions import NotRequired, Self
 import urllib3
 
 
+class _Settings:
+    relaxe_all_models: bool = False
+    relaxed_models: set[str] = set()
+
+settings = _Settings()
+
 JSON_SCHEMA_VALIDATION_KEYWORDS = {
     'multipleOf', 'maximum', 'exclusiveMaximum',
     'minimum', 'exclusiveMinimum', 'maxLength',
@@ -527,7 +533,7 @@ conf = poodle_async_full.Configuration(
                "OS: {env}\n"\
                "Python Version: {pyversion}\n"\
                "Version of the API: 5.0.2 (Build: 20250811)\n"\
-               "SDK Package Version: 5.0.2".\
+               "SDK Package Version: 5.0.2.post1".\
                format(env=sys.platform, pyversion=sys.version)
 
     def get_host_settings(self) -> List[HostSetting]:

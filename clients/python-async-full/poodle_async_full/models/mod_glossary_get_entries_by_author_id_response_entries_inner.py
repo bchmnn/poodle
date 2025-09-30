@@ -24,6 +24,8 @@ from poodle_async_full.models.core_blog_get_entries_response_entries_inner_tags_
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModGlossaryGetEntriesByAuthorIdResponseEntriesInner(BaseModel):
     """
     ModGlossaryGetEntriesByAuthorIdResponseEntriesInner
@@ -209,10 +211,12 @@ class ModGlossaryGetEntriesByAuthorIdResponseEntriesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModGlossaryGetEntriesByAuthorIdResponseEntriesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "approved": obj.get("approved"),
             "attachment": obj.get("attachment"),
             "attachments": [CoreBlockGetCourseBlocksResponseBlocksInnerContentsFilesInner.from_dict(_item) for _item in obj["attachments"]] if obj.get("attachments") is not None else None,
@@ -234,7 +238,8 @@ class ModGlossaryGetEntriesByAuthorIdResponseEntriesInner(BaseModel):
             "userfullname": obj.get("userfullname"),
             "userid": obj.get("userid"),
             "userpictureurl": obj.get("userpictureurl")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -24,6 +24,8 @@ from poodle_async_full.models.core_course_create_courses_parameters_courses_inne
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCourseUpdateCoursesParametersCoursesInner(BaseModel):
     """
     CoreCourseUpdateCoursesParametersCoursesInner
@@ -237,10 +239,12 @@ class CoreCourseUpdateCoursesParametersCoursesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCourseUpdateCoursesParametersCoursesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "categoryid": obj.get("categoryid"),
             "completionnotify": obj.get("completionnotify"),
             "courseformatoptions": [CoreCourseCreateCoursesParametersCoursesInnerCourseformatoptionsInner.from_dict(_item) for _item in obj["courseformatoptions"]] if obj.get("courseformatoptions") is not None else None,
@@ -267,7 +271,8 @@ class CoreCourseUpdateCoursesParametersCoursesInner(BaseModel):
             "summary": obj.get("summary"),
             "summaryformat": obj.get("summaryformat"),
             "visible": obj.get("visible")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

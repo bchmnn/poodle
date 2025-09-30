@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_quiz_get_overrides_response_overrides_inner im
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModQuizGetOverridesResponse(BaseModel):
     """
     ModQuizGetOverridesResponse
@@ -84,12 +86,15 @@ class ModQuizGetOverridesResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModQuizGetOverridesResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "overrides": [ModQuizGetOverridesResponseOverridesInner.from_dict(_item) for _item in obj["overrides"]] if obj.get("overrides") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

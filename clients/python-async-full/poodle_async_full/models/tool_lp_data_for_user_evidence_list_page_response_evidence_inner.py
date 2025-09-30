@@ -24,6 +24,8 @@ from poodle_async_full.models.tool_lp_data_for_user_evidence_list_page_response_
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolLpDataForUserEvidenceListPageResponseEvidenceInner(BaseModel):
     """
     ToolLpDataForUserEvidenceListPageResponseEvidenceInner
@@ -113,10 +115,12 @@ class ToolLpDataForUserEvidenceListPageResponseEvidenceInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolLpDataForUserEvidenceListPageResponseEvidenceInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "canmanage": obj.get("canmanage") if obj.get("canmanage") is not None else False,
             "competencycount": obj.get("competencycount") if obj.get("competencycount") is not None else 0,
             "description": obj.get("description") if obj.get("description") is not None else '',
@@ -134,7 +138,8 @@ class ToolLpDataForUserEvidenceListPageResponseEvidenceInner(BaseModel):
             "userhasplan": obj.get("userhasplan") if obj.get("userhasplan") is not None else False,
             "userid": obj.get("userid") if obj.get("userid") is not None else 0,
             "usermodified": obj.get("usermodified") if obj.get("usermodified") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

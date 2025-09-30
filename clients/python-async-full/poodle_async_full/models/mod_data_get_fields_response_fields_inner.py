@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModDataGetFieldsResponseFieldsInner(BaseModel):
     """
     ModDataGetFieldsResponseFieldsInner
@@ -141,10 +143,12 @@ class ModDataGetFieldsResponseFieldsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModDataGetFieldsResponseFieldsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "dataid": obj.get("dataid") if obj.get("dataid") is not None else 0,
             "description": obj.get("description") if obj.get("description") is not None else '',
             "id": obj.get("id") if obj.get("id") is not None else 0,
@@ -161,7 +165,8 @@ class ModDataGetFieldsResponseFieldsInner(BaseModel):
             "param9": obj.get("param9"),
             "required": obj.get("required") if obj.get("required") is not None else False,
             "type": obj.get("type") if obj.get("type") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

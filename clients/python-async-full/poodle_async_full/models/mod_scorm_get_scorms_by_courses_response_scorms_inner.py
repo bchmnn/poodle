@@ -23,6 +23,8 @@ from poodle_async_full.models.core_block_get_course_blocks_response_blocks_inner
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModScormGetScormsByCoursesResponseScormsInner(BaseModel):
     """
     SCORM
@@ -378,10 +380,12 @@ class ModScormGetScormsByCoursesResponseScormsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModScormGetScormsByCoursesResponseScormsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "auto": obj.get("auto"),
             "autocommit": obj.get("autocommit"),
             "completionscorerequired": obj.get("completionscorerequired"),
@@ -432,7 +436,8 @@ class ModScormGetScormsByCoursesResponseScormsInner(BaseModel):
             "visible": obj.get("visible"),
             "whatgrade": obj.get("whatgrade"),
             "width": obj.get("width")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

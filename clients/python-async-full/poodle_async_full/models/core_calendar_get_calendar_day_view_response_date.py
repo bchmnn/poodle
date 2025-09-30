@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCalendarGetCalendarDayViewResponseDate(BaseModel):
     """
     CoreCalendarGetCalendarDayViewResponseDate
@@ -86,10 +88,12 @@ class CoreCalendarGetCalendarDayViewResponseDate(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCalendarGetCalendarDayViewResponseDate" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "hours": obj.get("hours") if obj.get("hours") is not None else 0,
             "mday": obj.get("mday") if obj.get("mday") is not None else 0,
             "minutes": obj.get("minutes") if obj.get("minutes") is not None else 0,
@@ -101,7 +105,8 @@ class CoreCalendarGetCalendarDayViewResponseDate(BaseModel):
             "weekday": obj.get("weekday") if obj.get("weekday") is not None else '',
             "yday": obj.get("yday") if obj.get("yday") is not None else 0,
             "year": obj.get("year") if obj.get("year") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 
