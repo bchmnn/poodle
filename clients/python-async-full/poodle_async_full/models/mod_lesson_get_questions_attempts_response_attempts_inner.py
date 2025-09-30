@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModLessonGetQuestionsAttemptsResponseAttemptsInner(BaseModel):
     """
     The question page attempts
@@ -129,10 +131,12 @@ class ModLessonGetQuestionsAttemptsResponseAttemptsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModLessonGetQuestionsAttemptsResponseAttemptsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "answerid": obj.get("answerid"),
             "correct": obj.get("correct"),
             "id": obj.get("id"),
@@ -142,7 +146,8 @@ class ModLessonGetQuestionsAttemptsResponseAttemptsInner(BaseModel):
             "timeseen": obj.get("timeseen"),
             "useranswer": obj.get("useranswer"),
             "userid": obj.get("userid")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

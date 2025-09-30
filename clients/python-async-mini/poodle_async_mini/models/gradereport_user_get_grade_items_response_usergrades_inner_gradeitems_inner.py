@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_mini.configuration import settings
+
 class GradereportUserGetGradeItemsResponseUsergradesInnerGradeitemsInner(BaseModel):
     """
     Grade items
@@ -279,10 +281,12 @@ class GradereportUserGetGradeItemsResponseUsergradesInnerGradeitemsInner(BaseMod
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "GradereportUserGetGradeItemsResponseUsergradesInnerGradeitemsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "averageformatted": obj.get("averageformatted"),
             "categoryid": obj.get("categoryid"),
             "cmid": obj.get("cmid"),
@@ -317,7 +321,8 @@ class GradereportUserGetGradeItemsResponseUsergradesInnerGradeitemsInner(BaseMod
             "status": obj.get("status"),
             "weightformatted": obj.get("weightformatted"),
             "weightraw": obj.get("weightraw")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

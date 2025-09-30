@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_assign_save_grade_parameters_plugindata_assign
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModAssignSaveGradeParametersPlugindata(BaseModel):
     """
     plugin data
@@ -86,13 +88,16 @@ class ModAssignSaveGradeParametersPlugindata(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModAssignSaveGradeParametersPlugindata" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "assignfeedbackcomments_editor": ModAssignSaveGradeParametersPlugindataAssignfeedbackcommentsEditor.from_dict(obj["assignfeedbackcomments_editor"]) if obj.get("assignfeedbackcomments_editor") is not None else None,
             "files_filemanager": obj.get("files_filemanager")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

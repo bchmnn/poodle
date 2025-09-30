@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_h5pactivity_get_results_response_attempts_inne
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModH5pactivityGetResultsResponseAttemptsInnerResultsInner(BaseModel):
     """
     A single result statement tracking information
@@ -180,10 +182,12 @@ class ModH5pactivityGetResultsResponseAttemptsInnerResultsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModH5pactivityGetResultsResponseAttemptsInnerResultsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "answerlabel": obj.get("answerlabel"),
             "attemptid": obj.get("attemptid"),
             "completion": obj.get("completion"),
@@ -201,7 +205,8 @@ class ModH5pactivityGetResultsResponseAttemptsInnerResultsInner(BaseModel):
             "success": obj.get("success"),
             "timecreated": obj.get("timecreated"),
             "track": obj.get("track")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

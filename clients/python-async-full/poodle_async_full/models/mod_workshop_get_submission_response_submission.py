@@ -23,6 +23,8 @@ from poodle_async_full.models.core_blog_get_entries_response_entries_inner_attac
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModWorkshopGetSubmissionResponseSubmission(BaseModel):
     """
     ModWorkshopGetSubmissionResponseSubmission
@@ -166,10 +168,12 @@ class ModWorkshopGetSubmissionResponseSubmission(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModWorkshopGetSubmissionResponseSubmission" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "attachment": obj.get("attachment") if obj.get("attachment") is not None else 0,
             "attachmentfiles": [CoreBlogGetEntriesResponseEntriesInnerAttachmentfilesInner.from_dict(_item) for _item in obj["attachmentfiles"]] if obj.get("attachmentfiles") is not None else None,
             "authorid": obj.get("authorid") if obj.get("authorid") is not None else 0,
@@ -191,7 +195,8 @@ class ModWorkshopGetSubmissionResponseSubmission(BaseModel):
             "timemodified": obj.get("timemodified") if obj.get("timemodified") is not None else 0,
             "title": obj.get("title") if obj.get("title") is not None else '',
             "workshopid": obj.get("workshopid") if obj.get("workshopid") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

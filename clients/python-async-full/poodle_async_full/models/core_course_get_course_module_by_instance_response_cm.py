@@ -24,6 +24,8 @@ from poodle_async_full.models.core_course_get_course_module_by_instance_response
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCourseGetCourseModuleByInstanceResponseCm(BaseModel):
     """
     CoreCourseGetCourseModuleByInstanceResponseCm
@@ -267,10 +269,12 @@ class CoreCourseGetCourseModuleByInstanceResponseCm(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCourseGetCourseModuleByInstanceResponseCm" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "added": obj.get("added"),
             "advancedgrading": [CoreCourseGetCourseModuleByInstanceResponseCmAdvancedgradingInner.from_dict(_item) for _item in obj["advancedgrading"]] if obj.get("advancedgrading") is not None else None,
             "availability": obj.get("availability"),
@@ -302,7 +306,8 @@ class CoreCourseGetCourseModuleByInstanceResponseCm(BaseModel):
             "visible": obj.get("visible"),
             "visibleold": obj.get("visibleold"),
             "visibleoncoursepage": obj.get("visibleoncoursepage")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

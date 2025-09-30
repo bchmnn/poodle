@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModLtiCreateToolTypeResponseUrls(BaseModel):
     """
     ModLtiCreateToolTypeResponseUrls
@@ -111,17 +113,20 @@ class ModLtiCreateToolTypeResponseUrls(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModLtiCreateToolTypeResponseUrls" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "accesstoken": obj.get("accesstoken"),
             "authrequest": obj.get("authrequest"),
             "course": obj.get("course"),
             "edit": obj.get("edit"),
             "icon": obj.get("icon"),
             "publickeyset": obj.get("publickeyset")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

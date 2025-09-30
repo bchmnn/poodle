@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_wiki_get_page_for_editing_response_pagesection
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModWikiGetPageForEditingResponse(BaseModel):
     """
     ModWikiGetPageForEditingResponse
@@ -80,12 +82,15 @@ class ModWikiGetPageForEditingResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModWikiGetPageForEditingResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "pagesection": ModWikiGetPageForEditingResponsePagesection.from_dict(obj["pagesection"]) if obj.get("pagesection") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -24,6 +24,8 @@ from poodle_async_full.models.core_user_create_users_parameters_users_inner_pref
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreUserCreateUsersParametersUsersInner(BaseModel):
     """
     CoreUserCreateUsersParametersUsersInner
@@ -245,10 +247,12 @@ class CoreUserCreateUsersParametersUsersInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreUserCreateUsersParametersUsersInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "address": obj.get("address"),
             "alternatename": obj.get("alternatename"),
             "auth": obj.get("auth") if obj.get("auth") is not None else 'manual',
@@ -278,7 +282,8 @@ class CoreUserCreateUsersParametersUsersInner(BaseModel):
             "theme": obj.get("theme"),
             "timezone": obj.get("timezone"),
             "username": obj.get("username")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

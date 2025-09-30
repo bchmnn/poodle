@@ -23,6 +23,8 @@ from poodle_async_full.models.core_course_get_contents_response_inner_modules_in
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCourseGetContentsResponseInnerModulesInnerCompletiondataDetailsInner(BaseModel):
     """
     CoreCourseGetContentsResponseInnerModulesInnerCompletiondataDetailsInner
@@ -81,13 +83,16 @@ class CoreCourseGetContentsResponseInnerModulesInnerCompletiondataDetailsInner(B
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCourseGetContentsResponseInnerModulesInnerCompletiondataDetailsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "rulename": obj.get("rulename") if obj.get("rulename") is not None else '',
             "rulevalue": CoreCourseGetContentsResponseInnerModulesInnerCompletiondataDetailsInnerRulevalue.from_dict(obj["rulevalue"]) if obj.get("rulevalue") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

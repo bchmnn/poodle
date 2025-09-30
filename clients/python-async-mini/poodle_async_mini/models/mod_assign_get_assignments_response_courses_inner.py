@@ -23,6 +23,8 @@ from poodle_async_mini.models.mod_assign_get_assignments_response_courses_inner_
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_mini.configuration import settings
+
 class ModAssignGetAssignmentsResponseCoursesInner(BaseModel):
     """
     course information object
@@ -108,16 +110,19 @@ class ModAssignGetAssignmentsResponseCoursesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModAssignGetAssignmentsResponseCoursesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "assignments": [ModAssignGetAssignmentsResponseCoursesInnerAssignmentsInner.from_dict(_item) for _item in obj["assignments"]] if obj.get("assignments") is not None else None,
             "fullname": obj.get("fullname"),
             "id": obj.get("id"),
             "shortname": obj.get("shortname"),
             "timemodified": obj.get("timemodified")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

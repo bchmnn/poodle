@@ -14,7 +14,7 @@
 """  # noqa: E501
 
 
-__version__ = "5.0.2"
+__version__ = "5.0.2.post1"
 
 # Define package exports
 __all__ = [
@@ -22,6 +22,7 @@ __all__ = [
     "ApiResponse",
     "ApiClient",
     "Configuration",
+    "settings",
     "OpenApiException",
     "ApiTypeError",
     "ApiValueError",
@@ -69,6 +70,8 @@ __all__ = [
     "ModAssignListParticipantsResponseInnerGroupsInner",
     "ModAssignListParticipantsResponseInnerPreferencesInner",
     "ModAssignListParticipantsResponseInnerRolesInner",
+    "ToolMobileGetPublicConfigResponse",
+    "ToolMobileGetPublicConfigResponseIdentityprovidersInner",
 ]
 
 if __import__("typing").TYPE_CHECKING:
@@ -79,6 +82,7 @@ if __import__("typing").TYPE_CHECKING:
     from poodle_async_mini.api_response import ApiResponse as ApiResponse
     from poodle_async_mini.api_client import ApiClient as ApiClient
     from poodle_async_mini.configuration import Configuration as Configuration
+    from poodle_async_mini.configuration import settings as settings
     from poodle_async_mini.exceptions import OpenApiException as OpenApiException
     from poodle_async_mini.exceptions import ApiTypeError as ApiTypeError
     from poodle_async_mini.exceptions import ApiValueError as ApiValueError
@@ -128,6 +132,8 @@ if __import__("typing").TYPE_CHECKING:
     from poodle_async_mini.models.mod_assign_list_participants_response_inner_groups_inner import ModAssignListParticipantsResponseInnerGroupsInner as ModAssignListParticipantsResponseInnerGroupsInner
     from poodle_async_mini.models.mod_assign_list_participants_response_inner_preferences_inner import ModAssignListParticipantsResponseInnerPreferencesInner as ModAssignListParticipantsResponseInnerPreferencesInner
     from poodle_async_mini.models.mod_assign_list_participants_response_inner_roles_inner import ModAssignListParticipantsResponseInnerRolesInner as ModAssignListParticipantsResponseInnerRolesInner
+    from poodle_async_mini.models.tool_mobile_get_public_config_response import ToolMobileGetPublicConfigResponse as ToolMobileGetPublicConfigResponse
+    from poodle_async_mini.models.tool_mobile_get_public_config_response_identityproviders_inner import ToolMobileGetPublicConfigResponseIdentityprovidersInner as ToolMobileGetPublicConfigResponseIdentityprovidersInner
     
 else:
     from lazy_imports import LazyModule, as_package, load
@@ -144,6 +150,7 @@ from poodle_async_mini.api.default_api import DefaultApi as DefaultApi
 from poodle_async_mini.api_response import ApiResponse as ApiResponse
 from poodle_async_mini.api_client import ApiClient as ApiClient
 from poodle_async_mini.configuration import Configuration as Configuration
+from poodle_async_mini.configuration import settings as settings
 from poodle_async_mini.exceptions import OpenApiException as OpenApiException
 from poodle_async_mini.exceptions import ApiTypeError as ApiTypeError
 from poodle_async_mini.exceptions import ApiValueError as ApiValueError
@@ -193,6 +200,8 @@ from poodle_async_mini.models.mod_assign_list_participants_response_inner_enroll
 from poodle_async_mini.models.mod_assign_list_participants_response_inner_groups_inner import ModAssignListParticipantsResponseInnerGroupsInner as ModAssignListParticipantsResponseInnerGroupsInner
 from poodle_async_mini.models.mod_assign_list_participants_response_inner_preferences_inner import ModAssignListParticipantsResponseInnerPreferencesInner as ModAssignListParticipantsResponseInnerPreferencesInner
 from poodle_async_mini.models.mod_assign_list_participants_response_inner_roles_inner import ModAssignListParticipantsResponseInnerRolesInner as ModAssignListParticipantsResponseInnerRolesInner
+from poodle_async_mini.models.tool_mobile_get_public_config_response import ToolMobileGetPublicConfigResponse as ToolMobileGetPublicConfigResponse
+from poodle_async_mini.models.tool_mobile_get_public_config_response_identityproviders_inner import ToolMobileGetPublicConfigResponseIdentityprovidersInner as ToolMobileGetPublicConfigResponseIdentityprovidersInner
 
 """,
             name=__name__,

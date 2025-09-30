@@ -24,6 +24,8 @@ from poodle_async_mini.models.core_webservice_get_site_info_response_functions_i
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_mini.configuration import settings
+
 class CoreWebserviceGetSiteInfoResponse(BaseModel):
     """
     CoreWebserviceGetSiteInfoResponse
@@ -261,10 +263,12 @@ class CoreWebserviceGetSiteInfoResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreWebserviceGetSiteInfoResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "advancedfeatures": [CoreWebserviceGetSiteInfoResponseAdvancedfeaturesInner.from_dict(_item) for _item in obj["advancedfeatures"]] if obj.get("advancedfeatures") is not None else None,
             "downloadfiles": obj.get("downloadfiles"),
             "firstname": obj.get("firstname"),
@@ -295,7 +299,8 @@ class CoreWebserviceGetSiteInfoResponse(BaseModel):
             "userquota": obj.get("userquota"),
             "usersessionscount": obj.get("usersessionscount"),
             "version": obj.get("version")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

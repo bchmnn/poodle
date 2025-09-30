@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_lesson_get_attempts_overview_response_data_stu
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModLessonGetAttemptsOverviewResponseData(BaseModel):
     """
     Attempts overview data (empty for no attemps).
@@ -132,10 +134,12 @@ class ModLessonGetAttemptsOverviewResponseData(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModLessonGetAttemptsOverviewResponseData" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "avescore": obj.get("avescore"),
             "avetime": obj.get("avetime"),
             "highscore": obj.get("highscore"),
@@ -145,7 +149,8 @@ class ModLessonGetAttemptsOverviewResponseData(BaseModel):
             "lowtime": obj.get("lowtime"),
             "numofattempts": obj.get("numofattempts"),
             "students": [ModLessonGetAttemptsOverviewResponseDataStudentsInner.from_dict(_item) for _item in obj["students"]] if obj.get("students") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

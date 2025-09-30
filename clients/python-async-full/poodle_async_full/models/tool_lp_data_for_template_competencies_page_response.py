@@ -25,6 +25,8 @@ from poodle_async_full.models.tool_lp_data_for_template_competencies_page_respon
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolLpDataForTemplateCompetenciesPageResponse(BaseModel):
     """
     ToolLpDataForTemplateCompetenciesPageResponse
@@ -124,10 +126,12 @@ class ToolLpDataForTemplateCompetenciesPageResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolLpDataForTemplateCompetenciesPageResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "canmanagecompetencyframeworks": obj.get("canmanagecompetencyframeworks"),
             "canmanagetemplatecompetencies": obj.get("canmanagetemplatecompetencies"),
             "competencies": [ReportCompetencyDataForReportResponseUsercompetenciesInnerCompetency.from_dict(_item) for _item in obj["competencies"]] if obj.get("competencies") is not None else None,
@@ -136,7 +140,8 @@ class ToolLpDataForTemplateCompetenciesPageResponse(BaseModel):
             "pluginbaseurl": obj.get("pluginbaseurl"),
             "statistics": ToolLpDataForTemplateCompetenciesPageResponseStatistics.from_dict(obj["statistics"]) if obj.get("statistics") is not None else None,
             "template": CoreCompetencyCreatePlanResponseTemplate.from_dict(obj["template"]) if obj.get("template") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

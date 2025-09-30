@@ -27,6 +27,8 @@ from poodle_async_full.models.core_enrol_get_enrolled_users_with_capability_resp
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreEnrolGetEnrolledUsersWithCapabilityResponseInnerUsersInner(BaseModel):
     """
     CoreEnrolGetEnrolledUsersWithCapabilityResponseInnerUsersInner
@@ -246,10 +248,12 @@ class CoreEnrolGetEnrolledUsersWithCapabilityResponseInnerUsersInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreEnrolGetEnrolledUsersWithCapabilityResponseInnerUsersInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "address": obj.get("address"),
             "city": obj.get("city"),
             "country": obj.get("country"),
@@ -276,7 +280,8 @@ class CoreEnrolGetEnrolledUsersWithCapabilityResponseInnerUsersInner(BaseModel):
             "profileimageurlsmall": obj.get("profileimageurlsmall"),
             "roles": [CoreEnrolGetEnrolledUsersResponseInnerRolesInner.from_dict(_item) for _item in obj["roles"]] if obj.get("roles") is not None else None,
             "username": obj.get("username")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

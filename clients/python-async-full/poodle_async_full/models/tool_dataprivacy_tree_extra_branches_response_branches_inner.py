@@ -23,6 +23,8 @@ from poodle_async_full.models.tool_dataprivacy_tree_extra_branches_response_bran
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolDataprivacyTreeExtraBranchesResponseBranchesInner(BaseModel):
     """
     Node structure
@@ -120,10 +122,12 @@ class ToolDataprivacyTreeExtraBranchesResponseBranchesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolDataprivacyTreeExtraBranchesResponseBranchesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "branches": [ToolDataprivacyTreeExtraBranchesResponseBranchesInnerBranchesInner.from_dict(_item) for _item in obj["branches"]] if obj.get("branches") is not None else None,
             "contextid": obj.get("contextid"),
             "contextlevel": obj.get("contextlevel"),
@@ -131,7 +135,8 @@ class ToolDataprivacyTreeExtraBranchesResponseBranchesInner(BaseModel):
             "expanded": obj.get("expanded"),
             "expandelement": obj.get("expandelement"),
             "text": obj.get("text")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

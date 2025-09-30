@@ -23,6 +23,8 @@ from poodle_async_full.models.core_question_get_random_question_summaries_respon
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreQuestionGetRandomQuestionSummariesResponseQuestionsInner(BaseModel):
     """
     CoreQuestionGetRandomQuestionSummariesResponseQuestionsInner
@@ -85,17 +87,20 @@ class CoreQuestionGetRandomQuestionSummariesResponseQuestionsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreQuestionGetRandomQuestionSummariesResponseQuestionsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "category": obj.get("category") if obj.get("category") is not None else 0,
             "icon": CoreQuestionGetRandomQuestionSummariesResponseQuestionsInnerIcon.from_dict(obj["icon"]) if obj.get("icon") is not None else None,
             "id": obj.get("id") if obj.get("id") is not None else 0,
             "name": obj.get("name") if obj.get("name") is not None else '',
             "parent": obj.get("parent") if obj.get("parent") is not None else 0,
             "qtype": obj.get("qtype") if obj.get("qtype") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

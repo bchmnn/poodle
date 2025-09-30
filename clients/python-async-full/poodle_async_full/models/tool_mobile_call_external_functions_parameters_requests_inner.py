@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolMobileCallExternalFunctionsParametersRequestsInner(BaseModel):
     """
     ToolMobileCallExternalFunctionsParametersRequestsInner
@@ -111,17 +113,20 @@ class ToolMobileCallExternalFunctionsParametersRequestsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolMobileCallExternalFunctionsParametersRequestsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "arguments": obj.get("arguments") if obj.get("arguments") is not None else '{}',
             "function": obj.get("function"),
             "settingfileurl": obj.get("settingfileurl") if obj.get("settingfileurl") is not None else True,
             "settingfilter": obj.get("settingfilter") if obj.get("settingfilter") is not None else False,
             "settinglang": obj.get("settinglang") if obj.get("settinglang") is not None else '',
             "settingraw": obj.get("settingraw") if obj.get("settingraw") is not None else False
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

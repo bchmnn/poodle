@@ -24,6 +24,8 @@ from poodle_async_full.models.mod_assign_get_submission_status_response_feedback
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModAssignGetSubmissionStatusResponseFeedback(BaseModel):
     """
     Feedback for the last attempt.
@@ -101,15 +103,18 @@ class ModAssignGetSubmissionStatusResponseFeedback(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModAssignGetSubmissionStatusResponseFeedback" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "grade": ModAssignGetGradesResponseAssignmentsInnerGradesInner.from_dict(obj["grade"]) if obj.get("grade") is not None else None,
             "gradeddate": obj.get("gradeddate"),
             "gradefordisplay": obj.get("gradefordisplay"),
             "plugins": [ModAssignGetSubmissionStatusResponseFeedbackPluginsInner.from_dict(_item) for _item in obj["plugins"]] if obj.get("plugins") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

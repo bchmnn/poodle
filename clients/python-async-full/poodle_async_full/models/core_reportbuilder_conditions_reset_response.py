@@ -23,6 +23,8 @@ from poodle_async_full.models.core_reportbuilder_conditions_add_response_availab
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreReportbuilderConditionsResetResponse(BaseModel):
     """
     CoreReportbuilderConditionsResetResponse
@@ -89,17 +91,20 @@ class CoreReportbuilderConditionsResetResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreReportbuilderConditionsResetResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "activeconditionsform": obj.get("activeconditionsform") if obj.get("activeconditionsform") is not None else '',
             "availableconditions": [CoreReportbuilderConditionsAddResponseAvailableconditionsInner.from_dict(_item) for _item in obj["availableconditions"]] if obj.get("availableconditions") is not None else None,
             "hasactiveconditions": obj.get("hasactiveconditions") if obj.get("hasactiveconditions") is not None else False,
             "hasavailableconditions": obj.get("hasavailableconditions") if obj.get("hasavailableconditions") is not None else False,
             "helpicon": obj.get("helpicon") if obj.get("helpicon") is not None else '',
             "javascript": obj.get("javascript") if obj.get("javascript") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

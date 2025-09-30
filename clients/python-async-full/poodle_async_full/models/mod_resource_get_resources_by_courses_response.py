@@ -24,6 +24,8 @@ from poodle_async_full.models.mod_resource_get_resources_by_courses_response_res
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModResourceGetResourcesByCoursesResponse(BaseModel):
     """
     ModResourceGetResourcesByCoursesResponse
@@ -93,13 +95,16 @@ class ModResourceGetResourcesByCoursesResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModResourceGetResourcesByCoursesResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "resources": [ModResourceGetResourcesByCoursesResponseResourcesInner.from_dict(_item) for _item in obj["resources"]] if obj.get("resources") is not None else None,
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

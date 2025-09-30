@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreQuestionGetRandomQuestionSummariesResponseQuestionsInnerIcon(BaseModel):
     """
     CoreQuestionGetRandomQuestionSummariesResponseQuestionsInnerIcon
@@ -78,14 +80,17 @@ class CoreQuestionGetRandomQuestionSummariesResponseQuestionsInnerIcon(BaseModel
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreQuestionGetRandomQuestionSummariesResponseQuestionsInnerIcon" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "alttext": obj.get("alttext") if obj.get("alttext") is not None else '',
             "component": obj.get("component") if obj.get("component") is not None else '',
             "key": obj.get("key") if obj.get("key") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

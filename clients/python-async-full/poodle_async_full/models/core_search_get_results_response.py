@@ -23,6 +23,8 @@ from poodle_async_full.models.core_search_get_results_response_results_inner imp
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreSearchGetResultsResponse(BaseModel):
     """
     CoreSearchGetResultsResponse
@@ -90,13 +92,16 @@ class CoreSearchGetResultsResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreSearchGetResultsResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "results": [CoreSearchGetResultsResponseResultsInner.from_dict(_item) for _item in obj["results"]] if obj.get("results") is not None else None,
             "totalcount": obj.get("totalcount")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

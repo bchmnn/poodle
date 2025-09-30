@@ -24,6 +24,8 @@ from poodle_async_full.models.mod_data_get_entries_response_entries_inner_conten
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModDataGetEntriesResponseEntriesInner(BaseModel):
     """
     ModDataGetEntriesResponseEntriesInner
@@ -102,10 +104,12 @@ class ModDataGetEntriesResponseEntriesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModDataGetEntriesResponseEntriesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "approved": obj.get("approved") if obj.get("approved") is not None else False,
             "canmanageentry": obj.get("canmanageentry") if obj.get("canmanageentry") is not None else False,
             "contents": [ModDataGetEntriesResponseEntriesInnerContentsInner.from_dict(_item) for _item in obj["contents"]] if obj.get("contents") is not None else None,
@@ -117,7 +121,8 @@ class ModDataGetEntriesResponseEntriesInner(BaseModel):
             "timecreated": obj.get("timecreated") if obj.get("timecreated") is not None else 0,
             "timemodified": obj.get("timemodified") if obj.get("timemodified") is not None else 0,
             "userid": obj.get("userid") if obj.get("userid") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

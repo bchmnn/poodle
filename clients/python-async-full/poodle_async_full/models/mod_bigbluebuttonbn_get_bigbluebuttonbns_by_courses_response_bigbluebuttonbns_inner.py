@@ -23,6 +23,8 @@ from poodle_async_full.models.core_block_get_course_blocks_response_blocks_inner
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModBigbluebuttonbnGetBigbluebuttonbnsByCoursesResponseBigbluebuttonbnsInner(BaseModel):
     """
     ModBigbluebuttonbnGetBigbluebuttonbnsByCoursesResponseBigbluebuttonbnsInner
@@ -162,10 +164,12 @@ class ModBigbluebuttonbnGetBigbluebuttonbnsByCoursesResponseBigbluebuttonbnsInne
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModBigbluebuttonbnGetBigbluebuttonbnsByCoursesResponseBigbluebuttonbnsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "course": obj.get("course"),
             "coursemodule": obj.get("coursemodule"),
             "groupingid": obj.get("groupingid"),
@@ -180,7 +184,8 @@ class ModBigbluebuttonbnGetBigbluebuttonbnsByCoursesResponseBigbluebuttonbnsInne
             "section": obj.get("section"),
             "timemodified": obj.get("timemodified"),
             "visible": obj.get("visible")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

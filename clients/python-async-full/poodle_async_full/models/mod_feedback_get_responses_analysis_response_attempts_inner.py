@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_feedback_get_responses_analysis_response_anona
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModFeedbackGetResponsesAnalysisResponseAttemptsInner(BaseModel):
     """
     ModFeedbackGetResponsesAnalysisResponseAttemptsInner
@@ -114,17 +116,20 @@ class ModFeedbackGetResponsesAnalysisResponseAttemptsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModFeedbackGetResponsesAnalysisResponseAttemptsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "courseid": obj.get("courseid"),
             "fullname": obj.get("fullname"),
             "id": obj.get("id"),
             "responses": [ModFeedbackGetResponsesAnalysisResponseAnonattemptsInnerResponsesInner.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None,
             "timemodified": obj.get("timemodified"),
             "userid": obj.get("userid")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

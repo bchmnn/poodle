@@ -23,6 +23,8 @@ from poodle_async_full.models.core_block_get_course_blocks_response_blocks_inner
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreEnrolGetUsersCoursesResponseInner(BaseModel):
     """
     CoreEnrolGetUsersCoursesResponseInner
@@ -252,10 +254,12 @@ class CoreEnrolGetUsersCoursesResponseInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreEnrolGetUsersCoursesResponseInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "category": obj.get("category"),
             "completed": obj.get("completed"),
             "completionhascriteria": obj.get("completionhascriteria"),
@@ -285,7 +289,8 @@ class CoreEnrolGetUsersCoursesResponseInner(BaseModel):
             "summaryformat": obj.get("summaryformat"),
             "timemodified": obj.get("timemodified"),
             "visible": obj.get("visible")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

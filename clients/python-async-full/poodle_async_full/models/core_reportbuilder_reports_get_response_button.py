@@ -23,6 +23,8 @@ from poodle_async_full.models.core_reportbuilder_reports_get_response_button_att
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreReportbuilderReportsGetResponseButton(BaseModel):
     """
     CoreReportbuilderReportsGetResponseButton
@@ -86,14 +88,17 @@ class CoreReportbuilderReportsGetResponseButton(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreReportbuilderReportsGetResponseButton" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "attributes": [CoreReportbuilderReportsGetResponseButtonAttributesInner.from_dict(_item) for _item in obj["attributes"]] if obj.get("attributes") is not None else None,
             "tag": obj.get("tag") if obj.get("tag") is not None else '',
             "title": obj.get("title") if obj.get("title") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -23,6 +23,8 @@ from poodle_async_full.models.core_fetch_notifications_response_inner_variables 
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreFetchNotificationsResponseInner(BaseModel):
     """
     CoreFetchNotificationsResponseInner
@@ -86,13 +88,16 @@ class CoreFetchNotificationsResponseInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreFetchNotificationsResponseInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "template": obj.get("template"),
             "variables": CoreFetchNotificationsResponseInnerVariables.from_dict(obj["variables"]) if obj.get("variables") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

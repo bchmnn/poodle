@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModH5pactivityGetH5pactivitiesByCoursesResponseH5pactivitiesInnerDeployedfile(BaseModel):
     """
     ModH5pactivityGetH5pactivitiesByCoursesResponseH5pactivitiesInnerDeployedfile
@@ -81,17 +83,20 @@ class ModH5pactivityGetH5pactivitiesByCoursesResponseH5pactivitiesInnerDeployedf
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModH5pactivityGetH5pactivitiesByCoursesResponseH5pactivitiesInnerDeployedfile" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "filename": obj.get("filename") if obj.get("filename") is not None else '',
             "filepath": obj.get("filepath") if obj.get("filepath") is not None else '',
             "filesize": obj.get("filesize") if obj.get("filesize") is not None else 0,
             "fileurl": obj.get("fileurl") if obj.get("fileurl") is not None else '',
             "mimetype": obj.get("mimetype") if obj.get("mimetype") is not None else '',
             "timemodified": obj.get("timemodified") if obj.get("timemodified") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

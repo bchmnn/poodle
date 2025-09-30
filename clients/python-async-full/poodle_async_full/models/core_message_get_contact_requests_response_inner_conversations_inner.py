@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreMessageGetContactRequestsResponseInnerConversationsInner(BaseModel):
     """
     information about conversation
@@ -99,15 +101,18 @@ class CoreMessageGetContactRequestsResponseInnerConversationsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreMessageGetContactRequestsResponseInnerConversationsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "id": obj.get("id"),
             "name": obj.get("name"),
             "timecreated": obj.get("timecreated"),
             "type": obj.get("type")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModH5pactivityGetAttemptsResponseUsersattemptsInnerAttemptsInner(BaseModel):
     """
     ModH5pactivityGetAttemptsResponseUsersattemptsInnerAttemptsInner
@@ -147,10 +149,12 @@ class ModH5pactivityGetAttemptsResponseUsersattemptsInnerAttemptsInner(BaseModel
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModH5pactivityGetAttemptsResponseUsersattemptsInnerAttemptsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "attempt": obj.get("attempt"),
             "completion": obj.get("completion"),
             "duration": obj.get("duration"),
@@ -163,7 +167,8 @@ class ModH5pactivityGetAttemptsResponseUsersattemptsInnerAttemptsInner(BaseModel
             "timecreated": obj.get("timecreated"),
             "timemodified": obj.get("timemodified"),
             "userid": obj.get("userid")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

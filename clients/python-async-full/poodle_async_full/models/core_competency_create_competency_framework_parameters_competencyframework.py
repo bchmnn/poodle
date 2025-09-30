@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCompetencyCreateCompetencyFrameworkParametersCompetencyframework(BaseModel):
     """
     CoreCompetencyCreateCompetencyFrameworkParametersCompetencyframework
@@ -109,10 +111,12 @@ class CoreCompetencyCreateCompetencyFrameworkParametersCompetencyframework(BaseM
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCompetencyCreateCompetencyFrameworkParametersCompetencyframework" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "contextid": obj.get("contextid"),
             "contextlevel": obj.get("contextlevel"),
             "description": obj.get("description") if obj.get("description") is not None else '',
@@ -127,7 +131,8 @@ class CoreCompetencyCreateCompetencyFrameworkParametersCompetencyframework(BaseM
             "timemodified": obj.get("timemodified") if obj.get("timemodified") is not None else 0,
             "usermodified": obj.get("usermodified") if obj.get("usermodified") is not None else 0,
             "visible": obj.get("visible") if obj.get("visible") is not None else True
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

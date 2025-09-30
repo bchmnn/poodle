@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModFeedbackGetFinishedResponsesResponseResponsesInner(BaseModel):
     """
     ModFeedbackGetFinishedResponsesResponseResponsesInner
@@ -81,17 +83,20 @@ class ModFeedbackGetFinishedResponsesResponseResponsesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModFeedbackGetFinishedResponsesResponseResponsesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "completed": obj.get("completed") if obj.get("completed") is not None else 0,
             "course_id": obj.get("course_id") if obj.get("course_id") is not None else 0,
             "id": obj.get("id") if obj.get("id") is not None else 0,
             "item": obj.get("item") if obj.get("item") is not None else 0,
             "tmp_completed": obj.get("tmp_completed") if obj.get("tmp_completed") is not None else 0,
             "value": obj.get("value") if obj.get("value") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

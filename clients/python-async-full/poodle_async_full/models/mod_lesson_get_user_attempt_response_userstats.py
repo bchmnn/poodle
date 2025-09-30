@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_lesson_get_user_attempt_grade_response_grade i
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModLessonGetUserAttemptResponseUserstats(BaseModel):
     """
     ModLessonGetUserAttemptResponseUserstats
@@ -98,15 +100,18 @@ class ModLessonGetUserAttemptResponseUserstats(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModLessonGetUserAttemptResponseUserstats" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "completed": obj.get("completed"),
             "grade": obj.get("grade"),
             "gradeinfo": ModLessonGetUserAttemptGradeResponseGrade.from_dict(obj["gradeinfo"]) if obj.get("gradeinfo") is not None else None,
             "timetotake": obj.get("timetotake")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

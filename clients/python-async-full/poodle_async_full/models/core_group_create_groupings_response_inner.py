@@ -23,6 +23,8 @@ from poodle_async_full.models.core_cohort_create_cohorts_parameters_cohorts_inne
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreGroupCreateGroupingsResponseInner(BaseModel):
     """
     CoreGroupCreateGroupingsResponseInner
@@ -120,10 +122,12 @@ class CoreGroupCreateGroupingsResponseInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreGroupCreateGroupingsResponseInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "courseid": obj.get("courseid"),
             "customfields": [CoreCohortCreateCohortsParametersCohortsInnerCustomfieldsInner.from_dict(_item) for _item in obj["customfields"]] if obj.get("customfields") is not None else None,
             "description": obj.get("description"),
@@ -131,7 +135,8 @@ class CoreGroupCreateGroupingsResponseInner(BaseModel):
             "id": obj.get("id"),
             "idnumber": obj.get("idnumber"),
             "name": obj.get("name")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

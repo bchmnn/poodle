@@ -23,6 +23,8 @@ from poodle_async_full.models.core_calendar_get_calendar_monthly_view_response_w
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCalendarGetCalendarMonthlyViewResponseWeeksInner(BaseModel):
     """
     CoreCalendarGetCalendarMonthlyViewResponseWeeksInner
@@ -86,14 +88,17 @@ class CoreCalendarGetCalendarMonthlyViewResponseWeeksInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCalendarGetCalendarMonthlyViewResponseWeeksInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "days": [CoreCalendarGetCalendarMonthlyViewResponseWeeksInnerDaysInner.from_dict(_item) for _item in obj["days"]] if obj.get("days") is not None else None,
             "postpadding": obj.get("postpadding"),
             "prepadding": obj.get("prepadding")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -23,6 +23,8 @@ from poodle_async_full.models.core_message_get_unread_conversation_counts_respon
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreMessageGetUnreadConversationCountsResponse(BaseModel):
     """
     CoreMessageGetUnreadConversationCountsResponse
@@ -86,13 +88,16 @@ class CoreMessageGetUnreadConversationCountsResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreMessageGetUnreadConversationCountsResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "favourites": obj.get("favourites"),
             "types": CoreMessageGetUnreadConversationCountsResponseTypes.from_dict(obj["types"]) if obj.get("types") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -24,6 +24,8 @@ from poodle_async_full.models.mod_data_add_entry_response_fieldnotifications_inn
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModDataAddEntryResponse(BaseModel):
     """
     ModDataAddEntryResponse
@@ -100,15 +102,18 @@ class ModDataAddEntryResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModDataAddEntryResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "fieldnotifications": [ModDataAddEntryResponseFieldnotificationsInner.from_dict(_item) for _item in obj["fieldnotifications"]] if obj.get("fieldnotifications") is not None else None,
             "generalnotifications": obj.get("generalnotifications"),
             "newentryid": obj.get("newentryid"),
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

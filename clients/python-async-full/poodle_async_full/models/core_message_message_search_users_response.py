@@ -23,6 +23,8 @@ from poodle_async_full.models.core_message_get_contact_requests_response_inner i
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreMessageMessageSearchUsersResponse(BaseModel):
     """
     CoreMessageMessageSearchUsersResponse
@@ -92,13 +94,16 @@ class CoreMessageMessageSearchUsersResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreMessageMessageSearchUsersResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "contacts": [CoreMessageGetContactRequestsResponseInner.from_dict(_item) for _item in obj["contacts"]] if obj.get("contacts") is not None else None,
             "noncontacts": [CoreMessageGetContactRequestsResponseInner.from_dict(_item) for _item in obj["noncontacts"]] if obj.get("noncontacts") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

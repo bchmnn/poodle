@@ -23,6 +23,8 @@ from poodle_async_full.models.core_competency_create_plan_response_reviewer impo
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolDataprivacyGetDataRequestResponseResult(BaseModel):
     """
     ToolDataprivacyGetDataRequestResponseResult
@@ -123,10 +125,12 @@ class ToolDataprivacyGetDataRequestResponseResult(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolDataprivacyGetDataRequestResponseResult" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "allowfiltering": obj.get("allowfiltering") if obj.get("allowfiltering") is not None else False,
             "approvedeny": obj.get("approvedeny") if obj.get("approvedeny") is not None else False,
             "canmarkcomplete": obj.get("canmarkcomplete") if obj.get("canmarkcomplete") is not None else False,
@@ -155,7 +159,8 @@ class ToolDataprivacyGetDataRequestResponseResult(BaseModel):
             "typenameshort": obj.get("typenameshort") if obj.get("typenameshort") is not None else '',
             "userid": obj.get("userid") if obj.get("userid") is not None else 0,
             "usermodified": obj.get("usermodified") if obj.get("usermodified") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

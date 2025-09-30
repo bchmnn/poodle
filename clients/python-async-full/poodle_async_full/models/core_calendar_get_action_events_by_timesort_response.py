@@ -23,6 +23,8 @@ from poodle_async_full.models.core_calendar_get_action_events_by_course_response
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCalendarGetActionEventsByTimesortResponse(BaseModel):
     """
     CoreCalendarGetActionEventsByTimesortResponse
@@ -96,14 +98,17 @@ class CoreCalendarGetActionEventsByTimesortResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCalendarGetActionEventsByTimesortResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "events": [CoreCalendarGetActionEventsByCourseResponseEventsInner.from_dict(_item) for _item in obj["events"]] if obj.get("events") is not None else None,
             "firstid": obj.get("firstid"),
             "lastid": obj.get("lastid")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

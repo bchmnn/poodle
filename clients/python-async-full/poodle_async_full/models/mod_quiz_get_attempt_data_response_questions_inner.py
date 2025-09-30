@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_quiz_get_attempt_data_response_questions_inner
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModQuizGetAttemptDataResponseQuestionsInner(BaseModel):
     """
     The question data. Some fields may not be returned depending on the quiz display settings.
@@ -186,10 +188,12 @@ class ModQuizGetAttemptDataResponseQuestionsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModQuizGetAttemptDataResponseQuestionsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "blockedbyprevious": obj.get("blockedbyprevious"),
             "flagged": obj.get("flagged"),
             "hasautosavedstep": obj.get("hasautosavedstep"),
@@ -208,7 +212,8 @@ class ModQuizGetAttemptDataResponseQuestionsInner(BaseModel):
             "stateclass": obj.get("stateclass"),
             "status": obj.get("status"),
             "type": obj.get("type")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -23,6 +23,8 @@ from poodle_async_full.models.core_competency_list_competencies_in_template_resp
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolLpDataForTemplateCompetenciesPageResponseStatistics(BaseModel):
     """
     ToolLpDataForTemplateCompetenciesPageResponseStatistics
@@ -98,10 +100,12 @@ class ToolLpDataForTemplateCompetenciesPageResponseStatistics(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolLpDataForTemplateCompetenciesPageResponseStatistics" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "competencycount": obj.get("competencycount") if obj.get("competencycount") is not None else 0,
             "completedplancount": obj.get("completedplancount") if obj.get("completedplancount") is not None else 0,
             "completedplanpercentage": obj.get("completedplanpercentage") if obj.get("completedplanpercentage") is not None else 0,
@@ -117,7 +121,8 @@ class ToolLpDataForTemplateCompetenciesPageResponseStatistics(BaseModel):
             "proficientusercompetencyplanpercentageformatted": obj.get("proficientusercompetencyplanpercentageformatted") if obj.get("proficientusercompetencyplanpercentageformatted") is not None else '',
             "unlinkedcompetencycount": obj.get("unlinkedcompetencycount") if obj.get("unlinkedcompetencycount") is not None else 0,
             "usercompetencyplancount": obj.get("usercompetencyplancount") if obj.get("usercompetencyplancount") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

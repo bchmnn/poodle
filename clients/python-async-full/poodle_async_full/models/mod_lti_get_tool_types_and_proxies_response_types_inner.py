@@ -24,6 +24,8 @@ from poodle_async_full.models.mod_lti_create_tool_type_response_urls import ModL
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModLtiGetToolTypesAndProxiesResponseTypesInner(BaseModel):
     """
     Tool
@@ -141,10 +143,12 @@ class ModLtiGetToolTypesAndProxiesResponseTypesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModLtiGetToolTypesAndProxiesResponseTypesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "capabilitygroups": obj.get("capabilitygroups"),
             "clientid": obj.get("clientid"),
             "courseid": obj.get("courseid") if obj.get("courseid") is not None else 0,
@@ -158,7 +162,8 @@ class ModLtiGetToolTypesAndProxiesResponseTypesInner(BaseModel):
             "platformid": obj.get("platformid"),
             "state": ModLtiCreateToolTypeResponseState.from_dict(obj["state"]) if obj.get("state") is not None else None,
             "urls": ModLtiCreateToolTypeResponseUrls.from_dict(obj["urls"]) if obj.get("urls") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCourseGetActivityChooserFooterResponse(BaseModel):
     """
     CoreCourseGetActivityChooserFooterResponse
@@ -99,15 +101,18 @@ class CoreCourseGetActivityChooserFooterResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCourseGetActivityChooserFooterResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "customcarouseltemplate": obj.get("customcarouseltemplate"),
             "customfooterjs": obj.get("customfooterjs"),
             "customfootertemplate": obj.get("customfootertemplate"),
             "footer": obj.get("footer")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

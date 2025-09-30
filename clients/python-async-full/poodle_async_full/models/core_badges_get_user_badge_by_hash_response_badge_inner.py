@@ -25,6 +25,8 @@ from poodle_async_full.models.core_badges_get_user_badge_by_hash_response_badge_
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreBadgesGetUserBadgeByHashResponseBadgeInner(BaseModel):
     """
     CoreBadgesGetUserBadgeByHashResponseBadgeInner
@@ -181,10 +183,12 @@ class CoreBadgesGetUserBadgeByHashResponseBadgeInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreBadgesGetUserBadgeByHashResponseBadgeInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "alignment": [CoreBadgesGetBadgeResponseBadgeAlignmentInner.from_dict(_item) for _item in obj["alignment"]] if obj.get("alignment") is not None else None,
             "attachment": obj.get("attachment") if obj.get("attachment") is not None else 0,
             "badgeurl": obj.get("badgeurl") if obj.get("badgeurl") is not None else '',
@@ -221,7 +225,8 @@ class CoreBadgesGetUserBadgeByHashResponseBadgeInner(BaseModel):
             "usermodified": obj.get("usermodified") if obj.get("usermodified") is not None else 0,
             "version": obj.get("version"),
             "visible": obj.get("visible") if obj.get("visible") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

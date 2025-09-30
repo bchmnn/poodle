@@ -33,6 +33,8 @@ from poodle_async_full.models.gradereport_user_get_grades_table_response_tables_
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class GradereportUserGetGradesTableResponseTablesInnerTabledataInner(BaseModel):
     """
     table
@@ -131,10 +133,12 @@ class GradereportUserGetGradesTableResponseTablesInnerTabledataInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "GradereportUserGetGradesTableResponseTablesInnerTabledataInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "average": GradereportUserGetGradesTableResponseTablesInnerTabledataInnerAverage.from_dict(obj["average"]) if obj.get("average") is not None else None,
             "contributiontocoursetotal": GradereportUserGetGradesTableResponseTablesInnerTabledataInnerContributiontocoursetotal.from_dict(obj["contributiontocoursetotal"]) if obj.get("contributiontocoursetotal") is not None else None,
             "feedback": GradereportUserGetGradesTableResponseTablesInnerTabledataInnerFeedback.from_dict(obj["feedback"]) if obj.get("feedback") is not None else None,
@@ -147,7 +151,8 @@ class GradereportUserGetGradesTableResponseTablesInnerTabledataInner(BaseModel):
             "range": GradereportUserGetGradesTableResponseTablesInnerTabledataInnerRange.from_dict(obj["range"]) if obj.get("range") is not None else None,
             "rank": GradereportUserGetGradesTableResponseTablesInnerTabledataInnerRank.from_dict(obj["rank"]) if obj.get("rank") is not None else None,
             "weight": GradereportUserGetGradesTableResponseTablesInnerTabledataInnerWeight.from_dict(obj["weight"]) if obj.get("weight") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -24,6 +24,8 @@ from poodle_async_full.models.core_files_get_files_response_parents_inner import
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreFilesGetFilesResponse(BaseModel):
     """
     CoreFilesGetFilesResponse
@@ -93,13 +95,16 @@ class CoreFilesGetFilesResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreFilesGetFilesResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "files": [CoreFilesGetFilesResponseFilesInner.from_dict(_item) for _item in obj["files"]] if obj.get("files") is not None else None,
             "parents": [CoreFilesGetFilesResponseParentsInner.from_dict(_item) for _item in obj["parents"]] if obj.get("parents") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

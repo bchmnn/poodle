@@ -27,6 +27,8 @@ from poodle_async_mini.models.mod_assign_list_participants_response_inner_roles_
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_mini.configuration import settings
+
 class ModAssignListParticipantsResponseInner(BaseModel):
     """
     ModAssignListParticipantsResponseInner
@@ -300,10 +302,12 @@ class ModAssignListParticipantsResponseInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModAssignListParticipantsResponseInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "address": obj.get("address"),
             "city": obj.get("city"),
             "country": obj.get("country"),
@@ -339,7 +343,8 @@ class ModAssignListParticipantsResponseInner(BaseModel):
             "suspended": obj.get("suspended"),
             "trackforums": obj.get("trackforums"),
             "username": obj.get("username")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

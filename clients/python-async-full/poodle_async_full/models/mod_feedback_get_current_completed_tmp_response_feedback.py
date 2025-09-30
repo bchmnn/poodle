@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModFeedbackGetCurrentCompletedTmpResponseFeedback(BaseModel):
     """
     ModFeedbackGetCurrentCompletedTmpResponseFeedback
@@ -83,10 +85,12 @@ class ModFeedbackGetCurrentCompletedTmpResponseFeedback(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModFeedbackGetCurrentCompletedTmpResponseFeedback" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "anonymous_response": obj.get("anonymous_response") if obj.get("anonymous_response") is not None else 0,
             "courseid": obj.get("courseid") if obj.get("courseid") is not None else 0,
             "feedback": obj.get("feedback") if obj.get("feedback") is not None else 0,
@@ -95,7 +99,8 @@ class ModFeedbackGetCurrentCompletedTmpResponseFeedback(BaseModel):
             "random_response": obj.get("random_response") if obj.get("random_response") is not None else 0,
             "timemodified": obj.get("timemodified") if obj.get("timemodified") is not None else 0,
             "userid": obj.get("userid") if obj.get("userid") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

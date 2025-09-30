@@ -24,6 +24,8 @@ from poodle_async_full.models.gradingform_guide_grader_gradingpanel_fetch_respon
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class GradingformGuideGraderGradingpanelStoreResponse(BaseModel):
     """
     GradingformGuideGraderGradingpanelStoreResponse
@@ -101,15 +103,18 @@ class GradingformGuideGraderGradingpanelStoreResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "GradingformGuideGraderGradingpanelStoreResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "grade": GradingformGuideGraderGradingpanelFetchResponseGrade.from_dict(obj["grade"]) if obj.get("grade") is not None else None,
             "hasgrade": obj.get("hasgrade"),
             "templatename": obj.get("templatename"),
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -24,6 +24,8 @@ from poodle_async_full.models.mod_lti_get_tool_launch_data_response_parameters_i
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModLtiGetToolLaunchDataResponse(BaseModel):
     """
     ModLtiGetToolLaunchDataResponse
@@ -99,14 +101,17 @@ class ModLtiGetToolLaunchDataResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModLtiGetToolLaunchDataResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "endpoint": obj.get("endpoint"),
             "parameters": [ModLtiGetToolLaunchDataResponseParametersInner.from_dict(_item) for _item in obj["parameters"]] if obj.get("parameters") is not None else None,
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

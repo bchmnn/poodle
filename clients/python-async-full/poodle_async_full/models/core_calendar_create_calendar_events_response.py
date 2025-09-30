@@ -24,6 +24,8 @@ from poodle_async_full.models.core_calendar_create_calendar_events_response_even
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCalendarCreateCalendarEventsResponse(BaseModel):
     """
     CoreCalendarCreateCalendarEventsResponse
@@ -93,13 +95,16 @@ class CoreCalendarCreateCalendarEventsResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCalendarCreateCalendarEventsResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "events": [CoreCalendarCreateCalendarEventsResponseEventsInner.from_dict(_item) for _item in obj["events"]] if obj.get("events") is not None else None,
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

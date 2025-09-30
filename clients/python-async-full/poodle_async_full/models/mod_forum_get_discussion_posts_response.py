@@ -25,6 +25,8 @@ from poodle_async_full.models.mod_forum_add_discussion_post_response_post import
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModForumGetDiscussionPostsResponse(BaseModel):
     """
     ModForumGetDiscussionPostsResponse
@@ -110,16 +112,19 @@ class ModForumGetDiscussionPostsResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModForumGetDiscussionPostsResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "courseid": obj.get("courseid"),
             "forumid": obj.get("forumid"),
             "posts": [ModForumAddDiscussionPostResponsePost.from_dict(_item) for _item in obj["posts"]] if obj.get("posts") is not None else None,
             "ratinginfo": ModDataGetEntryResponseRatinginfo.from_dict(obj["ratinginfo"]) if obj.get("ratinginfo") is not None else None,
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

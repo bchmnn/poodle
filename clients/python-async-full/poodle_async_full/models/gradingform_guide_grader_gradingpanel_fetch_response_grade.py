@@ -24,6 +24,8 @@ from poodle_async_full.models.gradingform_guide_grader_gradingpanel_fetch_respon
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class GradingformGuideGraderGradingpanelFetchResponseGrade(BaseModel):
     """
     GradingformGuideGraderGradingpanelFetchResponseGrade
@@ -135,10 +137,12 @@ class GradingformGuideGraderGradingpanelFetchResponseGrade(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "GradingformGuideGraderGradingpanelFetchResponseGrade" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "comments": [GradingformGuideGraderGradingpanelFetchResponseGradeCommentsInner.from_dict(_item) for _item in obj["comments"]] if obj.get("comments") is not None else None,
             "criterion": [GradingformGuideGraderGradingpanelFetchResponseGradeCriterionInner.from_dict(_item) for _item in obj["criterion"]] if obj.get("criterion") is not None else None,
             "gradedby": obj.get("gradedby"),
@@ -148,7 +152,8 @@ class GradingformGuideGraderGradingpanelFetchResponseGrade(BaseModel):
             "timecreated": obj.get("timecreated"),
             "timemodified": obj.get("timemodified"),
             "usergrade": obj.get("usergrade")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 
