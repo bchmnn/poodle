@@ -24,6 +24,8 @@ from poodle_async_full.models.tool_lp_data_for_plan_page_response_competencies_i
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolLpDataForPlanPageResponse(BaseModel):
     """
     ToolLpDataForPlanPageResponse
@@ -125,10 +127,12 @@ class ToolLpDataForPlanPageResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolLpDataForPlanPageResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "competencies": [ToolLpDataForPlanPageResponseCompetenciesInner.from_dict(_item) for _item in obj["competencies"]] if obj.get("competencies") is not None else None,
             "competencycount": obj.get("competencycount"),
             "contextid": obj.get("contextid"),
@@ -137,7 +141,8 @@ class ToolLpDataForPlanPageResponse(BaseModel):
             "proficientcompetencycount": obj.get("proficientcompetencycount"),
             "proficientcompetencypercentage": obj.get("proficientcompetencypercentage"),
             "proficientcompetencypercentageformatted": obj.get("proficientcompetencypercentageformatted")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -29,6 +29,8 @@ from poodle_async_full.models.tool_lp_data_for_user_competency_summary_in_course
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolLpDataForUserCompetencySummaryInCourseResponseUsercompetencysummary(BaseModel):
     """
     ToolLpDataForUserCompetencySummaryInCourseResponseUsercompetencysummary
@@ -116,10 +118,12 @@ class ToolLpDataForUserCompetencySummaryInCourseResponseUsercompetencysummary(Ba
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolLpDataForUserCompetencySummaryInCourseResponseUsercompetencysummary" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "cangrade": obj.get("cangrade") if obj.get("cangrade") is not None else False,
             "commentarea": CoreCompetencyCreatePlanResponseCommentarea.from_dict(obj["commentarea"]) if obj.get("commentarea") is not None else None,
             "competency": ReportCompetencyDataForReportResponseUsercompetenciesInnerCompetency.from_dict(obj["competency"]) if obj.get("competency") is not None else None,
@@ -129,7 +133,8 @@ class ToolLpDataForUserCompetencySummaryInCourseResponseUsercompetencysummary(Ba
             "usercompetency": CoreCompetencyListPlanCompetenciesResponseInnerUsercompetency.from_dict(obj["usercompetency"]) if obj.get("usercompetency") is not None else None,
             "usercompetencycourse": ReportCompetencyDataForReportResponseUsercompetenciesInnerUsercompetencycourse.from_dict(obj["usercompetencycourse"]) if obj.get("usercompetencycourse") is not None else None,
             "usercompetencyplan": CoreCompetencyListPlanCompetenciesResponseInnerUsercompetencyplan.from_dict(obj["usercompetencyplan"]) if obj.get("usercompetencyplan") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

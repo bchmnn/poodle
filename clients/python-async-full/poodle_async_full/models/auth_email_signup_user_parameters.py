@@ -23,6 +23,8 @@ from poodle_async_full.models.auth_email_signup_user_parameters_customprofilefie
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class AuthEmailSignupUserParameters(BaseModel):
     """
     AuthEmailSignupUserParameters
@@ -144,10 +146,12 @@ class AuthEmailSignupUserParameters(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "AuthEmailSignupUserParameters" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "city": obj.get("city") if obj.get("city") is not None else '',
             "country": obj.get("country") if obj.get("country") is not None else '',
             "customprofilefields": [AuthEmailSignupUserParametersCustomprofilefieldsInner.from_dict(_item) for _item in obj["customprofilefields"]] if obj.get("customprofilefields") is not None else None,
@@ -159,7 +163,8 @@ class AuthEmailSignupUserParameters(BaseModel):
             "recaptcharesponse": obj.get("recaptcharesponse") if obj.get("recaptcharesponse") is not None else '',
             "redirect": obj.get("redirect") if obj.get("redirect") is not None else '',
             "username": obj.get("username")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

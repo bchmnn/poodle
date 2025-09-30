@@ -23,6 +23,8 @@ from poodle_async_full.models.core_blog_get_entries_response_entries_inner_attac
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModLessonGetLessonResponseLesson(BaseModel):
     """
     ModLessonGetLessonResponseLesson
@@ -146,10 +148,12 @@ class ModLessonGetLessonResponseLesson(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModLessonGetLessonResponseLesson" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "activitylink": obj.get("activitylink") if obj.get("activitylink") is not None else 0,
             "allowofflineattempts": obj.get("allowofflineattempts") if obj.get("allowofflineattempts") is not None else False,
             "available": obj.get("available") if obj.get("available") is not None else 0,
@@ -196,7 +200,8 @@ class ModLessonGetLessonResponseLesson(BaseModel):
             "usemaxgrade": obj.get("usemaxgrade") if obj.get("usemaxgrade") is not None else 0,
             "usepassword": obj.get("usepassword") if obj.get("usepassword") is not None else False,
             "width": obj.get("width") if obj.get("width") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

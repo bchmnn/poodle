@@ -24,6 +24,8 @@ from poodle_async_mini.models.mod_assign_get_submissions_response_assignments_in
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_mini.configuration import settings
+
 class ModAssignGetSubmissionsResponseAssignmentsInnerSubmissionsInnerPluginsInner(BaseModel):
     """
     ModAssignGetSubmissionsResponseAssignmentsInnerSubmissionsInnerPluginsInner
@@ -105,15 +107,18 @@ class ModAssignGetSubmissionsResponseAssignmentsInnerSubmissionsInnerPluginsInne
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModAssignGetSubmissionsResponseAssignmentsInnerSubmissionsInnerPluginsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "editorfields": [ModAssignGetSubmissionsResponseAssignmentsInnerSubmissionsInnerPluginsInnerEditorfieldsInner.from_dict(_item) for _item in obj["editorfields"]] if obj.get("editorfields") is not None else None,
             "fileareas": [ModAssignGetSubmissionsResponseAssignmentsInnerSubmissionsInnerPluginsInnerFileareasInner.from_dict(_item) for _item in obj["fileareas"]] if obj.get("fileareas") is not None else None,
             "name": obj.get("name"),
             "type": obj.get("type")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

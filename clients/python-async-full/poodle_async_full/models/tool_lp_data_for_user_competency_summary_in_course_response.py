@@ -26,6 +26,8 @@ from poodle_async_full.models.tool_lp_data_for_user_competency_summary_in_course
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolLpDataForUserCompetencySummaryInCourseResponse(BaseModel):
     """
     ToolLpDataForUserCompetencySummaryInCourseResponse
@@ -104,16 +106,19 @@ class ToolLpDataForUserCompetencySummaryInCourseResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolLpDataForUserCompetencySummaryInCourseResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "course": BlockStarredcoursesGetStarredCoursesResponseInner.from_dict(obj["course"]) if obj.get("course") is not None else None,
             "coursemodules": [ToolLpDataForCourseCompetenciesPageResponseCompetenciesInnerCoursemodulesInner.from_dict(_item) for _item in obj["coursemodules"]] if obj.get("coursemodules") is not None else None,
             "plans": [CoreCompetencyListUserPlansResponseInner.from_dict(_item) for _item in obj["plans"]] if obj.get("plans") is not None else None,
             "pluginbaseurl": obj.get("pluginbaseurl") if obj.get("pluginbaseurl") is not None else '',
             "usercompetencysummary": ToolLpDataForUserCompetencySummaryInCourseResponseUsercompetencysummary.from_dict(obj["usercompetencysummary"]) if obj.get("usercompetencysummary") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

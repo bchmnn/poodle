@@ -24,6 +24,8 @@ from poodle_async_full.models.mod_wiki_get_wikis_by_courses_response_wikis_inner
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModWikiGetWikisByCoursesResponse(BaseModel):
     """
     ModWikiGetWikisByCoursesResponse
@@ -93,13 +95,16 @@ class ModWikiGetWikisByCoursesResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModWikiGetWikisByCoursesResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None,
             "wikis": [ModWikiGetWikisByCoursesResponseWikisInner.from_dict(_item) for _item in obj["wikis"]] if obj.get("wikis") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

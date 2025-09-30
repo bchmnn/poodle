@@ -23,6 +23,8 @@ from poodle_async_full.models.gradingform_rubric_grader_gradingpanel_fetch_respo
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class GradingformRubricGraderGradingpanelFetchResponseGradeCriteriaInner(BaseModel):
     """
     GradingformRubricGraderGradingpanelFetchResponseGradeCriteriaInner
@@ -102,15 +104,18 @@ class GradingformRubricGraderGradingpanelFetchResponseGradeCriteriaInner(BaseMod
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "GradingformRubricGraderGradingpanelFetchResponseGradeCriteriaInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "description": obj.get("description"),
             "id": obj.get("id"),
             "levels": [GradingformRubricGraderGradingpanelFetchResponseGradeCriteriaInnerLevelsInner.from_dict(_item) for _item in obj["levels"]] if obj.get("levels") is not None else None,
             "remark": obj.get("remark")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

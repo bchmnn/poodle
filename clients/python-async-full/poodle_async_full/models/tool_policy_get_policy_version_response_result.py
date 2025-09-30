@@ -23,6 +23,8 @@ from poodle_async_full.models.tool_policy_get_policy_version_response_result_pol
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolPolicyGetPolicyVersionResponseResult(BaseModel):
     """
     ToolPolicyGetPolicyVersionResponseResult
@@ -80,12 +82,15 @@ class ToolPolicyGetPolicyVersionResponseResult(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolPolicyGetPolicyVersionResponseResult" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "policy": ToolPolicyGetPolicyVersionResponseResultPolicy.from_dict(obj["policy"]) if obj.get("policy") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

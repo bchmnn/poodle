@@ -27,6 +27,8 @@ from poodle_async_full.models.core_calendar_get_action_events_by_course_response
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCalendarGetActionEventsByCourseResponseEventsInner(BaseModel):
     """
     CoreCalendarGetActionEventsByCourseResponseEventsInner
@@ -214,10 +216,12 @@ class CoreCalendarGetActionEventsByCourseResponseEventsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCalendarGetActionEventsByCourseResponseEventsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "action": CoreCalendarGetActionEventsByCourseResponseEventsInnerAction.from_dict(obj["action"]) if obj.get("action") is not None else None,
             "activityname": obj.get("activityname"),
             "activitystr": obj.get("activitystr"),
@@ -262,7 +266,8 @@ class CoreCalendarGetActionEventsByCourseResponseEventsInner(BaseModel):
             "userid": obj.get("userid"),
             "viewurl": obj.get("viewurl") if obj.get("viewurl") is not None else '',
             "visible": obj.get("visible") if obj.get("visible") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

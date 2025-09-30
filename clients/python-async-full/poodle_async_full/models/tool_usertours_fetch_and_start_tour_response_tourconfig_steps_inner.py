@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolUsertoursFetchAndStartTourResponseTourconfigStepsInner(BaseModel):
     """
     ToolUsertoursFetchAndStartTourResponseTourconfigStepsInner
@@ -129,10 +131,12 @@ class ToolUsertoursFetchAndStartTourResponseTourconfigStepsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolUsertoursFetchAndStartTourResponseTourconfigStepsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "backdrop": obj.get("backdrop"),
             "content": obj.get("content"),
             "delay": obj.get("delay"),
@@ -142,7 +146,8 @@ class ToolUsertoursFetchAndStartTourResponseTourconfigStepsInner(BaseModel):
             "reflex": obj.get("reflex"),
             "stepid": obj.get("stepid"),
             "title": obj.get("title")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

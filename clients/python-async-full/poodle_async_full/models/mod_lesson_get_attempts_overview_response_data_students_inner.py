@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_lesson_get_attempts_overview_response_data_stu
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModLessonGetAttemptsOverviewResponseDataStudentsInner(BaseModel):
     """
     ModLessonGetAttemptsOverviewResponseDataStudentsInner
@@ -102,15 +104,18 @@ class ModLessonGetAttemptsOverviewResponseDataStudentsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModLessonGetAttemptsOverviewResponseDataStudentsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "attempts": [ModLessonGetAttemptsOverviewResponseDataStudentsInnerAttemptsInner.from_dict(_item) for _item in obj["attempts"]] if obj.get("attempts") is not None else None,
             "bestgrade": obj.get("bestgrade"),
             "fullname": obj.get("fullname"),
             "id": obj.get("id")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

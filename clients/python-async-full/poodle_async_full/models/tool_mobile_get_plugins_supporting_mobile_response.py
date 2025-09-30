@@ -24,6 +24,8 @@ from poodle_async_full.models.tool_mobile_get_plugins_supporting_mobile_response
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolMobileGetPluginsSupportingMobileResponse(BaseModel):
     """
     ToolMobileGetPluginsSupportingMobileResponse
@@ -93,13 +95,16 @@ class ToolMobileGetPluginsSupportingMobileResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolMobileGetPluginsSupportingMobileResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "plugins": [ToolMobileGetPluginsSupportingMobileResponsePluginsInner.from_dict(_item) for _item in obj["plugins"]] if obj.get("plugins") is not None else None,
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

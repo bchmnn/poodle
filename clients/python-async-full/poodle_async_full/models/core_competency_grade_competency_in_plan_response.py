@@ -23,6 +23,8 @@ from poodle_async_full.models.core_competency_create_plan_response_reviewer impo
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCompetencyGradeCompetencyInPlanResponse(BaseModel):
     """
     CoreCompetencyGradeCompetencyInPlanResponse
@@ -123,10 +125,12 @@ class CoreCompetencyGradeCompetencyInPlanResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCompetencyGradeCompetencyInPlanResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "action": obj.get("action") if obj.get("action") is not None else 0,
             "actionuser": CoreCompetencyCreatePlanResponseReviewer.from_dict(obj["actionuser"]) if obj.get("actionuser") is not None else None,
             "actionuserid": obj.get("actionuserid"),
@@ -146,7 +150,8 @@ class CoreCompetencyGradeCompetencyInPlanResponse(BaseModel):
             "usercompetencyid": obj.get("usercompetencyid") if obj.get("usercompetencyid") is not None else 0,
             "userdate": obj.get("userdate") if obj.get("userdate") is not None else '',
             "usermodified": obj.get("usermodified") if obj.get("usermodified") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

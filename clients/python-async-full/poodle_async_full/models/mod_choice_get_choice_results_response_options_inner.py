@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_choice_get_choice_results_response_options_inn
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModChoiceGetChoiceResultsResponseOptionsInner(BaseModel):
     """
     Options
@@ -114,17 +116,20 @@ class ModChoiceGetChoiceResultsResponseOptionsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModChoiceGetChoiceResultsResponseOptionsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "id": obj.get("id"),
             "maxanswer": obj.get("maxanswer"),
             "numberofuser": obj.get("numberofuser"),
             "percentageamount": obj.get("percentageamount"),
             "text": obj.get("text"),
             "userresponses": [ModChoiceGetChoiceResultsResponseOptionsInnerUserresponsesInner.from_dict(_item) for _item in obj["userresponses"]] if obj.get("userresponses") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

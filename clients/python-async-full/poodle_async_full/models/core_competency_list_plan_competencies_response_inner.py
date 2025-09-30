@@ -25,6 +25,8 @@ from poodle_async_full.models.core_competency_list_plan_competencies_response_in
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCompetencyListPlanCompetenciesResponseInner(BaseModel):
     """
     CoreCompetencyListPlanCompetenciesResponseInner
@@ -90,14 +92,17 @@ class CoreCompetencyListPlanCompetenciesResponseInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCompetencyListPlanCompetenciesResponseInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "competency": CoreCompetencyListCompetenciesInTemplateResponseInner.from_dict(obj["competency"]) if obj.get("competency") is not None else None,
             "usercompetency": CoreCompetencyListPlanCompetenciesResponseInnerUsercompetency.from_dict(obj["usercompetency"]) if obj.get("usercompetency") is not None else None,
             "usercompetencyplan": CoreCompetencyListPlanCompetenciesResponseInnerUsercompetencyplan.from_dict(obj["usercompetencyplan"]) if obj.get("usercompetencyplan") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreMessageDataForMessageareaSearchMessagesResponseContactsInner(BaseModel):
     """
     CoreMessageDataForMessageareaSearchMessagesResponseContactsInner
@@ -165,10 +167,12 @@ class CoreMessageDataForMessageareaSearchMessagesResponseContactsInner(BaseModel
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreMessageDataForMessageareaSearchMessagesResponseContactsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "conversationid": obj.get("conversationid"),
             "fullname": obj.get("fullname"),
             "isblocked": obj.get("isblocked"),
@@ -184,7 +188,8 @@ class CoreMessageDataForMessageareaSearchMessagesResponseContactsInner(BaseModel
             "showonlinestatus": obj.get("showonlinestatus"),
             "unreadcount": obj.get("unreadcount"),
             "userid": obj.get("userid")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

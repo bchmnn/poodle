@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_mini.configuration import settings
+
 class ModAssignListParticipantsResponseInnerRolesInner(BaseModel):
     """
     ModAssignListParticipantsResponseInnerRolesInner
@@ -99,15 +101,18 @@ class ModAssignListParticipantsResponseInnerRolesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModAssignListParticipantsResponseInnerRolesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "name": obj.get("name"),
             "roleid": obj.get("roleid"),
             "shortname": obj.get("shortname"),
             "sortorder": obj.get("sortorder")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

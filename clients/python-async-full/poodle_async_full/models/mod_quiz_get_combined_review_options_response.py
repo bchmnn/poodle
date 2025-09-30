@@ -24,6 +24,8 @@ from poodle_async_full.models.mod_quiz_get_combined_review_options_response_allo
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModQuizGetCombinedReviewOptionsResponse(BaseModel):
     """
     ModQuizGetCombinedReviewOptionsResponse
@@ -101,14 +103,17 @@ class ModQuizGetCombinedReviewOptionsResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModQuizGetCombinedReviewOptionsResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "alloptions": [ModQuizGetCombinedReviewOptionsResponseAlloptionsInner.from_dict(_item) for _item in obj["alloptions"]] if obj.get("alloptions") is not None else None,
             "someoptions": [ModQuizGetCombinedReviewOptionsResponseAlloptionsInner.from_dict(_item) for _item in obj["someoptions"]] if obj.get("someoptions") is not None else None,
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

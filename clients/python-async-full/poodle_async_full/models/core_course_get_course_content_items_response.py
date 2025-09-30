@@ -23,6 +23,8 @@ from poodle_async_full.models.core_course_get_course_content_items_response_cont
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCourseGetCourseContentItemsResponse(BaseModel):
     """
     CoreCourseGetCourseContentItemsResponse
@@ -84,12 +86,15 @@ class CoreCourseGetCourseContentItemsResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCourseGetCourseContentItemsResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "content_items": [CoreCourseGetCourseContentItemsResponseContentItemsInner.from_dict(_item) for _item in obj["content_items"]] if obj.get("content_items") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

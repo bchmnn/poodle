@@ -25,6 +25,8 @@ from poodle_async_full.models.mod_h5pactivity_get_h5pactivities_by_courses_respo
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModH5pactivityGetH5pactivitiesByCoursesResponse(BaseModel):
     """
     ModH5pactivityGetH5pactivitiesByCoursesResponse
@@ -98,14 +100,17 @@ class ModH5pactivityGetH5pactivitiesByCoursesResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModH5pactivityGetH5pactivitiesByCoursesResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "h5pactivities": [ModH5pactivityGetH5pactivitiesByCoursesResponseH5pactivitiesInner.from_dict(_item) for _item in obj["h5pactivities"]] if obj.get("h5pactivities") is not None else None,
             "h5pglobalsettings": ModH5pactivityGetH5pactivitiesByCoursesResponseH5pglobalsettings.from_dict(obj["h5pglobalsettings"]) if obj.get("h5pglobalsettings") is not None else None,
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

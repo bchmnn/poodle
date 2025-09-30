@@ -23,6 +23,8 @@ from poodle_async_full.models.gradereport_user_get_grade_items_response_usergrad
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class GradereportUserGetGradeItemsResponseUsergradesInner(BaseModel):
     """
     GradereportUserGetGradeItemsResponseUsergradesInner
@@ -120,10 +122,12 @@ class GradereportUserGetGradeItemsResponseUsergradesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "GradereportUserGetGradeItemsResponseUsergradesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "courseid": obj.get("courseid"),
             "courseidnumber": obj.get("courseidnumber"),
             "gradeitems": [GradereportUserGetGradeItemsResponseUsergradesInnerGradeitemsInner.from_dict(_item) for _item in obj["gradeitems"]] if obj.get("gradeitems") is not None else None,
@@ -131,7 +135,8 @@ class GradereportUserGetGradeItemsResponseUsergradesInner(BaseModel):
             "userfullname": obj.get("userfullname"),
             "userid": obj.get("userid"),
             "useridnumber": obj.get("useridnumber")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -24,6 +24,8 @@ from poodle_async_full.models.mod_lesson_get_user_attempt_response_answerpages_i
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModLessonGetUserAttemptResponseAnswerpagesInner(BaseModel):
     """
     ModLessonGetUserAttemptResponseAnswerpagesInner
@@ -109,17 +111,20 @@ class ModLessonGetUserAttemptResponseAnswerpagesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModLessonGetUserAttemptResponseAnswerpagesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "answerdata": ModLessonGetUserAttemptResponseAnswerpagesInnerAnswerdata.from_dict(obj["answerdata"]) if obj.get("answerdata") is not None else None,
             "contents": obj.get("contents"),
             "grayout": obj.get("grayout"),
             "page": ModLessonGetPageDataResponsePage.from_dict(obj["page"]) if obj.get("page") is not None else None,
             "qtype": obj.get("qtype"),
             "title": obj.get("title")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

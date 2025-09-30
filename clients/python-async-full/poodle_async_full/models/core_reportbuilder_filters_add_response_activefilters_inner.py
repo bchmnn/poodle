@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreReportbuilderFiltersAddResponseActivefiltersInner(BaseModel):
     """
     CoreReportbuilderFiltersAddResponseActivefiltersInner
@@ -81,17 +83,20 @@ class CoreReportbuilderFiltersAddResponseActivefiltersInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreReportbuilderFiltersAddResponseActivefiltersInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "entityname": obj.get("entityname") if obj.get("entityname") is not None else '',
             "heading": obj.get("heading") if obj.get("heading") is not None else '',
             "headingeditable": obj.get("headingeditable") if obj.get("headingeditable") is not None else '',
             "id": obj.get("id") if obj.get("id") is not None else 0,
             "movetitle": obj.get("movetitle") if obj.get("movetitle") is not None else '',
             "sortorder": obj.get("sortorder") if obj.get("sortorder") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

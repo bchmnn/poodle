@@ -26,6 +26,8 @@ from poodle_async_full.models.report_competency_data_for_report_response_usercom
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolLpDataForCompetencySummaryResponse(BaseModel):
     """
     ToolLpDataForCompetencySummaryResponse
@@ -113,10 +115,12 @@ class ToolLpDataForCompetencySummaryResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolLpDataForCompetencySummaryResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "competency": CoreCompetencyListCompetenciesInTemplateResponseInner.from_dict(obj["competency"]) if obj.get("competency") is not None else None,
             "comppath": ReportCompetencyDataForReportResponseUsercompetenciesInnerCompetencyComppath.from_dict(obj["comppath"]) if obj.get("comppath") is not None else None,
             "framework": CoreCompetencyListCompetencyFrameworksResponseInner.from_dict(obj["framework"]) if obj.get("framework") is not None else None,
@@ -128,7 +132,8 @@ class ToolLpDataForCompetencySummaryResponse(BaseModel):
             "scaleconfiguration": obj.get("scaleconfiguration") if obj.get("scaleconfiguration") is not None else '',
             "scaleid": obj.get("scaleid") if obj.get("scaleid") is not None else 0,
             "taxonomyterm": obj.get("taxonomyterm") if obj.get("taxonomyterm") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

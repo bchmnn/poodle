@@ -23,6 +23,8 @@ from poodle_async_full.models.core_block_get_course_blocks_response_blocks_inner
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModLessonGetPageDataResponseAnswersInner(BaseModel):
     """
     The page answers
@@ -158,10 +160,12 @@ class ModLessonGetPageDataResponseAnswersInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModLessonGetPageDataResponseAnswersInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "answer": obj.get("answer"),
             "answerfiles": [CoreBlockGetCourseBlocksResponseBlocksInnerContentsFilesInner.from_dict(_item) for _item in obj["answerfiles"]] if obj.get("answerfiles") is not None else None,
             "answerformat": obj.get("answerformat"),
@@ -175,7 +179,8 @@ class ModLessonGetPageDataResponseAnswersInner(BaseModel):
             "score": obj.get("score"),
             "timecreated": obj.get("timecreated"),
             "timemodified": obj.get("timemodified")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class BlockStarredcoursesGetStarredCoursesResponseInner(BaseModel):
     """
     BlockStarredcoursesGetStarredCoursesResponseInner
@@ -122,10 +124,12 @@ class BlockStarredcoursesGetStarredCoursesResponseInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "BlockStarredcoursesGetStarredCoursesResponseInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "coursecategory": obj.get("coursecategory") if obj.get("coursecategory") is not None else '',
             "courseimage": obj.get("courseimage") if obj.get("courseimage") is not None else '',
             "enddate": obj.get("enddate") if obj.get("enddate") is not None else 0,
@@ -148,7 +152,8 @@ class BlockStarredcoursesGetStarredCoursesResponseInner(BaseModel):
             "timeaccess": obj.get("timeaccess") if obj.get("timeaccess") is not None else 0,
             "viewurl": obj.get("viewurl") if obj.get("viewurl") is not None else '',
             "visible": obj.get("visible") if obj.get("visible") is not None else False
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

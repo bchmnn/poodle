@@ -23,6 +23,8 @@ from poodle_async_mini.models.core_course_get_contents_response_inner_modules_in
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_mini.configuration import settings
+
 class CoreCourseGetContentsResponseInnerModulesInnerActivitybadgeOneOf(BaseModel):
     """
     Activity badge to display near the name
@@ -108,16 +110,19 @@ class CoreCourseGetContentsResponseInnerModulesInnerActivitybadgeOneOf(BaseModel
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCourseGetContentsResponseInnerModulesInnerActivitybadgeOneOf" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "badgecontent": obj.get("badgecontent"),
             "badgeelementid": obj.get("badgeelementid"),
             "badgeextraattributes": [CoreCourseGetContentsResponseInnerModulesInnerActivitybadgeOneOfBadgeextraattributesInner.from_dict(_item) for _item in obj["badgeextraattributes"]] if obj.get("badgeextraattributes") is not None else None,
             "badgestyle": obj.get("badgestyle"),
             "badgeurl": obj.get("badgeurl")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

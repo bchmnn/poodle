@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreTagGetTagindexParametersTagindex(BaseModel):
     """
     parameters
@@ -123,10 +125,12 @@ class CoreTagGetTagindexParametersTagindex(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreTagGetTagindexParametersTagindex" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "ctx": obj.get("ctx") if obj.get("ctx") is not None else 0,
             "excl": obj.get("excl") if obj.get("excl") is not None else False,
             "from": obj.get("from") if obj.get("from") is not None else 0,
@@ -135,7 +139,8 @@ class CoreTagGetTagindexParametersTagindex(BaseModel):
             "ta": obj.get("ta"),
             "tag": obj.get("tag"),
             "tc": obj.get("tc")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

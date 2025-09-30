@@ -23,6 +23,8 @@ from poodle_async_full.models.core_reportbuilder_retrieve_report_response_data_r
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreReportbuilderRetrieveReportResponseData(BaseModel):
     """
     CoreReportbuilderRetrieveReportResponseData
@@ -86,14 +88,17 @@ class CoreReportbuilderRetrieveReportResponseData(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreReportbuilderRetrieveReportResponseData" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "headers": obj.get("headers"),
             "rows": [CoreReportbuilderRetrieveReportResponseDataRowsInner.from_dict(_item) for _item in obj["rows"]] if obj.get("rows") is not None else None,
             "totalrowcount": obj.get("totalrowcount") if obj.get("totalrowcount") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

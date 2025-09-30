@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModQuizGetAttemptDataResponseAttemptGradeitemmarksInner(BaseModel):
     """
     The grade for each grade item.
@@ -93,14 +95,17 @@ class ModQuizGetAttemptDataResponseAttemptGradeitemmarksInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModQuizGetAttemptDataResponseAttemptGradeitemmarksInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "grade": obj.get("grade"),
             "maxgrade": obj.get("maxgrade"),
             "name": obj.get("name")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

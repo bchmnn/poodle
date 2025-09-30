@@ -24,6 +24,8 @@ from poodle_async_full.models.mod_h5pactivity_get_h5pactivities_by_courses_respo
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModH5pactivityGetH5pactivitiesByCoursesResponseH5pactivitiesInner(BaseModel):
     """
     ModH5pactivityGetH5pactivitiesByCoursesResponseH5pactivitiesInner
@@ -121,10 +123,12 @@ class ModH5pactivityGetH5pactivitiesByCoursesResponseH5pactivitiesInner(BaseMode
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModH5pactivityGetH5pactivitiesByCoursesResponseH5pactivitiesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "contenthash": obj.get("contenthash") if obj.get("contenthash") is not None else '',
             "context": obj.get("context") if obj.get("context") is not None else 0,
             "course": obj.get("course") if obj.get("course") is not None else 0,
@@ -142,7 +146,8 @@ class ModH5pactivityGetH5pactivitiesByCoursesResponseH5pactivitiesInner(BaseMode
             "package": [CoreBlogGetEntriesResponseEntriesInnerAttachmentfilesInner.from_dict(_item) for _item in obj["package"]] if obj.get("package") is not None else None,
             "timecreated": obj.get("timecreated") if obj.get("timecreated") is not None else 0,
             "timemodified": obj.get("timemodified") if obj.get("timemodified") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

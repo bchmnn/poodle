@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCompetencyListCourseCompetenciesResponseInnerCoursecompetency(BaseModel):
     """
     CoreCompetencyListCourseCompetenciesResponseInnerCoursecompetency
@@ -83,10 +85,12 @@ class CoreCompetencyListCourseCompetenciesResponseInnerCoursecompetency(BaseMode
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCompetencyListCourseCompetenciesResponseInnerCoursecompetency" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "competencyid": obj.get("competencyid") if obj.get("competencyid") is not None else 0,
             "courseid": obj.get("courseid") if obj.get("courseid") is not None else 0,
             "id": obj.get("id") if obj.get("id") is not None else 0,
@@ -95,7 +99,8 @@ class CoreCompetencyListCourseCompetenciesResponseInnerCoursecompetency(BaseMode
             "timecreated": obj.get("timecreated") if obj.get("timecreated") is not None else 0,
             "timemodified": obj.get("timemodified") if obj.get("timemodified") is not None else 0,
             "usermodified": obj.get("usermodified") if obj.get("usermodified") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

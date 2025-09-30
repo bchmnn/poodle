@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_h5pactivity_get_attempts_response_usersattempt
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModH5pactivityGetAttemptsResponseUsersattemptsInnerScored(BaseModel):
     """
     Attempts used to grade the activity
@@ -96,14 +98,17 @@ class ModH5pactivityGetAttemptsResponseUsersattemptsInnerScored(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModH5pactivityGetAttemptsResponseUsersattemptsInnerScored" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "attempts": [ModH5pactivityGetAttemptsResponseUsersattemptsInnerAttemptsInner.from_dict(_item) for _item in obj["attempts"]] if obj.get("attempts") is not None else None,
             "grademethod": obj.get("grademethod"),
             "title": obj.get("title")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

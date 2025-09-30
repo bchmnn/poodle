@@ -23,6 +23,8 @@ from poodle_async_full.models.core_block_get_course_blocks_response_blocks_inner
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModForumGetForumDiscussionsResponseDiscussionsInner(BaseModel):
     """
     post
@@ -284,10 +286,12 @@ class ModForumGetForumDiscussionsResponseDiscussionsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModForumGetForumDiscussionsResponseDiscussionsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "attachment": obj.get("attachment"),
             "attachments": [CoreBlockGetCourseBlocksResponseBlocksInnerContentsFilesInner.from_dict(_item) for _item in obj["attachments"]] if obj.get("attachments") is not None else None,
             "canfavourite": obj.get("canfavourite"),
@@ -322,7 +326,8 @@ class ModForumGetForumDiscussionsResponseDiscussionsInner(BaseModel):
             "usermodifiedfullname": obj.get("usermodifiedfullname"),
             "usermodifiedpictureurl": obj.get("usermodifiedpictureurl"),
             "userpictureurl": obj.get("userpictureurl")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

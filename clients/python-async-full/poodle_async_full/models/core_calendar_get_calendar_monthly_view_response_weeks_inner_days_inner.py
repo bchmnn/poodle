@@ -23,6 +23,8 @@ from poodle_async_full.models.core_calendar_get_calendar_day_view_response_event
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCalendarGetCalendarMonthlyViewResponseWeeksInnerDaysInner(BaseModel):
     """
     CoreCalendarGetCalendarMonthlyViewResponseWeeksInnerDaysInner
@@ -104,10 +106,12 @@ class CoreCalendarGetCalendarMonthlyViewResponseWeeksInnerDaysInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCalendarGetCalendarMonthlyViewResponseWeeksInnerDaysInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "calendareventtypes": obj.get("calendareventtypes"),
             "daytitle": obj.get("daytitle") if obj.get("daytitle") is not None else '',
             "events": [CoreCalendarGetCalendarDayViewResponseEventsInner.from_dict(_item) for _item in obj["events"]] if obj.get("events") is not None else None,
@@ -129,7 +133,8 @@ class CoreCalendarGetCalendarMonthlyViewResponseWeeksInnerDaysInner(BaseModel):
             "wday": obj.get("wday") if obj.get("wday") is not None else 0,
             "yday": obj.get("yday") if obj.get("yday") is not None else 0,
             "year": obj.get("year") if obj.get("year") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

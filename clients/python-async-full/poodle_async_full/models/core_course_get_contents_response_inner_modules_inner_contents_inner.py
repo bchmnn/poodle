@@ -23,6 +23,8 @@ from poodle_async_full.models.core_blog_get_entries_response_entries_inner_tags_
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCourseGetContentsResponseInnerModulesInnerContentsInner(BaseModel):
     """
     CoreCourseGetContentsResponseInnerModulesInnerContentsInner
@@ -174,10 +176,12 @@ class CoreCourseGetContentsResponseInnerModulesInnerContentsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCourseGetContentsResponseInnerModulesInnerContentsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "author": obj.get("author"),
             "content": obj.get("content"),
             "filename": obj.get("filename"),
@@ -194,7 +198,8 @@ class CoreCourseGetContentsResponseInnerModulesInnerContentsInner(BaseModel):
             "timemodified": obj.get("timemodified"),
             "type": obj.get("type"),
             "userid": obj.get("userid")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

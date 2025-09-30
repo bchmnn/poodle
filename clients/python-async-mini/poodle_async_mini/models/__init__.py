@@ -56,6 +56,8 @@ if __import__("typing").TYPE_CHECKING:
     from poodle_async_mini.models.mod_assign_list_participants_response_inner_groups_inner import ModAssignListParticipantsResponseInnerGroupsInner
     from poodle_async_mini.models.mod_assign_list_participants_response_inner_preferences_inner import ModAssignListParticipantsResponseInnerPreferencesInner
     from poodle_async_mini.models.mod_assign_list_participants_response_inner_roles_inner import ModAssignListParticipantsResponseInnerRolesInner
+    from poodle_async_mini.models.tool_mobile_get_public_config_response import ToolMobileGetPublicConfigResponse
+    from poodle_async_mini.models.tool_mobile_get_public_config_response_identityproviders_inner import ToolMobileGetPublicConfigResponseIdentityprovidersInner
     
 else:
     from lazy_imports import LazyModule, as_package, load
@@ -105,6 +107,8 @@ from poodle_async_mini.models.mod_assign_list_participants_response_inner_enroll
 from poodle_async_mini.models.mod_assign_list_participants_response_inner_groups_inner import ModAssignListParticipantsResponseInnerGroupsInner
 from poodle_async_mini.models.mod_assign_list_participants_response_inner_preferences_inner import ModAssignListParticipantsResponseInnerPreferencesInner
 from poodle_async_mini.models.mod_assign_list_participants_response_inner_roles_inner import ModAssignListParticipantsResponseInnerRolesInner
+from poodle_async_mini.models.tool_mobile_get_public_config_response import ToolMobileGetPublicConfigResponse
+from poodle_async_mini.models.tool_mobile_get_public_config_response_identityproviders_inner import ToolMobileGetPublicConfigResponseIdentityprovidersInner
 
 """,
             name=__name__,

@@ -27,6 +27,8 @@ from poodle_async_full.models.core_enrol_get_potential_users_response_inner_pref
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreUserGetCourseUserProfilesResponseInner(BaseModel):
     """
     CoreUserGetCourseUserProfilesResponseInner
@@ -300,10 +302,12 @@ class CoreUserGetCourseUserProfilesResponseInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreUserGetCourseUserProfilesResponseInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "address": obj.get("address"),
             "auth": obj.get("auth"),
             "calendartype": obj.get("calendartype"),
@@ -339,7 +343,8 @@ class CoreUserGetCourseUserProfilesResponseInner(BaseModel):
             "timezone": obj.get("timezone"),
             "trackforums": obj.get("trackforums"),
             "username": obj.get("username")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

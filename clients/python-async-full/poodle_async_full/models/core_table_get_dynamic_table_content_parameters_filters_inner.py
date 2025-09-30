@@ -23,6 +23,8 @@ from poodle_async_full.models.core_table_get_dynamic_table_content_parameters_fi
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreTableGetDynamicTableContentParametersFiltersInner(BaseModel):
     """
     CoreTableGetDynamicTableContentParametersFiltersInner
@@ -97,15 +99,18 @@ class CoreTableGetDynamicTableContentParametersFiltersInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreTableGetDynamicTableContentParametersFiltersInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "filteroptions": [CoreTableGetDynamicTableContentParametersFiltersInnerFilteroptionsInner.from_dict(_item) for _item in obj["filteroptions"]] if obj.get("filteroptions") is not None else None,
             "jointype": obj.get("jointype"),
             "name": obj.get("name"),
             "values": obj.get("values")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

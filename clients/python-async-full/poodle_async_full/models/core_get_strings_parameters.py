@@ -23,6 +23,8 @@ from poodle_async_full.models.core_get_strings_parameters_strings_inner import C
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreGetStringsParameters(BaseModel):
     """
     CoreGetStringsParameters
@@ -84,12 +86,15 @@ class CoreGetStringsParameters(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreGetStringsParameters" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "strings": [CoreGetStringsParametersStringsInner.from_dict(_item) for _item in obj["strings"]] if obj.get("strings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -23,6 +23,8 @@ from poodle_async_full.models.core_blog_get_entries_response_entries_inner_tags_
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModWikiGetPageContentsResponsePage(BaseModel):
     """
     Page
@@ -144,10 +146,12 @@ class ModWikiGetPageContentsResponsePage(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModWikiGetPageContentsResponsePage" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "cachedcontent": obj.get("cachedcontent"),
             "caneditpage": obj.get("caneditpage"),
             "contentformat": obj.get("contentformat"),
@@ -159,7 +163,8 @@ class ModWikiGetPageContentsResponsePage(BaseModel):
             "userid": obj.get("userid"),
             "version": obj.get("version"),
             "wikiid": obj.get("wikiid")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

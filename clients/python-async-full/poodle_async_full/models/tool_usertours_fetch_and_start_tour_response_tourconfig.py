@@ -23,6 +23,8 @@ from poodle_async_full.models.tool_usertours_fetch_and_start_tour_response_tourc
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolUsertoursFetchAndStartTourResponseTourconfig(BaseModel):
     """
     Tour config
@@ -102,15 +104,18 @@ class ToolUsertoursFetchAndStartTourResponseTourconfig(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolUsertoursFetchAndStartTourResponseTourconfig" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "displaystepnumbers": obj.get("displaystepnumbers"),
             "endtourlabel": obj.get("endtourlabel"),
             "name": obj.get("name"),
             "steps": [ToolUsertoursFetchAndStartTourResponseTourconfigStepsInner.from_dict(_item) for _item in obj["steps"]] if obj.get("steps") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

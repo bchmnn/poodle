@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModQuizSaveOverridesParametersDataOverridesInner(BaseModel):
     """
     ModQuizSaveOverridesParametersDataOverridesInner
@@ -123,10 +125,12 @@ class ModQuizSaveOverridesParametersDataOverridesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModQuizSaveOverridesParametersDataOverridesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "attempts": obj.get("attempts"),
             "groupid": obj.get("groupid"),
             "id": obj.get("id"),
@@ -135,7 +139,8 @@ class ModQuizSaveOverridesParametersDataOverridesInner(BaseModel):
             "timelimit": obj.get("timelimit"),
             "timeopen": obj.get("timeopen"),
             "userid": obj.get("userid")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

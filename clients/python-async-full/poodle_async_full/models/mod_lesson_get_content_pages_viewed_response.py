@@ -24,6 +24,8 @@ from poodle_async_full.models.mod_lesson_get_content_pages_viewed_response_pages
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModLessonGetContentPagesViewedResponse(BaseModel):
     """
     ModLessonGetContentPagesViewedResponse
@@ -93,13 +95,16 @@ class ModLessonGetContentPagesViewedResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModLessonGetContentPagesViewedResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "pages": [ModLessonGetContentPagesViewedResponsePagesInner.from_dict(_item) for _item in obj["pages"]] if obj.get("pages") is not None else None,
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModForumSetPinStateResponseTimes(BaseModel):
     """
     ModForumSetPinStateResponseTimes
@@ -79,15 +81,18 @@ class ModForumSetPinStateResponseTimes(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModForumSetPinStateResponseTimes" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "end": obj.get("end") if obj.get("end") is not None else 0,
             "locked": obj.get("locked") if obj.get("locked") is not None else 0,
             "modified": obj.get("modified") if obj.get("modified") is not None else 0,
             "start": obj.get("start") if obj.get("start") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

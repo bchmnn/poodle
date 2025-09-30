@@ -23,6 +23,8 @@ from poodle_async_full.models.core_course_get_contents_response_inner_modules_in
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCourseGetContentsResponseInnerModulesInnerCompletiondata(BaseModel):
     """
     CoreCourseGetContentsResponseInnerModulesInnerCompletiondata
@@ -98,10 +100,12 @@ class CoreCourseGetContentsResponseInnerModulesInnerCompletiondata(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCourseGetContentsResponseInnerModulesInnerCompletiondata" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "details": [CoreCourseGetContentsResponseInnerModulesInnerCompletiondataDetailsInner.from_dict(_item) for _item in obj["details"]] if obj.get("details") is not None else None,
             "hascompletion": obj.get("hascompletion") if obj.get("hascompletion") is not None else False,
             "isautomatic": obj.get("isautomatic") if obj.get("isautomatic") is not None else False,
@@ -112,7 +116,8 @@ class CoreCourseGetContentsResponseInnerModulesInnerCompletiondata(BaseModel):
             "timecompleted": obj.get("timecompleted") if obj.get("timecompleted") is not None else 0,
             "uservisible": obj.get("uservisible") if obj.get("uservisible") is not None else False,
             "valueused": obj.get("valueused") if obj.get("valueused") is not None else False
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

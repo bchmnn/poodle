@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_assign_save_grade_parameters_advancedgradingda
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModAssignSaveGradeParametersAdvancedgradingdataGuide(BaseModel):
     """
     items
@@ -84,12 +86,15 @@ class ModAssignSaveGradeParametersAdvancedgradingdataGuide(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModAssignSaveGradeParametersAdvancedgradingdataGuide" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "criteria": [ModAssignSaveGradeParametersAdvancedgradingdataGuideCriteriaInner.from_dict(_item) for _item in obj["criteria"]] if obj.get("criteria") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

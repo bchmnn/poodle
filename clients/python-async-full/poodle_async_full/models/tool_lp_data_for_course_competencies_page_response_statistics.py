@@ -23,6 +23,8 @@ from poodle_async_full.models.core_competency_list_competencies_in_template_resp
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolLpDataForCourseCompetenciesPageResponseStatistics(BaseModel):
     """
     ToolLpDataForCourseCompetenciesPageResponseStatistics
@@ -91,10 +93,12 @@ class ToolLpDataForCourseCompetenciesPageResponseStatistics(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolLpDataForCourseCompetenciesPageResponseStatistics" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "canbegradedincourse": obj.get("canbegradedincourse") if obj.get("canbegradedincourse") is not None else False,
             "canmanagecoursecompetencies": obj.get("canmanagecoursecompetencies") if obj.get("canmanagecoursecompetencies") is not None else False,
             "competencycount": obj.get("competencycount") if obj.get("competencycount") is not None else 0,
@@ -103,7 +107,8 @@ class ToolLpDataForCourseCompetenciesPageResponseStatistics(BaseModel):
             "proficientcompetencycount": obj.get("proficientcompetencycount") if obj.get("proficientcompetencycount") is not None else 0,
             "proficientcompetencypercentage": obj.get("proficientcompetencypercentage") if obj.get("proficientcompetencypercentage") is not None else 0,
             "proficientcompetencypercentageformatted": obj.get("proficientcompetencypercentageformatted") if obj.get("proficientcompetencypercentageformatted") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -23,6 +23,8 @@ from poodle_async_full.models.core_grades_grader_gradingpanel_scale_fetch_respon
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreGradesGraderGradingpanelScaleFetchResponseGrade(BaseModel):
     """
     CoreGradesGraderGradingpanelScaleFetchResponseGrade
@@ -114,17 +116,20 @@ class CoreGradesGraderGradingpanelScaleFetchResponseGrade(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreGradesGraderGradingpanelScaleFetchResponseGrade" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "gradedby": obj.get("gradedby"),
             "maxgrade": obj.get("maxgrade"),
             "options": [CoreGradesGraderGradingpanelScaleFetchResponseGradeOptionsInner.from_dict(_item) for _item in obj["options"]] if obj.get("options") is not None else None,
             "timecreated": obj.get("timecreated"),
             "timemodified": obj.get("timemodified"),
             "usergrade": obj.get("usergrade")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

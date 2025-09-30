@@ -24,6 +24,8 @@ from poodle_async_full.models.core_block_get_course_blocks_response_blocks_inner
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreBlockGetCourseBlocksResponseBlocksInner(BaseModel):
     """
     Block information.
@@ -137,10 +139,12 @@ class CoreBlockGetCourseBlocksResponseBlocksInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreBlockGetCourseBlocksResponseBlocksInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "collapsible": obj.get("collapsible"),
             "configs": [CoreBlockGetCourseBlocksResponseBlocksInnerConfigsInner.from_dict(_item) for _item in obj["configs"]] if obj.get("configs") is not None else None,
             "contents": CoreBlockGetCourseBlocksResponseBlocksInnerContents.from_dict(obj["contents"]) if obj.get("contents") is not None else None,
@@ -151,7 +155,8 @@ class CoreBlockGetCourseBlocksResponseBlocksInner(BaseModel):
             "region": obj.get("region"),
             "visible": obj.get("visible"),
             "weight": obj.get("weight")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

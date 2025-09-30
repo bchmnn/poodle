@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreNotesGetNotesResponseNotesInner(BaseModel):
     """
     note
@@ -111,17 +113,20 @@ class CoreNotesGetNotesResponseNotesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreNotesGetNotesResponseNotesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "courseid": obj.get("courseid"),
             "format": obj.get("format"),
             "noteid": obj.get("noteid"),
             "publishstate": obj.get("publishstate"),
             "text": obj.get("text"),
             "userid": obj.get("userid")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

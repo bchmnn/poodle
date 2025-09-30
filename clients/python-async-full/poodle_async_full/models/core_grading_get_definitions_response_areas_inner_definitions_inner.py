@@ -24,6 +24,8 @@ from poodle_async_full.models.core_grading_get_definitions_response_areas_inner_
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreGradingGetDefinitionsResponseAreasInnerDefinitionsInner(BaseModel):
     """
     CoreGradingGetDefinitionsResponseAreasInnerDefinitionsInner
@@ -157,10 +159,12 @@ class CoreGradingGetDefinitionsResponseAreasInnerDefinitionsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreGradingGetDefinitionsResponseAreasInnerDefinitionsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "copiedfromid": obj.get("copiedfromid"),
             "description": obj.get("description"),
             "descriptionformat": obj.get("descriptionformat"),
@@ -175,7 +179,8 @@ class CoreGradingGetDefinitionsResponseAreasInnerDefinitionsInner(BaseModel):
             "timemodified": obj.get("timemodified"),
             "usercreated": obj.get("usercreated"),
             "usermodified": obj.get("usermodified")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

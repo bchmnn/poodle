@@ -23,6 +23,8 @@ from poodle_async_full.models.tool_mobile_call_external_functions_response_respo
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolMobileCallExternalFunctionsResponse(BaseModel):
     """
     ToolMobileCallExternalFunctionsResponse
@@ -84,12 +86,15 @@ class ToolMobileCallExternalFunctionsResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolMobileCallExternalFunctionsResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "responses": [ToolMobileCallExternalFunctionsResponseResponsesInner.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

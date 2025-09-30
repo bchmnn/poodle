@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCourseAddContentItemToUserFavouritesResponse(BaseModel):
     """
     CoreCourseAddContentItemToUserFavouritesResponse
@@ -88,10 +90,12 @@ class CoreCourseAddContentItemToUserFavouritesResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCourseAddContentItemToUserFavouritesResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "archetype": obj.get("archetype") if obj.get("archetype") is not None else '',
             "branded": obj.get("branded") if obj.get("branded") is not None else False,
             "componentname": obj.get("componentname") if obj.get("componentname") is not None else '',
@@ -105,7 +109,8 @@ class CoreCourseAddContentItemToUserFavouritesResponse(BaseModel):
             "purpose": obj.get("purpose") if obj.get("purpose") is not None else '',
             "recommended": obj.get("recommended") if obj.get("recommended") is not None else False,
             "title": obj.get("title") if obj.get("title") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 
