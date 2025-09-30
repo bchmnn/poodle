@@ -24,6 +24,8 @@ from poodle_async_full.models.mod_data_get_entry_response_ratinginfo_scales_inne
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModDataGetEntryResponseRatinginfo(BaseModel):
     """
     Rating information
@@ -123,10 +125,12 @@ class ModDataGetEntryResponseRatinginfo(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModDataGetEntryResponseRatinginfo" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "canviewall": obj.get("canviewall"),
             "canviewany": obj.get("canviewany"),
             "component": obj.get("component"),
@@ -134,7 +138,8 @@ class ModDataGetEntryResponseRatinginfo(BaseModel):
             "ratingarea": obj.get("ratingarea"),
             "ratings": [ModDataGetEntryResponseRatinginfoRatingsInner.from_dict(_item) for _item in obj["ratings"]] if obj.get("ratings") is not None else None,
             "scales": [ModDataGetEntryResponseRatinginfoScalesInner.from_dict(_item) for _item in obj["scales"]] if obj.get("scales") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

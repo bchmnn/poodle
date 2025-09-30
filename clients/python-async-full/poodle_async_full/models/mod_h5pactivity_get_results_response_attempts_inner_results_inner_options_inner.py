@@ -24,6 +24,8 @@ from poodle_async_full.models.mod_h5pactivity_get_results_response_attempts_inne
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModH5pactivityGetResultsResponseAttemptsInnerResultsInnerOptionsInner(BaseModel):
     """
     ModH5pactivityGetResultsResponseAttemptsInnerResultsInnerOptionsInner
@@ -97,15 +99,18 @@ class ModH5pactivityGetResultsResponseAttemptsInnerResultsInnerOptionsInner(Base
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModH5pactivityGetResultsResponseAttemptsInnerResultsInnerOptionsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "correctanswer": ModH5pactivityGetResultsResponseAttemptsInnerResultsInnerOptionsInnerCorrectanswer.from_dict(obj["correctanswer"]) if obj.get("correctanswer") is not None else None,
             "description": obj.get("description"),
             "id": obj.get("id"),
             "useranswer": ModH5pactivityGetResultsResponseAttemptsInnerResultsInnerOptionsInnerUseranswer.from_dict(obj["useranswer"]) if obj.get("useranswer") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

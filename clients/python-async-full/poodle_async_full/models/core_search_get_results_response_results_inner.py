@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreSearchGetResultsResponseResultsInner(BaseModel):
     """
     CoreSearchGetResultsResponseResultsInner
@@ -116,10 +118,12 @@ class CoreSearchGetResultsResponseResultsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreSearchGetResultsResponseResultsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "areaname": obj.get("areaname") if obj.get("areaname") is not None else '',
             "componentname": obj.get("componentname") if obj.get("componentname") is not None else '',
             "content": obj.get("content") if obj.get("content") is not None else '',
@@ -141,7 +145,8 @@ class CoreSearchGetResultsResponseResultsInner(BaseModel):
             "userfullname": obj.get("userfullname") if obj.get("userfullname") is not None else '',
             "userid": obj.get("userid") if obj.get("userid") is not None else 0,
             "userurl": obj.get("userurl") if obj.get("userurl") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

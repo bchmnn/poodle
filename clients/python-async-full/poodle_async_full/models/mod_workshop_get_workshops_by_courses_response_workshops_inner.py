@@ -23,6 +23,8 @@ from poodle_async_full.models.core_blog_get_entries_response_entries_inner_attac
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModWorkshopGetWorkshopsByCoursesResponseWorkshopsInner(BaseModel):
     """
     ModWorkshopGetWorkshopsByCoursesResponseWorkshopsInner
@@ -202,10 +204,12 @@ class ModWorkshopGetWorkshopsByCoursesResponseWorkshopsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModWorkshopGetWorkshopsByCoursesResponseWorkshopsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "assessmentend": obj.get("assessmentend") if obj.get("assessmentend") is not None else 0,
             "assessmentstart": obj.get("assessmentstart") if obj.get("assessmentstart") is not None else 0,
             "conclusion": obj.get("conclusion"),
@@ -249,7 +253,8 @@ class ModWorkshopGetWorkshopsByCoursesResponseWorkshopsInner(BaseModel):
             "useexamples": obj.get("useexamples") if obj.get("useexamples") is not None else False,
             "usepeerassessment": obj.get("usepeerassessment") if obj.get("usepeerassessment") is not None else False,
             "useselfassessment": obj.get("useselfassessment") if obj.get("useselfassessment") is not None else False
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

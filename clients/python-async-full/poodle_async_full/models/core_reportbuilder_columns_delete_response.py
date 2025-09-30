@@ -23,6 +23,8 @@ from poodle_async_full.models.core_reportbuilder_columns_add_response_sortableco
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreReportbuilderColumnsDeleteResponse(BaseModel):
     """
     CoreReportbuilderColumnsDeleteResponse
@@ -86,14 +88,17 @@ class CoreReportbuilderColumnsDeleteResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreReportbuilderColumnsDeleteResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "hassortablecolumns": obj.get("hassortablecolumns") if obj.get("hassortablecolumns") is not None else False,
             "helpicon": obj.get("helpicon") if obj.get("helpicon") is not None else '',
             "sortablecolumns": [CoreReportbuilderColumnsAddResponseSortablecolumnsInner.from_dict(_item) for _item in obj["sortablecolumns"]] if obj.get("sortablecolumns") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

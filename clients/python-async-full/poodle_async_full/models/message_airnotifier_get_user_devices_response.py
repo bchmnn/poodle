@@ -24,6 +24,8 @@ from poodle_async_full.models.message_airnotifier_get_user_devices_response_devi
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class MessageAirnotifierGetUserDevicesResponse(BaseModel):
     """
     MessageAirnotifierGetUserDevicesResponse
@@ -93,13 +95,16 @@ class MessageAirnotifierGetUserDevicesResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "MessageAirnotifierGetUserDevicesResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "devices": [MessageAirnotifierGetUserDevicesResponseDevicesInner.from_dict(_item) for _item in obj["devices"]] if obj.get("devices") is not None else None,
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreOutputLoadTemplateWithDependenciesParameters(BaseModel):
     """
     CoreOutputLoadTemplateWithDependenciesParameters
@@ -105,16 +107,19 @@ class CoreOutputLoadTemplateWithDependenciesParameters(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreOutputLoadTemplateWithDependenciesParameters" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "component": obj.get("component"),
             "includecomments": obj.get("includecomments") if obj.get("includecomments") is not None else False,
             "lang": obj.get("lang"),
             "template": obj.get("template"),
             "themename": obj.get("themename")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

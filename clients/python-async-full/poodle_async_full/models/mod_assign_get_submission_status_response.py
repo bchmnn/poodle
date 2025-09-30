@@ -28,6 +28,8 @@ from poodle_async_full.models.mod_assign_get_submission_status_response_previous
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModAssignGetSubmissionStatusResponse(BaseModel):
     """
     ModAssignGetSubmissionStatusResponse
@@ -113,17 +115,20 @@ class ModAssignGetSubmissionStatusResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModAssignGetSubmissionStatusResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "assignmentdata": ModAssignGetSubmissionStatusResponseAssignmentdata.from_dict(obj["assignmentdata"]) if obj.get("assignmentdata") is not None else None,
             "feedback": ModAssignGetSubmissionStatusResponseFeedback.from_dict(obj["feedback"]) if obj.get("feedback") is not None else None,
             "gradingsummary": ModAssignGetSubmissionStatusResponseGradingsummary.from_dict(obj["gradingsummary"]) if obj.get("gradingsummary") is not None else None,
             "lastattempt": ModAssignGetSubmissionStatusResponseLastattempt.from_dict(obj["lastattempt"]) if obj.get("lastattempt") is not None else None,
             "previousattempts": [ModAssignGetSubmissionStatusResponsePreviousattemptsInner.from_dict(_item) for _item in obj["previousattempts"]] if obj.get("previousattempts") is not None else None,
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

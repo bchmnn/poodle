@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_assign_get_submission_status_response_lastatte
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModAssignGetSubmissionStatusResponseLastattempt(BaseModel):
     """
     Last attempt information.
@@ -152,10 +154,12 @@ class ModAssignGetSubmissionStatusResponseLastattempt(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModAssignGetSubmissionStatusResponseLastattempt" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "blindmarking": obj.get("blindmarking"),
             "canedit": obj.get("canedit"),
             "caneditowner": obj.get("caneditowner"),
@@ -171,7 +175,8 @@ class ModAssignGetSubmissionStatusResponseLastattempt(BaseModel):
             "teamsubmission": ModAssignGetSubmissionStatusResponseLastattemptSubmission.from_dict(obj["teamsubmission"]) if obj.get("teamsubmission") is not None else None,
             "timelimit": obj.get("timelimit"),
             "usergroups": obj.get("usergroups")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

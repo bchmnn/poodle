@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModLtiGetToolProxyRegistrationRequestResponse(BaseModel):
     """
     ModLtiGetToolProxyRegistrationRequestResponse
@@ -117,10 +119,12 @@ class ModLtiGetToolProxyRegistrationRequestResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModLtiGetToolProxyRegistrationRequestResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "launch_presentation_return_url": obj.get("launch_presentation_return_url"),
             "lti_message_type": obj.get("lti_message_type"),
             "lti_version": obj.get("lti_version"),
@@ -128,7 +132,8 @@ class ModLtiGetToolProxyRegistrationRequestResponse(BaseModel):
             "reg_password": obj.get("reg_password"),
             "reg_url": obj.get("reg_url"),
             "tc_profile_url": obj.get("tc_profile_url")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

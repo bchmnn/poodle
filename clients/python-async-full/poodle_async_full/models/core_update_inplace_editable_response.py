@@ -23,6 +23,8 @@ from poodle_async_full.models.core_update_inplace_editable_response_editicon imp
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreUpdateInplaceEditableResponse(BaseModel):
     """
     CoreUpdateInplaceEditableResponse
@@ -140,10 +142,12 @@ class CoreUpdateInplaceEditableResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreUpdateInplaceEditableResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "component": obj.get("component"),
             "displayvalue": obj.get("displayvalue"),
             "edithint": obj.get("edithint"),
@@ -155,7 +159,8 @@ class CoreUpdateInplaceEditableResponse(BaseModel):
             "options": obj.get("options"),
             "type": obj.get("type"),
             "value": obj.get("value")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

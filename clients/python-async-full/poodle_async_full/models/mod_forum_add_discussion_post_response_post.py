@@ -29,6 +29,8 @@ from poodle_async_full.models.mod_forum_add_discussion_post_response_post_urls i
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModForumAddDiscussionPostResponsePost(BaseModel):
     """
     ModForumAddDiscussionPostResponsePost
@@ -173,10 +175,12 @@ class ModForumAddDiscussionPostResponsePost(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModForumAddDiscussionPostResponsePost" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "attachments": [ModForumAddDiscussionPostResponsePostAttachmentsInner.from_dict(_item) for _item in obj["attachments"]] if obj.get("attachments") is not None else None,
             "author": ModForumAddDiscussionPostResponsePostAuthor.from_dict(obj["author"]) if obj.get("author") is not None else None,
             "capabilities": ModForumAddDiscussionPostResponsePostCapabilities.from_dict(obj["capabilities"]) if obj.get("capabilities") is not None else None,
@@ -200,7 +204,8 @@ class ModForumAddDiscussionPostResponsePost(BaseModel):
             "unread": obj.get("unread"),
             "urls": ModForumAddDiscussionPostResponsePostUrls.from_dict(obj["urls"]) if obj.get("urls") is not None else None,
             "wordcount": obj.get("wordcount")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

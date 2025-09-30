@@ -25,6 +25,8 @@ from poodle_async_full.models.mod_scorm_get_scorms_by_courses_response_scorms_in
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModScormGetScormsByCoursesResponse(BaseModel):
     """
     ModScormGetScormsByCoursesResponse
@@ -102,14 +104,17 @@ class ModScormGetScormsByCoursesResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModScormGetScormsByCoursesResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "options": [ModScormGetScormsByCoursesResponseOptionsInner.from_dict(_item) for _item in obj["options"]] if obj.get("options") is not None else None,
             "scorms": [ModScormGetScormsByCoursesResponseScormsInner.from_dict(_item) for _item in obj["scorms"]] if obj.get("scorms") is not None else None,
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

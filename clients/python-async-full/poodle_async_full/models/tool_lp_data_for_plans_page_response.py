@@ -23,6 +23,8 @@ from poodle_async_full.models.core_competency_list_user_plans_response_inner imp
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolLpDataForPlansPageResponse(BaseModel):
     """
     ToolLpDataForPlansPageResponse
@@ -109,17 +111,20 @@ class ToolLpDataForPlansPageResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolLpDataForPlansPageResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "canmanageuserplans": obj.get("canmanageuserplans"),
             "canreaduserevidence": obj.get("canreaduserevidence"),
             "navigation": obj.get("navigation"),
             "plans": [CoreCompetencyListUserPlansResponseInner.from_dict(_item) for _item in obj["plans"]] if obj.get("plans") is not None else None,
             "pluginbaseurl": obj.get("pluginbaseurl"),
             "userid": obj.get("userid")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

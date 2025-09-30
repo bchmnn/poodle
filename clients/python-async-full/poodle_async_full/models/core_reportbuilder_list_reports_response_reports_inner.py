@@ -24,6 +24,8 @@ from poodle_async_full.models.core_competency_create_plan_response_reviewer impo
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreReportbuilderListReportsResponseReportsInner(BaseModel):
     """
     CoreReportbuilderListReportsResponseReportsInner
@@ -125,10 +127,12 @@ class CoreReportbuilderListReportsResponseReportsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreReportbuilderListReportsResponseReportsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "area": obj.get("area") if obj.get("area") is not None else '',
             "component": obj.get("component") if obj.get("component") is not None else '',
             "conditiondata": obj.get("conditiondata"),
@@ -147,7 +151,8 @@ class CoreReportbuilderListReportsResponseReportsInner(BaseModel):
             "uniquerows": obj.get("uniquerows") if obj.get("uniquerows") is not None else False,
             "usercreated": obj.get("usercreated") if obj.get("usercreated") is not None else 0,
             "usermodified": obj.get("usermodified") if obj.get("usermodified") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

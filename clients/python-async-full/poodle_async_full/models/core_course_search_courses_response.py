@@ -24,6 +24,8 @@ from poodle_async_full.models.core_course_search_courses_response_courses_inner 
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCourseSearchCoursesResponse(BaseModel):
     """
     CoreCourseSearchCoursesResponse
@@ -99,14 +101,17 @@ class CoreCourseSearchCoursesResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCourseSearchCoursesResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "courses": [CoreCourseSearchCoursesResponseCoursesInner.from_dict(_item) for _item in obj["courses"]] if obj.get("courses") is not None else None,
             "total": obj.get("total"),
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

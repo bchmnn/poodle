@@ -23,6 +23,8 @@ from poodle_async_full.models.core_blog_get_entries_response_entries_inner_attac
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModFeedbackGetFeedbacksByCoursesResponseFeedbacksInner(BaseModel):
     """
     ModFeedbackGetFeedbacksByCoursesResponseFeedbacksInner
@@ -126,10 +128,12 @@ class ModFeedbackGetFeedbacksByCoursesResponseFeedbacksInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModFeedbackGetFeedbacksByCoursesResponseFeedbacksInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "anonymous": obj.get("anonymous") if obj.get("anonymous") is not None else 0,
             "autonumbering": obj.get("autonumbering") if obj.get("autonumbering") is not None else True,
             "completionsubmit": obj.get("completionsubmit") if obj.get("completionsubmit") is not None else False,
@@ -151,7 +155,8 @@ class ModFeedbackGetFeedbacksByCoursesResponseFeedbacksInner(BaseModel):
             "timeclose": obj.get("timeclose") if obj.get("timeclose") is not None else 0,
             "timemodified": obj.get("timemodified") if obj.get("timemodified") is not None else 0,
             "timeopen": obj.get("timeopen") if obj.get("timeopen") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

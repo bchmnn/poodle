@@ -23,6 +23,8 @@ from poodle_async_full.models.core_block_get_course_blocks_response_blocks_inner
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModChatGetChatsByCoursesResponseChatsInner(BaseModel):
     """
     Chats
@@ -186,10 +188,12 @@ class ModChatGetChatsByCoursesResponseChatsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModChatGetChatsByCoursesResponseChatsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "chatmethod": obj.get("chatmethod"),
             "chattime": obj.get("chattime"),
             "course": obj.get("course"),
@@ -208,7 +212,8 @@ class ModChatGetChatsByCoursesResponseChatsInner(BaseModel):
             "studentlogs": obj.get("studentlogs"),
             "timemodified": obj.get("timemodified"),
             "visible": obj.get("visible")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

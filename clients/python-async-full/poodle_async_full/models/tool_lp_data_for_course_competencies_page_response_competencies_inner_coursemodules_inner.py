@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolLpDataForCourseCompetenciesPageResponseCompetenciesInnerCoursemodulesInner(BaseModel):
     """
     ToolLpDataForCourseCompetenciesPageResponseCompetenciesInnerCoursemodulesInner
@@ -79,15 +81,18 @@ class ToolLpDataForCourseCompetenciesPageResponseCompetenciesInnerCoursemodulesI
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolLpDataForCourseCompetenciesPageResponseCompetenciesInnerCoursemodulesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "iconurl": obj.get("iconurl") if obj.get("iconurl") is not None else '',
             "id": obj.get("id") if obj.get("id") is not None else 0,
             "name": obj.get("name") if obj.get("name") is not None else '',
             "url": obj.get("url") if obj.get("url") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -23,6 +23,8 @@ from poodle_async_full.models.core_block_get_course_blocks_response_blocks_inner
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModGlossaryGetGlossariesByCoursesResponseGlossariesInner(BaseModel):
     """
     Glossaries
@@ -295,10 +297,12 @@ class ModGlossaryGetGlossariesByCoursesResponseGlossariesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModGlossaryGetGlossariesByCoursesResponseGlossariesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "allowcomments": obj.get("allowcomments"),
             "allowduplicatedentries": obj.get("allowduplicatedentries"),
             "allowprintview": obj.get("allowprintview"),
@@ -336,7 +340,8 @@ class ModGlossaryGetGlossariesByCoursesResponseGlossariesInner(BaseModel):
             "timemodified": obj.get("timemodified"),
             "usedynalink": obj.get("usedynalink"),
             "visible": obj.get("visible")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreTagGetTagCollectionsResponseCollectionsInner(BaseModel):
     """
     CoreTagGetTagCollectionsResponseCollectionsInner
@@ -97,10 +99,12 @@ class CoreTagGetTagCollectionsResponseCollectionsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreTagGetTagCollectionsResponseCollectionsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "component": obj.get("component"),
             "customurl": obj.get("customurl"),
             "id": obj.get("id") if obj.get("id") is not None else 0,
@@ -108,7 +112,8 @@ class CoreTagGetTagCollectionsResponseCollectionsInner(BaseModel):
             "name": obj.get("name"),
             "searchable": obj.get("searchable") if obj.get("searchable") is not None else True,
             "sortorder": obj.get("sortorder") if obj.get("sortorder") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

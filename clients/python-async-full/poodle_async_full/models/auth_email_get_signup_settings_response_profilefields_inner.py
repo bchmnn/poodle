@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class AuthEmailGetSignupSettingsResponseProfilefieldsInner(BaseModel):
     """
     AuthEmailGetSignupSettingsResponseProfilefieldsInner
@@ -201,10 +203,12 @@ class AuthEmailGetSignupSettingsResponseProfilefieldsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "AuthEmailGetSignupSettingsResponseProfilefieldsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "categoryid": obj.get("categoryid"),
             "categoryname": obj.get("categoryname"),
             "datatype": obj.get("datatype"),
@@ -226,7 +230,8 @@ class AuthEmailGetSignupSettingsResponseProfilefieldsInner(BaseModel):
             "signup": obj.get("signup"),
             "sortorder": obj.get("sortorder"),
             "visible": obj.get("visible")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

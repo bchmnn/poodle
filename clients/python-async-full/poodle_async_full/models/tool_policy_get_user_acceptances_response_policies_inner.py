@@ -23,6 +23,8 @@ from poodle_async_full.models.tool_policy_get_user_acceptances_response_policies
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolPolicyGetUserAcceptancesResponsePoliciesInner(BaseModel):
     """
     ToolPolicyGetUserAcceptancesResponsePoliciesInner
@@ -164,10 +166,12 @@ class ToolPolicyGetUserAcceptancesResponsePoliciesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolPolicyGetUserAcceptancesResponsePoliciesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "acceptance": ToolPolicyGetUserAcceptancesResponsePoliciesInnerAcceptance.from_dict(obj["acceptance"]) if obj.get("acceptance") is not None else None,
             "agreementstyle": obj.get("agreementstyle"),
             "canaccept": obj.get("canaccept"),
@@ -183,7 +187,8 @@ class ToolPolicyGetUserAcceptancesResponsePoliciesInner(BaseModel):
             "summary": obj.get("summary"),
             "summaryformat": obj.get("summaryformat"),
             "versionid": obj.get("versionid")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

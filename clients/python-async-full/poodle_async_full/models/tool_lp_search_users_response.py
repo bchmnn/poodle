@@ -23,6 +23,8 @@ from poodle_async_full.models.core_competency_create_plan_response_reviewer impo
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolLpSearchUsersResponse(BaseModel):
     """
     ToolLpSearchUsersResponse
@@ -90,13 +92,16 @@ class ToolLpSearchUsersResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolLpSearchUsersResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "count": obj.get("count"),
             "users": [CoreCompetencyCreatePlanResponseReviewer.from_dict(_item) for _item in obj["users"]] if obj.get("users") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

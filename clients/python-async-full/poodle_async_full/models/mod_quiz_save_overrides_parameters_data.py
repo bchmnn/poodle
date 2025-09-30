@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_quiz_save_overrides_parameters_data_overrides_
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModQuizSaveOverridesParametersData(BaseModel):
     """
     ModQuizSaveOverridesParametersData
@@ -90,13 +92,16 @@ class ModQuizSaveOverridesParametersData(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModQuizSaveOverridesParametersData" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "overrides": [ModQuizSaveOverridesParametersDataOverridesInner.from_dict(_item) for _item in obj["overrides"]] if obj.get("overrides") is not None else None,
             "quizid": obj.get("quizid")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -1,35 +1,19 @@
-diff --color -Naur python.orig/api_client.mustache python/api_client.mustache
---- python.orig/api_client.mustache	2025-09-20 07:27:20.802745622 +0200
-+++ python/api_client.mustache	2025-09-06 11:27:14.139998930 +0200
-@@ -446,6 +446,25 @@
-         if data is None:
-             return None
- 
-+        # special case login
-+        if isinstance(data, dict) and "error" in data:
-+            raise ApiException(status=400, reason=data["error"], data=data)
-+
-+        # special case rest webservices
-+        if isinstance(data, dict) and "exception" in data:
-+            raise ApiException(status=400, reason=data["message"], data=data)
-+
-+        # special case ajax response
-+        if isinstance(data, list) and len(data) == 1 and isinstance(data[0], dict) and "error" in data[0]:
-+            _data = data[0]
-+            if _data["error"]:
-+                raise ApiException(
-+                    status=400,
-+                    reason=_data["exception"]["message"],
-+                    data=_data
-+                )
-+            data = _data["data"]
-+
-         if isinstance(klass, str):
-             if klass.startswith('List['):
-                 m = re.match(r'List\[(.*)]', klass)
-diff --color -Naur python.orig/api.mustache python/api.mustache
---- python.orig/api.mustache	2025-09-20 07:27:20.815478555 +0200
-+++ python/api.mustache	2025-09-06 11:27:14.139744473 +0200
+diff --git a/__init__package.mustache b/__init__package.mustache
+index 7d1cb69..517e438 100644
+--- a/__init__package.mustache
++++ b/__init__package.mustache
+@@ -13,6 +13,7 @@ __all__ = [
+     {{/apis}}{{/apiInfo}}"ApiResponse",
+     "ApiClient",
+     "Configuration",
++    "settings",
+     "OpenApiException",
+     "ApiTypeError",
+     "ApiValueError",
+diff --git a/api.mustache b/api.mustache
+index 3e440e1..2817838 100644
+--- a/api.mustache
++++ b/api.mustache
 @@ -3,6 +3,8 @@
  {{>partial_header}}
  
@@ -39,7 +23,7 @@ diff --color -Naur python.orig/api.mustache python/api.mustache
  from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
  from typing import Any, Dict, List, Optional, Tuple, Union
  from typing_extensions import Annotated
-@@ -14,6 +16,46 @@
+@@ -14,6 +16,46 @@ from typing_extensions import Annotated
  from {{packageName}}.api_client import ApiClient, RequestSerialized
  from {{packageName}}.api_response import ApiResponse
  from {{packageName}}.rest import RESTResponseType
@@ -86,7 +70,7 @@ diff --color -Naur python.orig/api.mustache python/api.mustache
  
  
  {{#operations}}
-@@ -28,6 +70,16 @@
+@@ -28,6 +70,16 @@ class {{classname}}:
          if api_client is None:
              api_client = ApiClient.get_default()
          self.api_client = api_client
@@ -103,7 +87,7 @@ diff --color -Naur python.orig/api.mustache python/api.mustache
  {{#operation}}
  
  
-@@ -101,6 +153,8 @@
+@@ -101,6 +153,8 @@ class {{classname}}:
              {{/allParams}}
          }
  
@@ -112,7 +96,7 @@ diff --color -Naur python.orig/api.mustache python/api.mustache
          _path_params: Dict[str, str] = {}
          _query_params: List[Tuple[str, str]] = []
          _header_params: Dict[str, Optional[str]] = _headers or {}
-@@ -116,6 +170,9 @@
+@@ -116,6 +170,9 @@ class {{classname}}:
              _path_params['{{baseName}}'] = {{paramName}}{{#isEnumRef}}.value{{/isEnumRef}}
  {{/pathParams}}
          # process the query parameters
@@ -122,7 +106,7 @@ diff --color -Naur python.orig/api.mustache python/api.mustache
  {{#queryParams}}
          if {{paramName}} is not None:
              {{#isDateTime}}
-@@ -148,6 +205,21 @@
+@@ -148,6 +205,21 @@ class {{classname}}:
              _query_params.append(('{{baseName}}', {{paramName}}{{#isEnumRef}}.value{{/isEnumRef}}))
              {{/isDate}}{{/isDateTime}}
  {{/queryParams}}
@@ -144,7 +128,7 @@ diff --color -Naur python.orig/api.mustache python/api.mustache
          # process the header parameters
  {{#headerParams}}
          if {{paramName}} is not None:
-@@ -160,7 +232,7 @@
+@@ -160,7 +232,7 @@ class {{classname}}:
              _files['{{{baseName}}}'] = {{paramName}}
              {{/isFile}}
              {{^isFile}}
@@ -153,7 +137,7 @@ diff --color -Naur python.orig/api.mustache python/api.mustache
              {{/isFile}}
  {{/formParams}}
          # process the body parameter
-@@ -226,7 +298,7 @@
+@@ -226,7 +298,7 @@ class {{classname}}:
  
          return self.api_client.param_serialize(
              method='{{httpMethod}}',
@@ -162,10 +146,114 @@ diff --color -Naur python.orig/api.mustache python/api.mustache
              path_params=_path_params,
              query_params=_query_params,
              header_params=_header_params,
-diff --color -Naur python.orig/pyproject.mustache python/pyproject.mustache
---- python.orig/pyproject.mustache	2025-09-20 07:27:20.816445271 +0200
-+++ python/pyproject.mustache	2025-09-20 07:27:39.441475302 +0200
-@@ -91,7 +91,7 @@
+diff --git a/api_client.mustache b/api_client.mustache
+index e89b611..a3d058a 100644
+--- a/api_client.mustache
++++ b/api_client.mustache
+@@ -446,6 +446,25 @@ class ApiClient:
+         if data is None:
+             return None
+ 
++        # special case login
++        if isinstance(data, dict) and "error" in data:
++            raise ApiException(status=400, reason=data["error"], data=data)
++
++        # special case rest webservices
++        if isinstance(data, dict) and "exception" in data:
++            raise ApiException(status=400, reason=data["message"], data=data)
++
++        # special case ajax response
++        if isinstance(data, list) and len(data) == 1 and isinstance(data[0], dict) and "error" in data[0]:
++            _data = data[0]
++            if _data["error"]:
++                raise ApiException(
++                    status=400,
++                    reason=_data["exception"]["message"],
++                    data=_data
++                )
++            data = _data["data"]
++
+         if isinstance(klass, str):
+             if klass.startswith('List['):
+                 m = re.match(r'List\[(.*)]', klass)
+diff --git a/configuration.mustache b/configuration.mustache
+index 2601d75..5bbd19a 100644
+--- a/configuration.mustache
++++ b/configuration.mustache
+@@ -20,6 +20,12 @@ import urllib3
+ from {{packageName}}.signing import HttpSigningConfiguration
+ {{/hasHttpSignatureMethods}}
+ 
++class _Settings:
++    relaxe_all_models: bool = False
++    relaxed_models: set[str] = set()
++
++settings = _Settings()
++
+ JSON_SCHEMA_VALIDATION_KEYWORDS = {
+     'multipleOf', 'maximum', 'exclusiveMaximum',
+     'minimum', 'exclusiveMinimum', 'maxLength',
+diff --git a/exports_package.mustache b/exports_package.mustache
+index 96bd44e..55f0c1a 100644
+--- a/exports_package.mustache
++++ b/exports_package.mustache
+@@ -5,6 +5,7 @@
+ from {{packageName}}.api_response import ApiResponse as ApiResponse
+ from {{packageName}}.api_client import ApiClient as ApiClient
+ from {{packageName}}.configuration import Configuration as Configuration
++from {{packageName}}.configuration import settings as settings
+ from {{packageName}}.exceptions import OpenApiException as OpenApiException
+ from {{packageName}}.exceptions import ApiTypeError as ApiTypeError
+ from {{packageName}}.exceptions import ApiValueError as ApiValueError
+diff --git a/model_generic.mustache b/model_generic.mustache
+index 9fa35c8..e85aeb6 100644
+--- a/model_generic.mustache
++++ b/model_generic.mustache
+@@ -12,6 +12,8 @@ import json
+ from typing import Optional, Set
+ from typing_extensions import Self
+ 
++from {{packageName}}.configuration import settings
++
+ {{#hasChildren}}
+ {{#discriminator}}
+ {{! If this model is a super class, importlib is used. So import the necessary modules for the type here. }}
+@@ -276,8 +278,10 @@ class {{classname}}({{#parent}}{{{.}}}{{/parent}}{{^parent}}BaseModel{{/parent}}
+         if obj is None:
+             return None
+ 
++        relaxed = settings.relaxe_all_models or "{{{classname}}}" in settings.relaxed_models
++
+         if not isinstance(obj, dict):
+-            return cls.model_validate(obj)
++            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+ 
+         {{#disallowAdditionalPropertiesIfNotPresent}}
+         {{^isAdditionalPropertiesTrue}}
+@@ -288,7 +292,7 @@ class {{classname}}({{#parent}}{{{.}}}{{/parent}}{{^parent}}BaseModel{{/parent}}
+ 
+         {{/isAdditionalPropertiesTrue}}
+         {{/disallowAdditionalPropertiesIfNotPresent}}
+-        _obj = cls.model_validate({
++        data = {
+             {{#allVars}}
+             {{#isContainer}}
+             {{#isArray}}
+@@ -383,7 +387,8 @@ class {{classname}}({{#parent}}{{{.}}}{{/parent}}{{^parent}}BaseModel{{/parent}}
+             {{/isPrimitiveType}}
+             {{/isContainer}}
+             {{/allVars}}
+-        })
++        }
++        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
+         {{#isAdditionalPropertiesTrue}}
+         # store additional fields in additional_properties
+         for _key in obj.keys():
+diff --git a/pyproject.mustache b/pyproject.mustache
+index d5b2826..a0c06c7 100644
+--- a/pyproject.mustache
++++ b/pyproject.mustache
+@@ -91,7 +91,7 @@ mypy = ">= 1.5"
  
  
  [build-system]

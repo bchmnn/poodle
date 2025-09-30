@@ -23,6 +23,8 @@ from poodle_async_full.models.core_block_get_course_blocks_response_blocks_inner
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModPageGetPagesByCoursesResponsePagesInner(BaseModel):
     """
     ModPageGetPagesByCoursesResponsePagesInner
@@ -206,10 +208,12 @@ class ModPageGetPagesByCoursesResponsePagesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModPageGetPagesByCoursesResponsePagesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "content": obj.get("content"),
             "contentfiles": [CoreBlockGetCourseBlocksResponseBlocksInnerContentsFilesInner.from_dict(_item) for _item in obj["contentfiles"]] if obj.get("contentfiles") is not None else None,
             "contentformat": obj.get("contentformat"),
@@ -231,7 +235,8 @@ class ModPageGetPagesByCoursesResponsePagesInner(BaseModel):
             "section": obj.get("section"),
             "timemodified": obj.get("timemodified"),
             "visible": obj.get("visible")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_mini.configuration import settings
+
 class CoreCourseGetContentsResponseInnerModulesInnerContentsInnerTagsInner(BaseModel):
     """
     CoreCourseGetContentsResponseInnerModulesInnerContentsInnerTagsInner
@@ -96,10 +98,12 @@ class CoreCourseGetContentsResponseInnerModulesInnerContentsInnerTagsInner(BaseM
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCourseGetContentsResponseInnerModulesInnerContentsInnerTagsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "flag": obj.get("flag") if obj.get("flag") is not None else 0,
             "id": obj.get("id") if obj.get("id") is not None else 0,
             "isstandard": obj.get("isstandard") if obj.get("isstandard") is not None else False,
@@ -111,7 +115,8 @@ class CoreCourseGetContentsResponseInnerModulesInnerContentsInnerTagsInner(BaseM
             "taginstancecontextid": obj.get("taginstancecontextid") if obj.get("taginstancecontextid") is not None else 0,
             "taginstanceid": obj.get("taginstanceid") if obj.get("taginstanceid") is not None else 0,
             "viewurl": obj.get("viewurl")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

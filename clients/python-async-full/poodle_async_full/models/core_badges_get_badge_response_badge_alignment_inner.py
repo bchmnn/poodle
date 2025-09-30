@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreBadgesGetBadgeResponseBadgeAlignmentInner(BaseModel):
     """
     CoreBadgesGetBadgeResponseBadgeAlignmentInner
@@ -97,10 +99,12 @@ class CoreBadgesGetBadgeResponseBadgeAlignmentInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreBadgesGetBadgeResponseBadgeAlignmentInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "badgeid": obj.get("badgeid") if obj.get("badgeid") is not None else 0,
             "id": obj.get("id") if obj.get("id") is not None else 0,
             "targetCode": obj.get("targetCode"),
@@ -108,7 +112,8 @@ class CoreBadgesGetBadgeResponseBadgeAlignmentInner(BaseModel):
             "targetFramework": obj.get("targetFramework"),
             "targetName": obj.get("targetName") if obj.get("targetName") is not None else '',
             "targetUrl": obj.get("targetUrl") if obj.get("targetUrl") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -24,6 +24,8 @@ from poodle_async_full.models.tool_lp_data_for_user_competency_summary_in_course
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ToolLpDataForUserCompetencySummaryInPlanResponse(BaseModel):
     """
     ToolLpDataForUserCompetencySummaryInPlanResponse
@@ -85,13 +87,16 @@ class ToolLpDataForUserCompetencySummaryInPlanResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ToolLpDataForUserCompetencySummaryInPlanResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "plan": CoreCompetencyListUserPlansResponseInner.from_dict(obj["plan"]) if obj.get("plan") is not None else None,
             "usercompetencysummary": ToolLpDataForUserCompetencySummaryInCourseResponseUsercompetencysummary.from_dict(obj["usercompetencysummary"]) if obj.get("usercompetencysummary") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

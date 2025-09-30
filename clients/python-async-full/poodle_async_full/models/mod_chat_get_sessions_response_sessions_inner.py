@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_chat_get_sessions_response_sessions_inner_sess
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModChatGetSessionsResponseSessionsInner(BaseModel):
     """
     ModChatGetSessionsResponseSessionsInner
@@ -102,15 +104,18 @@ class ModChatGetSessionsResponseSessionsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModChatGetSessionsResponseSessionsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "iscomplete": obj.get("iscomplete"),
             "sessionend": obj.get("sessionend"),
             "sessionstart": obj.get("sessionstart"),
             "sessionusers": [ModChatGetSessionsResponseSessionsInnerSessionusersInner.from_dict(_item) for _item in obj["sessionusers"]] if obj.get("sessionusers") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

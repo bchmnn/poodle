@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModChatGetSessionMessagesResponseMessagesInner(BaseModel):
     """
     ModChatGetSessionMessagesResponseMessagesInner
@@ -82,10 +84,12 @@ class ModChatGetSessionMessagesResponseMessagesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModChatGetSessionMessagesResponseMessagesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "chatid": obj.get("chatid") if obj.get("chatid") is not None else 0,
             "groupid": obj.get("groupid") if obj.get("groupid") is not None else 0,
             "id": obj.get("id") if obj.get("id") is not None else 0,
@@ -93,7 +97,8 @@ class ModChatGetSessionMessagesResponseMessagesInner(BaseModel):
             "message": obj.get("message") if obj.get("message") is not None else '',
             "timestamp": obj.get("timestamp") if obj.get("timestamp") is not None else 0,
             "userid": obj.get("userid") if obj.get("userid") is not None else 0
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

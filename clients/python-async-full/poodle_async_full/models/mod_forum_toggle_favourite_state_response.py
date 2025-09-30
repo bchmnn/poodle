@@ -28,6 +28,8 @@ from poodle_async_full.models.mod_forum_set_pin_state_response_userstate import 
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModForumToggleFavouriteStateResponse(BaseModel):
     """
     ModForumToggleFavouriteStateResponse
@@ -112,10 +114,12 @@ class ModForumToggleFavouriteStateResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModForumToggleFavouriteStateResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "capabilities": ModForumSetPinStateResponseCapabilities.from_dict(obj["capabilities"]) if obj.get("capabilities") is not None else None,
             "firstpostid": obj.get("firstpostid") if obj.get("firstpostid") is not None else 0,
             "forumid": obj.get("forumid") if obj.get("forumid") is not None else 0,
@@ -129,7 +133,8 @@ class ModForumToggleFavouriteStateResponse(BaseModel):
             "times": ModForumSetPinStateResponseTimes.from_dict(obj["times"]) if obj.get("times") is not None else None,
             "urls": ModForumSetPinStateResponseUrls.from_dict(obj["urls"]) if obj.get("urls") is not None else None,
             "userstate": ModForumSetPinStateResponseUserstate.from_dict(obj["userstate"]) if obj.get("userstate") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

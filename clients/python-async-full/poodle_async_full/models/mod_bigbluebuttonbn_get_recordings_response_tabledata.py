@@ -23,6 +23,8 @@ from poodle_async_full.models.mod_bigbluebuttonbn_get_recordings_response_tabled
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModBigbluebuttonbnGetRecordingsResponseTabledata(BaseModel):
     """
     ModBigbluebuttonbnGetRecordingsResponseTabledata
@@ -109,17 +111,20 @@ class ModBigbluebuttonbnGetRecordingsResponseTabledata(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModBigbluebuttonbnGetRecordingsResponseTabledata" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "activity": obj.get("activity"),
             "columns": [ModBigbluebuttonbnGetRecordingsResponseTabledataColumnsInner.from_dict(_item) for _item in obj["columns"]] if obj.get("columns") is not None else None,
             "data": obj.get("data"),
             "locale": obj.get("locale"),
             "ping_interval": obj.get("ping_interval"),
             "profile_features": obj.get("profile_features")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

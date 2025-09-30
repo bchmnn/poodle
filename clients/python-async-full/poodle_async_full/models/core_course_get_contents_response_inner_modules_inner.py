@@ -27,6 +27,8 @@ from poodle_async_full.models.core_course_get_contents_response_inner_modules_in
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreCourseGetContentsResponseInnerModulesInner(BaseModel):
     """
     CoreCourseGetContentsResponseInnerModulesInner
@@ -252,10 +254,12 @@ class CoreCourseGetContentsResponseInnerModulesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreCourseGetContentsResponseInnerModulesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "activitybadge": CoreCourseGetContentsResponseInnerModulesInnerActivitybadge.from_dict(obj["activitybadge"]) if obj.get("activitybadge") is not None else None,
             "afterlink": obj.get("afterlink"),
             "availability": obj.get("availability"),
@@ -285,7 +289,8 @@ class CoreCourseGetContentsResponseInnerModulesInner(BaseModel):
             "uservisible": obj.get("uservisible"),
             "visible": obj.get("visible"),
             "visibleoncoursepage": obj.get("visibleoncoursepage")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

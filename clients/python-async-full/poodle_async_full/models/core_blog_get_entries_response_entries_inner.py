@@ -24,6 +24,8 @@ from poodle_async_full.models.core_blog_get_entries_response_entries_inner_tags_
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreBlogGetEntriesResponseEntriesInner(BaseModel):
     """
     CoreBlogGetEntriesResponseEntriesInner
@@ -151,10 +153,12 @@ class CoreBlogGetEntriesResponseEntriesInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreBlogGetEntriesResponseEntriesInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "attachment": obj.get("attachment"),
             "attachmentfiles": [CoreBlogGetEntriesResponseEntriesInnerAttachmentfilesInner.from_dict(_item) for _item in obj["attachmentfiles"]] if obj.get("attachmentfiles") is not None else None,
             "canedit": obj.get("canedit") if obj.get("canedit") is not None else False,
@@ -178,7 +182,8 @@ class CoreBlogGetEntriesResponseEntriesInner(BaseModel):
             "uniquehash": obj.get("uniquehash") if obj.get("uniquehash") is not None else '',
             "userid": obj.get("userid") if obj.get("userid") is not None else 0,
             "usermodified": obj.get("usermodified")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

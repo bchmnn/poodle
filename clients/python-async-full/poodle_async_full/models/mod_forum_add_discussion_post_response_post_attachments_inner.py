@@ -24,6 +24,8 @@ from poodle_async_full.models.mod_forum_add_discussion_post_response_post_attach
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModForumAddDiscussionPostResponsePostAttachmentsInner(BaseModel):
     """
     ModForumAddDiscussionPostResponsePostAttachmentsInner
@@ -104,10 +106,12 @@ class ModForumAddDiscussionPostResponsePostAttachmentsInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModForumAddDiscussionPostResponsePostAttachmentsInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "author": obj.get("author") if obj.get("author") is not None else '',
             "component": obj.get("component") if obj.get("component") is not None else '',
             "contextid": obj.get("contextid") if obj.get("contextid") is not None else 0,
@@ -129,7 +133,8 @@ class ModForumAddDiscussionPostResponsePostAttachmentsInner(BaseModel):
             "timemodifiedformatted": obj.get("timemodifiedformatted") if obj.get("timemodifiedformatted") is not None else '',
             "url": obj.get("url") if obj.get("url") is not None else '',
             "urls": ModForumAddDiscussionPostResponsePostAttachmentsInnerUrls.from_dict(obj["urls"]) if obj.get("urls") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

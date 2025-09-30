@@ -24,6 +24,8 @@ from poodle_async_full.models.core_notes_get_course_notes_response_coursenotes_i
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreNotesGetCourseNotesResponse(BaseModel):
     """
     notes
@@ -121,17 +123,20 @@ class CoreNotesGetCourseNotesResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreNotesGetCourseNotesResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "canmanagecoursenotes": obj.get("canmanagecoursenotes"),
             "canmanagesystemnotes": obj.get("canmanagesystemnotes"),
             "coursenotes": [CoreNotesGetCourseNotesResponseCoursenotesInner.from_dict(_item) for _item in obj["coursenotes"]] if obj.get("coursenotes") is not None else None,
             "personalnotes": [CoreNotesGetCourseNotesResponseCoursenotesInner.from_dict(_item) for _item in obj["personalnotes"]] if obj.get("personalnotes") is not None else None,
             "sitenotes": [CoreNotesGetCourseNotesResponseCoursenotesInner.from_dict(_item) for _item in obj["sitenotes"]] if obj.get("sitenotes") is not None else None,
             "warnings": [AuthEmailGetSignupSettingsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

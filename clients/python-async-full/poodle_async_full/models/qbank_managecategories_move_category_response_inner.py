@@ -23,6 +23,8 @@ from poodle_async_full.models.qbank_managecategories_move_category_response_inne
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class QbankManagecategoriesMoveCategoryResponseInner(BaseModel):
     """
     An individual state update
@@ -92,14 +94,17 @@ class QbankManagecategoriesMoveCategoryResponseInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "QbankManagecategoriesMoveCategoryResponseInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "action": obj.get("action"),
             "fields": QbankManagecategoriesMoveCategoryResponseInnerFields.from_dict(obj["fields"]) if obj.get("fields") is not None else None,
             "name": obj.get("name")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

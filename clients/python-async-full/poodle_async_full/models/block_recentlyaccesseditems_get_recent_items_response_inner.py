@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class BlockRecentlyaccesseditemsGetRecentItemsResponseInner(BaseModel):
     """
     BlockRecentlyaccesseditemsGetRecentItemsResponseInner
@@ -88,10 +90,12 @@ class BlockRecentlyaccesseditemsGetRecentItemsResponseInner(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "BlockRecentlyaccesseditemsGetRecentItemsResponseInner" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "branded": obj.get("branded") if obj.get("branded") is not None else False,
             "cmid": obj.get("cmid") if obj.get("cmid") is not None else 0,
             "courseid": obj.get("courseid") if obj.get("courseid") is not None else 0,
@@ -105,7 +109,8 @@ class BlockRecentlyaccesseditemsGetRecentItemsResponseInner(BaseModel):
             "timeaccess": obj.get("timeaccess") if obj.get("timeaccess") is not None else 0,
             "userid": obj.get("userid") if obj.get("userid") is not None else 0,
             "viewurl": obj.get("viewurl") if obj.get("viewurl") is not None else ''
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

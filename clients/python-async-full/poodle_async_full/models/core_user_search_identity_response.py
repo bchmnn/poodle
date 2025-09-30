@@ -23,6 +23,8 @@ from poodle_async_full.models.core_user_search_identity_response_list_inner impo
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class CoreUserSearchIdentityResponse(BaseModel):
     """
     CoreUserSearchIdentityResponse
@@ -96,14 +98,17 @@ class CoreUserSearchIdentityResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "CoreUserSearchIdentityResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "list": [CoreUserSearchIdentityResponseListInner.from_dict(_item) for _item in obj["list"]] if obj.get("list") is not None else None,
             "maxusersperpage": obj.get("maxusersperpage"),
             "overflow": obj.get("overflow")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 

@@ -24,6 +24,8 @@ from poodle_async_full.models.mod_bigbluebuttonbn_meeting_info_response_presenta
 from typing import Optional, Set
 from typing_extensions import Self
 
+from poodle_async_full.configuration import settings
+
 class ModBigbluebuttonbnMeetingInfoResponse(BaseModel):
     """
     ModBigbluebuttonbnMeetingInfoResponse
@@ -231,10 +233,12 @@ class ModBigbluebuttonbnMeetingInfoResponse(BaseModel):
         if obj is None:
             return None
 
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
+        relaxed = settings.relaxe_all_models or "ModBigbluebuttonbnMeetingInfoResponse" in settings.relaxed_models
 
-        _obj = cls.model_validate({
+        if not isinstance(obj, dict):
+            return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
+
+        data = {
             "bigbluebuttonbnid": obj.get("bigbluebuttonbnid"),
             "canjoin": obj.get("canjoin"),
             "closingtime": obj.get("closingtime"),
@@ -260,7 +264,8 @@ class ModBigbluebuttonbnMeetingInfoResponse(BaseModel):
             "statusopen": obj.get("statusopen"),
             "statusrunning": obj.get("statusrunning"),
             "userlimit": obj.get("userlimit")
-        })
+        }
+        _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
 
 
