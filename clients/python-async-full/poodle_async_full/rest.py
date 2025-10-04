@@ -83,7 +83,7 @@ class RESTClientObject:
         if self.retry_client is not None:
             await self.retry_client.close()
 
-    async def request(
+    def build_request(
         self,
         method,
         url,
@@ -92,20 +92,6 @@ class RESTClientObject:
         post_params=None,
         _request_timeout=None
     ):
-        """Execute request
-
-        :param method: http request method
-        :param url: http request url
-        :param headers: http request headers
-        :param body: request json body, for `application/json`
-        :param post_params: request post parameters,
-                            `application/x-www-form-urlencoded`
-                            and `multipart/form-data`
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        """
         method = method.upper()
         assert method in [
             'GET',
@@ -184,7 +170,47 @@ class RESTClientObject:
                          arguments. Please check that your arguments match
                          declared content type."""
                 raise ApiException(status=0, reason=msg)
+        return args
 
+    async def request(
+        self,
+        method,
+        url,
+        headers=None,
+        body=None,
+        post_params=None,
+        _request_timeout=None
+    ):
+        """Execute request
+
+        :param method: http request method
+        :param url: http request url
+        :param headers: http request headers
+        :param body: request json body, for `application/json`
+        :param post_params: request post parameters,
+                            `application/x-www-form-urlencoded`
+                            and `multipart/form-data`
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        """
+
+        args = self.build_request(
+            method,
+            url,
+            headers,
+            body,
+            post_params,
+            _request_timeout
+        )
+
+        return await self.do_request(args)
+
+    async def do_request(
+        self,
+        args
+    ):
         pool_manager: Union[aiohttp.ClientSession, aiohttp_retry.RetryClient]
 
         # https pool manager
@@ -195,7 +221,7 @@ class RESTClientObject:
             )
         pool_manager = self.pool_manager
 
-        if self.retries is not None and method in ALLOW_RETRY_METHODS:
+        if self.retries is not None and args["method"] in ALLOW_RETRY_METHODS:
             if self.retry_client is None:
                 self.retry_client = aiohttp_retry.RetryClient(
                     client_session=self.pool_manager,
@@ -211,3 +237,4 @@ class RESTClientObject:
         r = await pool_manager.request(**args)
 
         return RESTResponse(r)
+
