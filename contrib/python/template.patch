@@ -11,7 +11,7 @@ index 7d1cb69..517e438 100644
      "ApiTypeError",
      "ApiValueError",
 diff --git a/api.mustache b/api.mustache
-index 3e440e1..2817838 100644
+index 3e440e1..c21bf49 100644
 --- a/api.mustache
 +++ b/api.mustache
 @@ -3,6 +3,8 @@
@@ -70,7 +70,7 @@ index 3e440e1..2817838 100644
  
  
  {{#operations}}
-@@ -28,6 +70,16 @@ class {{classname}}:
+@@ -28,9 +70,29 @@ class {{classname}}:
          if api_client is None:
              api_client = ApiClient.get_default()
          self.api_client = api_client
@@ -87,7 +87,49 @@ index 3e440e1..2817838 100644
  {{#operation}}
  
  
-@@ -101,6 +153,8 @@ class {{classname}}:
++    @validate_call
++    def {{operationId}}_args{{>partial_api_args}}:
++{{>partial_api}}
++
++        return self.api_client.build_api_call(
++            *_param,
++            _request_timeout=_request_timeout
++        )
++
++
+     @validate_call
+     {{#asyncio}}async {{/asyncio}}def {{operationId}}{{>partial_api_args}} -> {{{returnType}}}{{^returnType}}None{{/returnType}}:
+ {{>partial_api}}
+@@ -46,6 +108,28 @@ class {{classname}}:
+         ).data
+ 
+ 
++    @validate_call
++    {{#asyncio}}async {{/asyncio}}def {{operationId}}_from_args(
++        self,
++        args
++    ) -> {{{returnType}}}{{^returnType}}None{{/returnType}}:
++        _response_types_map: Dict[str, Optional[str]] = {
++            {{#responses}}
++            {{^isWildcard}}
++            '{{code}}': {{#dataType}}"{{.}}"{{/dataType}}{{^dataType}}None{{/dataType}},
++            {{/isWildcard}}
++            {{/responses}}
++        }
++        response_data = {{#asyncio}}await {{/asyncio}}self.api_client.call_api_from_args(
++            args
++        )
++        {{#asyncio}}await {{/asyncio}}response_data.read()
++        return self.api_client.response_deserialize(
++            response_data=response_data,
++            response_types_map=_response_types_map,
++        ).data
++
++
+     @validate_call
+     {{#asyncio}}async {{/asyncio}}def {{operationId}}_with_http_info{{>partial_api_args}} -> ApiResponse[{{{returnType}}}{{^returnType}}None{{/returnType}}]:
+ {{>partial_api}}
+@@ -101,6 +185,8 @@ class {{classname}}:
              {{/allParams}}
          }
  
@@ -96,7 +138,7 @@ index 3e440e1..2817838 100644
          _path_params: Dict[str, str] = {}
          _query_params: List[Tuple[str, str]] = []
          _header_params: Dict[str, Optional[str]] = _headers or {}
-@@ -116,6 +170,9 @@ class {{classname}}:
+@@ -116,6 +202,9 @@ class {{classname}}:
              _path_params['{{baseName}}'] = {{paramName}}{{#isEnumRef}}.value{{/isEnumRef}}
  {{/pathParams}}
          # process the query parameters
@@ -106,7 +148,7 @@ index 3e440e1..2817838 100644
  {{#queryParams}}
          if {{paramName}} is not None:
              {{#isDateTime}}
-@@ -148,6 +205,21 @@ class {{classname}}:
+@@ -148,6 +237,21 @@ class {{classname}}:
              _query_params.append(('{{baseName}}', {{paramName}}{{#isEnumRef}}.value{{/isEnumRef}}))
              {{/isDate}}{{/isDateTime}}
  {{/queryParams}}
@@ -128,7 +170,7 @@ index 3e440e1..2817838 100644
          # process the header parameters
  {{#headerParams}}
          if {{paramName}} is not None:
-@@ -160,7 +232,7 @@ class {{classname}}:
+@@ -160,7 +264,7 @@ class {{classname}}:
              _files['{{{baseName}}}'] = {{paramName}}
              {{/isFile}}
              {{^isFile}}
@@ -137,7 +179,7 @@ index 3e440e1..2817838 100644
              {{/isFile}}
  {{/formParams}}
          # process the body parameter
-@@ -226,7 +298,7 @@ class {{classname}}:
+@@ -226,7 +330,7 @@ class {{classname}}:
  
          return self.api_client.param_serialize(
              method='{{httpMethod}}',
@@ -147,10 +189,76 @@ index 3e440e1..2817838 100644
              query_params=_query_params,
              header_params=_header_params,
 diff --git a/api_client.mustache b/api_client.mustache
-index e89b611..a3d058a 100644
+index e89b611..d903456 100644
 --- a/api_client.mustache
 +++ b/api_client.mustache
-@@ -446,6 +446,25 @@ class ApiClient:
+@@ -253,6 +253,40 @@ class ApiClient:
+ 
+         return method, url, header_params, body, post_params
+ 
++    def build_api_call(
++        self,
++        method,
++        url,
++        header_params=None,
++        body=None,
++        post_params=None,
++        _request_timeout=None
++    ):
++        """Makes the HTTP request (synchronous)
++        :param method: Method to call.
++        :param url: Path to method endpoint.
++        :param header_params: Header parameters to be
++            placed in the request header.
++        :param body: Request body.
++        :param post_params dict: Request post form parameters,
++            for `application/x-www-form-urlencoded`, `multipart/form-data`.
++        :param _request_timeout: timeout setting for this request.
++        :return: RESTResponse
++        """
++
++        try:
++            # perform request and return response
++            args = self.rest_client.build_request(
++                method, url,
++                headers=header_params,
++                body=body, post_params=post_params,
++                _request_timeout=_request_timeout
++            )
++
++        except ApiException as e:
++            raise e
++
++        return args
+ 
+     {{#tornado}}
+     @tornado.gen.coroutine
+@@ -292,6 +326,24 @@ class ApiClient:
+ 
+         return response_data
+ 
++    {{#tornado}}
++    @tornado.gen.coroutine
++    {{/tornado}}
++    {{#asyncio}}async {{/asyncio}}def call_api_from_args(
++        self,
++        args
++    ) -> rest.RESTResponse:
++        try:
++            # perform request and return response
++            response_data = {{#asyncio}}await {{/asyncio}}{{#tornado}}yield {{/tornado}}self.rest_client.do_request(
++                args
++            )
++
++        except ApiException as e:
++            raise e
++
++        return response_data
++
+     def response_deserialize(
+         self,
+         response_data: rest.RESTResponse,
+@@ -446,6 +498,25 @@ class ApiClient:
          if data is None:
              return None
  
@@ -176,6 +284,102 @@ index e89b611..a3d058a 100644
          if isinstance(klass, str):
              if klass.startswith('List['):
                  m = re.match(r'List\[(.*)]', klass)
+diff --git a/asyncio/rest.mustache b/asyncio/rest.mustache
+index 599107e..e544ac9 100644
+--- a/asyncio/rest.mustache
++++ b/asyncio/rest.mustache
+@@ -74,7 +74,7 @@ class RESTClientObject:
+         if self.retry_client is not None:
+             await self.retry_client.close()
+ 
+-    async def request(
++    def build_request(
+         self,
+         method,
+         url,
+@@ -83,20 +83,6 @@ class RESTClientObject:
+         post_params=None,
+         _request_timeout=None
+     ):
+-        """Execute request
+-
+-        :param method: http request method
+-        :param url: http request url
+-        :param headers: http request headers
+-        :param body: request json body, for `application/json`
+-        :param post_params: request post parameters,
+-                            `application/x-www-form-urlencoded`
+-                            and `multipart/form-data`
+-        :param _request_timeout: timeout setting for this request. If one
+-                                 number provided, it will be total request
+-                                 timeout. It can also be a pair (tuple) of
+-                                 (connection, read) timeouts.
+-        """
+         method = method.upper()
+         assert method in [
+             'GET',
+@@ -175,7 +161,47 @@ class RESTClientObject:
+                          arguments. Please check that your arguments match
+                          declared content type."""
+                 raise ApiException(status=0, reason=msg)
++        return args
+ 
++    async def request(
++        self,
++        method,
++        url,
++        headers=None,
++        body=None,
++        post_params=None,
++        _request_timeout=None
++    ):
++        """Execute request
++
++        :param method: http request method
++        :param url: http request url
++        :param headers: http request headers
++        :param body: request json body, for `application/json`
++        :param post_params: request post parameters,
++                            `application/x-www-form-urlencoded`
++                            and `multipart/form-data`
++        :param _request_timeout: timeout setting for this request. If one
++                                 number provided, it will be total request
++                                 timeout. It can also be a pair (tuple) of
++                                 (connection, read) timeouts.
++        """
++
++        args = self.build_request(
++            method,
++            url,
++            headers,
++            body,
++            post_params,
++            _request_timeout
++        )
++
++        return await self.do_request(args)
++
++    async def do_request(
++        self,
++        args
++    ):
+         pool_manager: Union[aiohttp.ClientSession, aiohttp_retry.RetryClient]
+ 
+         # https pool manager
+@@ -186,7 +212,7 @@ class RESTClientObject:
+             )
+         pool_manager = self.pool_manager
+ 
+-        if self.retries is not None and method in ALLOW_RETRY_METHODS:
++        if self.retries is not None and args["method"] in ALLOW_RETRY_METHODS:
+             if self.retry_client is None:
+                 self.retry_client = aiohttp_retry.RetryClient(
+                     client_session=self.pool_manager,
+@@ -202,3 +228,4 @@ class RESTClientObject:
+         r = await pool_manager.request(**args)
+ 
+         return RESTResponse(r)
++
 diff --git a/configuration.mustache b/configuration.mustache
 index 2601d75..5bbd19a 100644
 --- a/configuration.mustache
