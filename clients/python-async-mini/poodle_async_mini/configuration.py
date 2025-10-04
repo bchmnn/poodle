@@ -533,7 +533,7 @@ conf = poodle_async_mini.Configuration(
                "OS: {env}\n"\
                "Python Version: {pyversion}\n"\
                "Version of the API: 5.0.2 (Build: 20250811)\n"\
-               "SDK Package Version: 5.0.2.post1".\
+               "SDK Package Version: 5.0.2.post2".\
                format(env=sys.platform, pyversion=sys.version)
 
     def get_host_settings(self) -> List[HostSetting]:

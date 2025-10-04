@@ -102,6 +102,72 @@ class DefaultApi:
 
 
     @validate_call
+    def core_course_get_contents_args(
+        self,
+        courseid: Annotated[Optional[StrictInt], Field(description="course id")],
+        options: Annotated[Optional[List[CoreCourseGetContentsParametersOptionsInner]], Field(description="Options, used since Moodle 2.9")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ):
+        """Get course contents
+
+        Get course contents
+
+        :param courseid: course id (required)
+        :type courseid: int
+        :param options: Options, used since Moodle 2.9
+        :type options: List[CoreCourseGetContentsParametersOptionsInner]
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._core_course_get_contents_serialize(
+            courseid=courseid,
+            options=options,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "List[CoreCourseGetContentsResponseInner]",
+        }
+        return self.api_client.build_api_call(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+
+
+    @validate_call
     async def core_course_get_contents(
         self,
         courseid: Annotated[Optional[StrictInt], Field(description="course id")],
@@ -164,6 +230,24 @@ class DefaultApi:
         response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    async def core_course_get_contents_from_args(
+        self,
+        args
+    ) -> List[CoreCourseGetContentsResponseInner]:
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "List[CoreCourseGetContentsResponseInner]",
+        }
+        response_data = await self.api_client.call_api_from_args(
+            args
         )
         await response_data.read()
         return self.api_client.response_deserialize(
@@ -412,6 +496,72 @@ class DefaultApi:
 
 
     @validate_call
+    def core_enrol_get_users_courses_args(
+        self,
+        userid: Annotated[Optional[StrictInt], Field(description="user id")],
+        returnusercount: Annotated[Optional[StrictBool], Field(description="Include count of enrolled users for each course? This can add several seconds to the response time if a user is on several large courses, so set this to false if the value will not be used to improve performance.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ):
+        """Get the list of courses where a user is enrolled in
+
+        Get the list of courses where a user is enrolled in
+
+        :param userid: user id (required)
+        :type userid: int
+        :param returnusercount: Include count of enrolled users for each course? This can add several seconds to the response time if a user is on several large courses, so set this to false if the value will not be used to improve performance.
+        :type returnusercount: bool
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._core_enrol_get_users_courses_serialize(
+            userid=userid,
+            returnusercount=returnusercount,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "List[CoreEnrolGetUsersCoursesResponseInner]",
+        }
+        return self.api_client.build_api_call(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+
+
+    @validate_call
     async def core_enrol_get_users_courses(
         self,
         userid: Annotated[Optional[StrictInt], Field(description="user id")],
@@ -474,6 +624,24 @@ class DefaultApi:
         response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    async def core_enrol_get_users_courses_from_args(
+        self,
+        args
+    ) -> List[CoreEnrolGetUsersCoursesResponseInner]:
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "List[CoreEnrolGetUsersCoursesResponseInner]",
+        }
+        response_data = await self.api_client.call_api_from_args(
+            args
         )
         await response_data.read()
         return self.api_client.response_deserialize(
@@ -721,6 +889,68 @@ class DefaultApi:
 
 
     @validate_call
+    def core_group_get_course_groups_args(
+        self,
+        courseid: Annotated[Optional[StrictInt], Field(description="id of course")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ):
+        """Returns all groups in specified course.
+
+        Returns all groups in specified course.
+
+        :param courseid: id of course (required)
+        :type courseid: int
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._core_group_get_course_groups_serialize(
+            courseid=courseid,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "List[CoreGroupGetCourseGroupsResponseInner]",
+        }
+        return self.api_client.build_api_call(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+
+
+    @validate_call
     async def core_group_get_course_groups(
         self,
         courseid: Annotated[Optional[StrictInt], Field(description="id of course")],
@@ -779,6 +1009,24 @@ class DefaultApi:
         response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    async def core_group_get_course_groups_from_args(
+        self,
+        args
+    ) -> List[CoreGroupGetCourseGroupsResponseInner]:
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "List[CoreGroupGetCourseGroupsResponseInner]",
+        }
+        response_data = await self.api_client.call_api_from_args(
+            args
         )
         await response_data.read()
         return self.api_client.response_deserialize(
@@ -1015,6 +1263,68 @@ class DefaultApi:
 
 
     @validate_call
+    def core_webservice_get_site_info_args(
+        self,
+        serviceshortnames: Annotated[Optional[List[Optional[StrictStr]]], Field(description="DEPRECATED PARAMETER - it was a design error in the original implementation. \\\\                     It is ignored now. (parameter kept for backward compatibility)")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ):
+        """Return some site info / user info / list web service functions
+
+        Return some site info / user info / list web service functions
+
+        :param serviceshortnames: DEPRECATED PARAMETER - it was a design error in the original implementation. \\\\                     It is ignored now. (parameter kept for backward compatibility)
+        :type serviceshortnames: List[Optional[str]]
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._core_webservice_get_site_info_serialize(
+            serviceshortnames=serviceshortnames,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CoreWebserviceGetSiteInfoResponse",
+        }
+        return self.api_client.build_api_call(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+
+
+    @validate_call
     async def core_webservice_get_site_info(
         self,
         serviceshortnames: Annotated[Optional[List[Optional[StrictStr]]], Field(description="DEPRECATED PARAMETER - it was a design error in the original implementation. \\\\                     It is ignored now. (parameter kept for backward compatibility)")] = None,
@@ -1073,6 +1383,24 @@ class DefaultApi:
         response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    async def core_webservice_get_site_info_from_args(
+        self,
+        args
+    ) -> CoreWebserviceGetSiteInfoResponse:
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CoreWebserviceGetSiteInfoResponse",
+        }
+        response_data = await self.api_client.call_api_from_args(
+            args
         )
         await response_data.read()
         return self.api_client.response_deserialize(
@@ -1310,6 +1638,76 @@ class DefaultApi:
 
 
     @validate_call
+    def gradereport_user_get_grade_items_args(
+        self,
+        courseid: Annotated[Optional[StrictInt], Field(description="Course Id")],
+        groupid: Annotated[Optional[StrictInt], Field(description="Get users from this group only")] = None,
+        userid: Annotated[Optional[StrictInt], Field(description="Return grades only for this user (optional)")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ):
+        """Returns the complete list of grade items for users in a course
+
+        Returns the complete list of grade items for users in a course
+
+        :param courseid: Course Id (required)
+        :type courseid: int
+        :param groupid: Get users from this group only
+        :type groupid: int
+        :param userid: Return grades only for this user (optional)
+        :type userid: int
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._gradereport_user_get_grade_items_serialize(
+            courseid=courseid,
+            groupid=groupid,
+            userid=userid,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GradereportUserGetGradeItemsResponse",
+        }
+        return self.api_client.build_api_call(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+
+
+    @validate_call
     async def gradereport_user_get_grade_items(
         self,
         courseid: Annotated[Optional[StrictInt], Field(description="Course Id")],
@@ -1376,6 +1774,24 @@ class DefaultApi:
         response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    async def gradereport_user_get_grade_items_from_args(
+        self,
+        args
+    ) -> GradereportUserGetGradeItemsResponse:
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GradereportUserGetGradeItemsResponse",
+        }
+        response_data = await self.api_client.call_api_from_args(
+            args
         )
         await response_data.read()
         return self.api_client.response_deserialize(
@@ -1634,6 +2050,75 @@ class DefaultApi:
 
 
     @validate_call
+    def login_token_args(
+        self,
+        password: StrictStr,
+        service: StrictStr,
+        username: StrictStr,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ):
+        """login_token
+
+
+        :param password: (required)
+        :type password: str
+        :param service: (required)
+        :type service: str
+        :param username: (required)
+        :type username: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._login_token_serialize(
+            password=password,
+            service=service,
+            username=username,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "LoginToken200Response",
+        }
+        return self.api_client.build_api_call(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+
+
+    @validate_call
     async def login_token(
         self,
         password: StrictStr,
@@ -1699,6 +2184,24 @@ class DefaultApi:
         response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    async def login_token_from_args(
+        self,
+        args
+    ) -> LoginToken200Response:
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "LoginToken200Response",
+        }
+        response_data = await self.api_client.call_api_from_args(
+            args
         )
         await response_data.read()
         return self.api_client.response_deserialize(
@@ -1954,6 +2457,76 @@ class DefaultApi:
 
 
     @validate_call
+    def mod_assign_get_assignments_args(
+        self,
+        capabilities: Annotated[Optional[List[Optional[StrictStr]]], Field(description="list of capabilities used to filter courses")] = None,
+        courseids: Annotated[Optional[List[Optional[StrictInt]]], Field(description="0 or more course ids")] = None,
+        includenotenrolledcourses: Annotated[Optional[StrictBool], Field(description="whether to return courses that the user can see                                                                     even if is not enroled in. This requires the parameter courseids                                                                     to not be empty.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ):
+        """Returns the courses and assignments for the users capability
+
+        Returns the courses and assignments for the users capability
+
+        :param capabilities: list of capabilities used to filter courses
+        :type capabilities: List[Optional[str]]
+        :param courseids: 0 or more course ids
+        :type courseids: List[Optional[int]]
+        :param includenotenrolledcourses: whether to return courses that the user can see                                                                     even if is not enroled in. This requires the parameter courseids                                                                     to not be empty.
+        :type includenotenrolledcourses: bool
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._mod_assign_get_assignments_serialize(
+            capabilities=capabilities,
+            courseids=courseids,
+            includenotenrolledcourses=includenotenrolledcourses,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "ModAssignGetAssignmentsResponse",
+        }
+        return self.api_client.build_api_call(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+
+
+    @validate_call
     async def mod_assign_get_assignments(
         self,
         capabilities: Annotated[Optional[List[Optional[StrictStr]]], Field(description="list of capabilities used to filter courses")] = None,
@@ -2020,6 +2593,24 @@ class DefaultApi:
         response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    async def mod_assign_get_assignments_from_args(
+        self,
+        args
+    ) -> ModAssignGetAssignmentsResponse:
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "ModAssignGetAssignmentsResponse",
+        }
+        response_data = await self.api_client.call_api_from_args(
+            args
         )
         await response_data.read()
         return self.api_client.response_deserialize(
@@ -2280,6 +2871,80 @@ class DefaultApi:
 
 
     @validate_call
+    def mod_assign_get_submissions_args(
+        self,
+        assignmentids: Annotated[List[Optional[StrictInt]], Field(description="1 or more assignment ids")],
+        before: Annotated[Optional[StrictInt], Field(description="submitted before")] = None,
+        since: Annotated[Optional[StrictInt], Field(description="submitted since")] = None,
+        status: Annotated[Optional[StrictStr], Field(description="status")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ):
+        """Returns the submissions for assignments
+
+        Returns the submissions for assignments
+
+        :param assignmentids: 1 or more assignment ids (required)
+        :type assignmentids: List[Optional[int]]
+        :param before: submitted before
+        :type before: int
+        :param since: submitted since
+        :type since: int
+        :param status: status
+        :type status: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._mod_assign_get_submissions_serialize(
+            assignmentids=assignmentids,
+            before=before,
+            since=since,
+            status=status,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "ModAssignGetSubmissionsResponse",
+        }
+        return self.api_client.build_api_call(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+
+
+    @validate_call
     async def mod_assign_get_submissions(
         self,
         assignmentids: Annotated[List[Optional[StrictInt]], Field(description="1 or more assignment ids")],
@@ -2350,6 +3015,24 @@ class DefaultApi:
         response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    async def mod_assign_get_submissions_from_args(
+        self,
+        args
+    ) -> ModAssignGetSubmissionsResponse:
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "ModAssignGetSubmissionsResponse",
+        }
+        response_data = await self.api_client.call_api_from_args(
+            args
         )
         await response_data.read()
         return self.api_client.response_deserialize(
@@ -2620,6 +3303,96 @@ class DefaultApi:
 
 
     @validate_call
+    def mod_assign_list_participants_args(
+        self,
+        assignid: Annotated[Optional[StrictInt], Field(description="assign instance id")],
+        filter: Annotated[Optional[StrictStr], Field(description="search string to filter the results")],
+        groupid: Annotated[Optional[StrictInt], Field(description="group id")],
+        includeenrolments: Annotated[Optional[StrictBool], Field(description="Do return courses where the user is enrolled")] = None,
+        limit: Annotated[Optional[StrictInt], Field(description="maximum number of records to return")] = None,
+        onlyids: Annotated[Optional[StrictBool], Field(description="Do not return all user fields")] = None,
+        skip: Annotated[Optional[StrictInt], Field(description="number of records to skip")] = None,
+        tablesort: Annotated[Optional[StrictBool], Field(description="Apply current user table sorting preferences.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ):
+        """List the participants for a single assignment, with some summary info about their submissions.
+
+        List the participants for a single assignment, with some summary info about their submissions.
+
+        :param assignid: assign instance id (required)
+        :type assignid: int
+        :param filter: search string to filter the results (required)
+        :type filter: str
+        :param groupid: group id (required)
+        :type groupid: int
+        :param includeenrolments: Do return courses where the user is enrolled
+        :type includeenrolments: bool
+        :param limit: maximum number of records to return
+        :type limit: int
+        :param onlyids: Do not return all user fields
+        :type onlyids: bool
+        :param skip: number of records to skip
+        :type skip: int
+        :param tablesort: Apply current user table sorting preferences.
+        :type tablesort: bool
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._mod_assign_list_participants_serialize(
+            assignid=assignid,
+            filter=filter,
+            groupid=groupid,
+            includeenrolments=includeenrolments,
+            limit=limit,
+            onlyids=onlyids,
+            skip=skip,
+            tablesort=tablesort,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "List[ModAssignListParticipantsResponseInner]",
+        }
+        return self.api_client.build_api_call(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+
+
+    @validate_call
     async def mod_assign_list_participants(
         self,
         assignid: Annotated[Optional[StrictInt], Field(description="assign instance id")],
@@ -2706,6 +3479,24 @@ class DefaultApi:
         response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    async def mod_assign_list_participants_from_args(
+        self,
+        args
+    ) -> List[ModAssignListParticipantsResponseInner]:
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "List[ModAssignListParticipantsResponseInner]",
+        }
+        response_data = await self.api_client.call_api_from_args(
+            args
         )
         await response_data.read()
         return self.api_client.response_deserialize(
@@ -3019,6 +3810,64 @@ class DefaultApi:
 
 
     @validate_call
+    def tool_mobile_get_public_config_args(
+        self,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ):
+        """Returns a list of the site public settings, those not requiring authentication.
+
+        Returns a list of the site public settings, those not requiring authentication.
+
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._tool_mobile_get_public_config_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "ToolMobileGetPublicConfigResponse",
+        }
+        return self.api_client.build_api_call(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+
+
+    @validate_call
     async def tool_mobile_get_public_config(
         self,
         _request_timeout: Union[
@@ -3073,6 +3922,24 @@ class DefaultApi:
         response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    async def tool_mobile_get_public_config_from_args(
+        self,
+        args
+    ) -> ToolMobileGetPublicConfigResponse:
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "ToolMobileGetPublicConfigResponse",
+        }
+        response_data = await self.api_client.call_api_from_args(
+            args
         )
         await response_data.read()
         return self.api_client.response_deserialize(
