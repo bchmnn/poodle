@@ -15,6 +15,8 @@
 
 if __import__("typing").TYPE_CHECKING:
     # import models into model package
+    from poodle_async_mini.models.core_comment_add_comments_parameters_comments_inner import CoreCommentAddCommentsParametersCommentsInner
+    from poodle_async_mini.models.core_comment_add_comments_response_inner import CoreCommentAddCommentsResponseInner
     from poodle_async_mini.models.core_course_get_contents_parameters_options_inner import CoreCourseGetContentsParametersOptionsInner
     from poodle_async_mini.models.core_course_get_contents_response_inner import CoreCourseGetContentsResponseInner
     from poodle_async_mini.models.core_course_get_contents_response_inner_modules_inner import CoreCourseGetContentsResponseInnerModulesInner
@@ -66,6 +68,8 @@ else:
         LazyModule(
             *as_package(__file__),
             """# import models into model package
+from poodle_async_mini.models.core_comment_add_comments_parameters_comments_inner import CoreCommentAddCommentsParametersCommentsInner
+from poodle_async_mini.models.core_comment_add_comments_response_inner import CoreCommentAddCommentsResponseInner
 from poodle_async_mini.models.core_course_get_contents_parameters_options_inner import CoreCourseGetContentsParametersOptionsInner
 from poodle_async_mini.models.core_course_get_contents_response_inner import CoreCourseGetContentsResponseInner
 from poodle_async_mini.models.core_course_get_contents_response_inner_modules_inner import CoreCourseGetContentsResponseInnerModulesInner

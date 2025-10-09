@@ -14,7 +14,7 @@
 """  # noqa: E501
 
 
-__version__ = "5.0.2.post2"
+__version__ = "5.0.2.post3"
 
 # Define package exports
 __all__ = [
@@ -29,6 +29,8 @@ __all__ = [
     "ApiKeyError",
     "ApiAttributeError",
     "ApiException",
+    "CoreCommentAddCommentsParametersCommentsInner",
+    "CoreCommentAddCommentsResponseInner",
     "CoreCourseGetContentsParametersOptionsInner",
     "CoreCourseGetContentsResponseInner",
     "CoreCourseGetContentsResponseInnerModulesInner",
@@ -91,6 +93,8 @@ if __import__("typing").TYPE_CHECKING:
     from poodle_async_mini.exceptions import ApiException as ApiException
     
     # import models into sdk package
+    from poodle_async_mini.models.core_comment_add_comments_parameters_comments_inner import CoreCommentAddCommentsParametersCommentsInner as CoreCommentAddCommentsParametersCommentsInner
+    from poodle_async_mini.models.core_comment_add_comments_response_inner import CoreCommentAddCommentsResponseInner as CoreCommentAddCommentsResponseInner
     from poodle_async_mini.models.core_course_get_contents_parameters_options_inner import CoreCourseGetContentsParametersOptionsInner as CoreCourseGetContentsParametersOptionsInner
     from poodle_async_mini.models.core_course_get_contents_response_inner import CoreCourseGetContentsResponseInner as CoreCourseGetContentsResponseInner
     from poodle_async_mini.models.core_course_get_contents_response_inner_modules_inner import CoreCourseGetContentsResponseInnerModulesInner as CoreCourseGetContentsResponseInnerModulesInner
@@ -159,6 +163,8 @@ from poodle_async_mini.exceptions import ApiAttributeError as ApiAttributeError
 from poodle_async_mini.exceptions import ApiException as ApiException
 
 # import models into sdk package
+from poodle_async_mini.models.core_comment_add_comments_parameters_comments_inner import CoreCommentAddCommentsParametersCommentsInner as CoreCommentAddCommentsParametersCommentsInner
+from poodle_async_mini.models.core_comment_add_comments_response_inner import CoreCommentAddCommentsResponseInner as CoreCommentAddCommentsResponseInner
 from poodle_async_mini.models.core_course_get_contents_parameters_options_inner import CoreCourseGetContentsParametersOptionsInner as CoreCourseGetContentsParametersOptionsInner
 from poodle_async_mini.models.core_course_get_contents_response_inner import CoreCourseGetContentsResponseInner as CoreCourseGetContentsResponseInner
 from poodle_async_mini.models.core_course_get_contents_response_inner_modules_inner import CoreCourseGetContentsResponseInnerModulesInner as CoreCourseGetContentsResponseInnerModulesInner
