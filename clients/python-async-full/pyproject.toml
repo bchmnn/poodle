@@ -1,6 +1,6 @@
 [project]
 name = "poodle_async_full"
-version = "4.5.7"
+version = "4.5.7.post1"
 description = "Moodle Webservice API"
 authors = [
   {name = "OpenAPI Generator Community",email = "team@openapitools.org"},
