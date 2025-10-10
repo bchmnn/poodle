@@ -1,3 +1,4 @@
+core_comment_add_comments
 core_course_get_contents
 core_enrol_get_users_courses
 core_group_get_course_groups
