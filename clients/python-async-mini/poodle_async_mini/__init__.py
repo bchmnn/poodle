@@ -14,7 +14,7 @@
 """  # noqa: E501
 
 
-__version__ = "5.0.2.post3"
+__version__ = "5.0.2.post4"
 
 # Define package exports
 __all__ = [
@@ -31,6 +31,8 @@ __all__ = [
     "ApiException",
     "CoreCommentAddCommentsParametersCommentsInner",
     "CoreCommentAddCommentsResponseInner",
+    "CoreCommentGetCommentsResponse",
+    "CoreCommentGetCommentsResponseWarningsInner",
     "CoreCourseGetContentsParametersOptionsInner",
     "CoreCourseGetContentsResponseInner",
     "CoreCourseGetContentsResponseInnerModulesInner",
@@ -53,7 +55,6 @@ __all__ = [
     "GradereportUserGetGradeItemsResponse",
     "GradereportUserGetGradeItemsResponseUsergradesInner",
     "GradereportUserGetGradeItemsResponseUsergradesInnerGradeitemsInner",
-    "GradereportUserGetGradeItemsResponseWarningsInner",
     "LoginToken200Response",
     "ModAssignGetAssignmentsResponse",
     "ModAssignGetAssignmentsResponseCoursesInner",
@@ -95,6 +96,8 @@ if __import__("typing").TYPE_CHECKING:
     # import models into sdk package
     from poodle_async_mini.models.core_comment_add_comments_parameters_comments_inner import CoreCommentAddCommentsParametersCommentsInner as CoreCommentAddCommentsParametersCommentsInner
     from poodle_async_mini.models.core_comment_add_comments_response_inner import CoreCommentAddCommentsResponseInner as CoreCommentAddCommentsResponseInner
+    from poodle_async_mini.models.core_comment_get_comments_response import CoreCommentGetCommentsResponse as CoreCommentGetCommentsResponse
+    from poodle_async_mini.models.core_comment_get_comments_response_warnings_inner import CoreCommentGetCommentsResponseWarningsInner as CoreCommentGetCommentsResponseWarningsInner
     from poodle_async_mini.models.core_course_get_contents_parameters_options_inner import CoreCourseGetContentsParametersOptionsInner as CoreCourseGetContentsParametersOptionsInner
     from poodle_async_mini.models.core_course_get_contents_response_inner import CoreCourseGetContentsResponseInner as CoreCourseGetContentsResponseInner
     from poodle_async_mini.models.core_course_get_contents_response_inner_modules_inner import CoreCourseGetContentsResponseInnerModulesInner as CoreCourseGetContentsResponseInnerModulesInner
@@ -117,7 +120,6 @@ if __import__("typing").TYPE_CHECKING:
     from poodle_async_mini.models.gradereport_user_get_grade_items_response import GradereportUserGetGradeItemsResponse as GradereportUserGetGradeItemsResponse
     from poodle_async_mini.models.gradereport_user_get_grade_items_response_usergrades_inner import GradereportUserGetGradeItemsResponseUsergradesInner as GradereportUserGetGradeItemsResponseUsergradesInner
     from poodle_async_mini.models.gradereport_user_get_grade_items_response_usergrades_inner_gradeitems_inner import GradereportUserGetGradeItemsResponseUsergradesInnerGradeitemsInner as GradereportUserGetGradeItemsResponseUsergradesInnerGradeitemsInner
-    from poodle_async_mini.models.gradereport_user_get_grade_items_response_warnings_inner import GradereportUserGetGradeItemsResponseWarningsInner as GradereportUserGetGradeItemsResponseWarningsInner
     from poodle_async_mini.models.login_token200_response import LoginToken200Response as LoginToken200Response
     from poodle_async_mini.models.mod_assign_get_assignments_response import ModAssignGetAssignmentsResponse as ModAssignGetAssignmentsResponse
     from poodle_async_mini.models.mod_assign_get_assignments_response_courses_inner import ModAssignGetAssignmentsResponseCoursesInner as ModAssignGetAssignmentsResponseCoursesInner
@@ -165,6 +167,8 @@ from poodle_async_mini.exceptions import ApiException as ApiException
 # import models into sdk package
 from poodle_async_mini.models.core_comment_add_comments_parameters_comments_inner import CoreCommentAddCommentsParametersCommentsInner as CoreCommentAddCommentsParametersCommentsInner
 from poodle_async_mini.models.core_comment_add_comments_response_inner import CoreCommentAddCommentsResponseInner as CoreCommentAddCommentsResponseInner
+from poodle_async_mini.models.core_comment_get_comments_response import CoreCommentGetCommentsResponse as CoreCommentGetCommentsResponse
+from poodle_async_mini.models.core_comment_get_comments_response_warnings_inner import CoreCommentGetCommentsResponseWarningsInner as CoreCommentGetCommentsResponseWarningsInner
 from poodle_async_mini.models.core_course_get_contents_parameters_options_inner import CoreCourseGetContentsParametersOptionsInner as CoreCourseGetContentsParametersOptionsInner
 from poodle_async_mini.models.core_course_get_contents_response_inner import CoreCourseGetContentsResponseInner as CoreCourseGetContentsResponseInner
 from poodle_async_mini.models.core_course_get_contents_response_inner_modules_inner import CoreCourseGetContentsResponseInnerModulesInner as CoreCourseGetContentsResponseInnerModulesInner
@@ -187,7 +191,6 @@ from poodle_async_mini.models.core_webservice_get_site_info_response_functions_i
 from poodle_async_mini.models.gradereport_user_get_grade_items_response import GradereportUserGetGradeItemsResponse as GradereportUserGetGradeItemsResponse
 from poodle_async_mini.models.gradereport_user_get_grade_items_response_usergrades_inner import GradereportUserGetGradeItemsResponseUsergradesInner as GradereportUserGetGradeItemsResponseUsergradesInner
 from poodle_async_mini.models.gradereport_user_get_grade_items_response_usergrades_inner_gradeitems_inner import GradereportUserGetGradeItemsResponseUsergradesInnerGradeitemsInner as GradereportUserGetGradeItemsResponseUsergradesInnerGradeitemsInner
-from poodle_async_mini.models.gradereport_user_get_grade_items_response_warnings_inner import GradereportUserGetGradeItemsResponseWarningsInner as GradereportUserGetGradeItemsResponseWarningsInner
 from poodle_async_mini.models.login_token200_response import LoginToken200Response as LoginToken200Response
 from poodle_async_mini.models.mod_assign_get_assignments_response import ModAssignGetAssignmentsResponse as ModAssignGetAssignmentsResponse
 from poodle_async_mini.models.mod_assign_get_assignments_response_courses_inner import ModAssignGetAssignmentsResponseCoursesInner as ModAssignGetAssignmentsResponseCoursesInner

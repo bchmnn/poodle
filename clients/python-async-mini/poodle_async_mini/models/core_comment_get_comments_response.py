@@ -17,22 +17,25 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional
+from poodle_async_mini.models.core_comment_add_comments_response_inner import CoreCommentAddCommentsResponseInner
 from poodle_async_mini.models.core_comment_get_comments_response_warnings_inner import CoreCommentGetCommentsResponseWarningsInner
-from poodle_async_mini.models.mod_assign_get_submissions_response_assignments_inner import ModAssignGetSubmissionsResponseAssignmentsInner
 from typing import Optional, Set
 from typing_extensions import Self
 
 from poodle_async_mini.configuration import settings
 
-class ModAssignGetSubmissionsResponse(BaseModel):
+class CoreCommentGetCommentsResponse(BaseModel):
     """
-    ModAssignGetSubmissionsResponse
+    CoreCommentGetCommentsResponse
     """ # noqa: E501
-    assignments: List[ModAssignGetSubmissionsResponseAssignmentsInner] = Field(description="assignment submissions")
+    canpost: Optional[StrictBool] = Field(default=None, description="Whether the user can post in this comment area.")
+    comments: List[CoreCommentAddCommentsResponseInner] = Field(description="List of comments")
+    count: Optional[StrictInt] = Field(default=None, description="Total number of comments.")
+    perpage: Optional[StrictInt] = Field(default=None, description="Number of comments per page.")
     warnings: Optional[List[CoreCommentGetCommentsResponseWarningsInner]] = Field(default=None, description="list of warnings")
-    __properties: ClassVar[List[str]] = ["assignments", "warnings"]
+    __properties: ClassVar[List[str]] = ["canpost", "comments", "count", "perpage", "warnings"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +55,7 @@ class ModAssignGetSubmissionsResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ModAssignGetSubmissionsResponse from a JSON string"""
+        """Create an instance of CoreCommentGetCommentsResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,13 +76,13 @@ class ModAssignGetSubmissionsResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in assignments (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in comments (list)
         _items = []
-        if self.assignments:
-            for _item_assignments in self.assignments:
-                if _item_assignments:
-                    _items.append(_item_assignments.to_dict())
-            _dict['assignments'] = _items
+        if self.comments:
+            for _item_comments in self.comments:
+                if _item_comments:
+                    _items.append(_item_comments.to_dict())
+            _dict['comments'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in warnings (list)
         _items = []
         if self.warnings:
@@ -87,21 +90,39 @@ class ModAssignGetSubmissionsResponse(BaseModel):
                 if _item_warnings:
                     _items.append(_item_warnings.to_dict())
             _dict['warnings'] = _items
+        # set to None if canpost (nullable) is None
+        # and model_fields_set contains the field
+        if self.canpost is None and "canpost" in self.model_fields_set:
+            _dict['canpost'] = None
+
+        # set to None if count (nullable) is None
+        # and model_fields_set contains the field
+        if self.count is None and "count" in self.model_fields_set:
+            _dict['count'] = None
+
+        # set to None if perpage (nullable) is None
+        # and model_fields_set contains the field
+        if self.perpage is None and "perpage" in self.model_fields_set:
+            _dict['perpage'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ModAssignGetSubmissionsResponse from a dict"""
+        """Create an instance of CoreCommentGetCommentsResponse from a dict"""
         if obj is None:
             return None
 
-        relaxed = settings.relaxe_all_models or "ModAssignGetSubmissionsResponse" in settings.relaxed_models
+        relaxed = settings.relaxe_all_models or "CoreCommentGetCommentsResponse" in settings.relaxed_models
 
         if not isinstance(obj, dict):
             return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
 
         data = {
-            "assignments": [ModAssignGetSubmissionsResponseAssignmentsInner.from_dict(_item) for _item in obj["assignments"]] if obj.get("assignments") is not None else None,
+            "canpost": obj.get("canpost"),
+            "comments": [CoreCommentAddCommentsResponseInner.from_dict(_item) for _item in obj["comments"]] if obj.get("comments") is not None else None,
+            "count": obj.get("count"),
+            "perpage": obj.get("perpage"),
             "warnings": [CoreCommentGetCommentsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
         }
         _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)

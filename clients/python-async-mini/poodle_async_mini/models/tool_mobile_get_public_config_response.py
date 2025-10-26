@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from poodle_async_mini.models.gradereport_user_get_grade_items_response_warnings_inner import GradereportUserGetGradeItemsResponseWarningsInner
+from poodle_async_mini.models.core_comment_get_comments_response_warnings_inner import CoreCommentGetCommentsResponseWarningsInner
 from poodle_async_mini.models.tool_mobile_get_public_config_response_identityproviders_inner import ToolMobileGetPublicConfigResponseIdentityprovidersInner
 from typing import Optional, Set
 from typing_extensions import Self
@@ -67,7 +67,7 @@ class ToolMobileGetPublicConfigResponse(BaseModel):
     tool_mobile_qrcodetype: Optional[StrictInt] = Field(default=None, description="QR login configuration.")
     tool_mobile_setuplink: Optional[StrictStr] = Field(default=None, description="App download page.")
     typeoflogin: Optional[StrictInt] = Field(description="The type of login. 1 for app, 2 for browser, 3 for embedded.")
-    warnings: Optional[List[GradereportUserGetGradeItemsResponseWarningsInner]] = Field(default=None, description="list of warnings")
+    warnings: Optional[List[CoreCommentGetCommentsResponseWarningsInner]] = Field(default=None, description="list of warnings")
     wwwroot: Optional[StrictStr] = Field(description="Site URL.")
     __properties: ClassVar[List[str]] = ["agedigitalconsentverification", "authinstructions", "authloginviaemail", "authnoneenabled", "autolang", "compactlogourl", "country", "enablemobilewebservice", "enablewebservices", "forgottenpasswordurl", "guestlogin", "httpswwwroot", "identityproviders", "lang", "langlist", "langmenu", "launchurl", "locale", "logourl", "maintenanceenabled", "maintenancemessage", "mobilecssurl", "registerauth", "rememberusername", "showloginform", "sitename", "supportavailability", "supportemail", "supportname", "supportpage", "tool_mobile_androidappid", "tool_mobile_disabledfeatures", "tool_mobile_iosappid", "tool_mobile_minimumversion", "tool_mobile_qrcodetype", "tool_mobile_setuplink", "typeoflogin", "warnings", "wwwroot"]
 
@@ -360,7 +360,7 @@ class ToolMobileGetPublicConfigResponse(BaseModel):
             "tool_mobile_qrcodetype": obj.get("tool_mobile_qrcodetype"),
             "tool_mobile_setuplink": obj.get("tool_mobile_setuplink"),
             "typeoflogin": obj.get("typeoflogin"),
-            "warnings": [GradereportUserGetGradeItemsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None,
+            "warnings": [CoreCommentGetCommentsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None,
             "wwwroot": obj.get("wwwroot")
         }
         _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
