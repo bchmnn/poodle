@@ -19,8 +19,8 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
+from poodle_async_mini.models.core_comment_get_comments_response_warnings_inner import CoreCommentGetCommentsResponseWarningsInner
 from poodle_async_mini.models.gradereport_user_get_grade_items_response_usergrades_inner import GradereportUserGetGradeItemsResponseUsergradesInner
-from poodle_async_mini.models.gradereport_user_get_grade_items_response_warnings_inner import GradereportUserGetGradeItemsResponseWarningsInner
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -31,7 +31,7 @@ class GradereportUserGetGradeItemsResponse(BaseModel):
     GradereportUserGetGradeItemsResponse
     """ # noqa: E501
     usergrades: List[GradereportUserGetGradeItemsResponseUsergradesInner]
-    warnings: Optional[List[GradereportUserGetGradeItemsResponseWarningsInner]] = Field(default=None, description="list of warnings")
+    warnings: Optional[List[CoreCommentGetCommentsResponseWarningsInner]] = Field(default=None, description="list of warnings")
     __properties: ClassVar[List[str]] = ["usergrades", "warnings"]
 
     model_config = ConfigDict(
@@ -102,7 +102,7 @@ class GradereportUserGetGradeItemsResponse(BaseModel):
 
         data = {
             "usergrades": [GradereportUserGetGradeItemsResponseUsergradesInner.from_dict(_item) for _item in obj["usergrades"]] if obj.get("usergrades") is not None else None,
-            "warnings": [GradereportUserGetGradeItemsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
+            "warnings": [CoreCommentGetCommentsResponseWarningsInner.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None
         }
         _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
