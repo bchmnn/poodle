@@ -11,7 +11,7 @@ index 7d1cb69..517e438 100644
      "ApiTypeError",
      "ApiValueError",
 diff --git a/api.mustache b/api.mustache
-index 3e440e1..c21bf49 100644
+index 3e440e1..525135f 100644
 --- a/api.mustache
 +++ b/api.mustache
 @@ -3,6 +3,8 @@
@@ -36,7 +36,7 @@ index 3e440e1..c21bf49 100644
 +    )
 +
 +def is_primitive(value: Any):
-+    return isinstance(value, (int, str, bool))
++    return isinstance(value, (int, float, str, bool))
 +
 +
 +def is_collection(value: Any):
@@ -47,7 +47,7 @@ index 3e440e1..c21bf49 100644
 +    if data is None:
 +        return []
 +    if is_primitive(data):
-+        value = str(data).lower() if isinstance(data, bool) else str(data)
++        value = int(data) if isinstance(data, bool) else str(data)
 +        return [(prefix, value)]
 +    result: List[Tuple[str, str]] = []
 +    if is_collection(data):
