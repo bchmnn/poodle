@@ -24,7 +24,7 @@ from typing_extensions import Self
 
 from poodle_async_mini.configuration import settings
 
-class GradereportUserGetGradeItemsResponseWarningsInner(BaseModel):
+class CoreCommentGetCommentsResponseWarningsInner(BaseModel):
     """
     warning
     """ # noqa: E501
@@ -52,7 +52,7 @@ class GradereportUserGetGradeItemsResponseWarningsInner(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GradereportUserGetGradeItemsResponseWarningsInner from a JSON string"""
+        """Create an instance of CoreCommentGetCommentsResponseWarningsInner from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -97,11 +97,11 @@ class GradereportUserGetGradeItemsResponseWarningsInner(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GradereportUserGetGradeItemsResponseWarningsInner from a dict"""
+        """Create an instance of CoreCommentGetCommentsResponseWarningsInner from a dict"""
         if obj is None:
             return None
 
-        relaxed = settings.relaxe_all_models or "GradereportUserGetGradeItemsResponseWarningsInner" in settings.relaxed_models
+        relaxed = settings.relaxe_all_models or "CoreCommentGetCommentsResponseWarningsInner" in settings.relaxed_models
 
         if not isinstance(obj, dict):
             return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
