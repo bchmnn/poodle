@@ -90,13 +90,14 @@ exit(0);
 type Extractor struct {
 	Moodle           *util.Moodle
 	MoodleDockerPath string
+	Port             int
 	OutPath          string
 	ToStdout         bool
 	LogWriter        io.Writer
 	Log              *log.Logger
 }
 
-func NewExtractor(moodle *util.Moodle, moodleDockerPath string, outPath string, toStdout bool) *Extractor {
+func NewExtractor(moodle *util.Moodle, moodleDockerPath string, port int, outPath string, toStdout bool) *Extractor {
 	var logWriter io.Writer
 	if toStdout {
 		logWriter = os.Stderr
@@ -107,6 +108,7 @@ func NewExtractor(moodle *util.Moodle, moodleDockerPath string, outPath string, 
 	return &Extractor{
 		Moodle:           moodle,
 		MoodleDockerPath: moodleDockerPath,
+		Port:             port,
 		OutPath:          outPath,
 		ToStdout:         toStdout,
 		LogWriter:        logWriter,
@@ -151,6 +153,14 @@ func (e *Extractor) GetEnv() []util.EnvItem {
 		{
 			Key:   "MOODLE_DOCKER_DB",
 			Value: "pgsql",
+		},
+		{
+			Key:   "MOODLE_DOCKER_WEB_PORT",
+			Value: fmt.Sprint(e.Port),
+		},
+		{
+			Key:   "COMPOSE_PROJECT_NAME",
+			Value: "poodle_extractor",
 		},
 	}
 }

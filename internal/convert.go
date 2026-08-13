@@ -167,7 +167,7 @@ func (p *Converter) Convert() error {
 		responseSchema.WithType(jsonschema.Object.Type())
 		responseSchema.WithPropertiesItem("token", stringSchema)
 		responseSchema.WithPropertiesItem("privatetoken", stringSchema)
-		responseSchema.WithRequired("token", "privatetoken")
+		responseSchema.WithRequired("token")
 		responseSchemaSm, _ := responseSchema.ToSchemaOrBool().ToSimpleMap()
 		response := openapi31.Response{
 			Content: map[string]openapi31.MediaType{
