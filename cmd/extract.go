@@ -40,6 +40,10 @@ func NewExtractCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			port, err := util.GetFreePort()
+			if err != nil {
+				return err
+			}
 			var toStdout = true
 			if outPath != "" {
 				toStdout = false
@@ -73,7 +77,7 @@ func NewExtractCommand() *cobra.Command {
 				}
 			}
 
-			extractor := internal.NewExtractor(moodle, moodleDockerPath, outPath, toStdout)
+			extractor := internal.NewExtractor(moodle, moodleDockerPath, port, outPath, toStdout)
 			err = extractor.Extract()
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Error: %s", err)
