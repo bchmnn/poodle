@@ -21,7 +21,7 @@ type Moodle struct {
 }
 
 func NewMoodle(path string) (*Moodle, error) {
-	content, err := os.ReadFile(path + "public/version.php")
+	content, err := os.ReadFile(path + "/public/version.php")
 	if err != nil {
 		return nil, err
 	}
