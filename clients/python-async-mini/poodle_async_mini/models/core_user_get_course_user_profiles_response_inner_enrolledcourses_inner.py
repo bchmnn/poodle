@@ -17,20 +17,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
 from poodle_async_mini.configuration import settings
 
-class ModAssignListParticipantsResponseInnerPreferencesInner(BaseModel):
+class CoreUserGetCourseUserProfilesResponseInnerEnrolledcoursesInner(BaseModel):
     """
-    ModAssignListParticipantsResponseInnerPreferencesInner
+    CoreUserGetCourseUserProfilesResponseInnerEnrolledcoursesInner
     """ # noqa: E501
-    name: Optional[StrictStr] = Field(description="The name of the preferences")
-    value: Optional[StrictStr] = Field(description="The value of the preference")
-    __properties: ClassVar[List[str]] = ["name", "value"]
+    fullname: Optional[StrictStr] = Field(description="Fullname of the course")
+    id: Optional[StrictInt] = Field(description="Id of the course")
+    shortname: Optional[StrictStr] = Field(description="Shortname of the course")
+    __properties: ClassVar[List[str]] = ["fullname", "id", "shortname"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +51,7 @@ class ModAssignListParticipantsResponseInnerPreferencesInner(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ModAssignListParticipantsResponseInnerPreferencesInner from a JSON string"""
+        """Create an instance of CoreUserGetCourseUserProfilesResponseInnerEnrolledcoursesInner from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,32 +72,38 @@ class ModAssignListParticipantsResponseInnerPreferencesInner(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if name (nullable) is None
+        # set to None if fullname (nullable) is None
         # and model_fields_set contains the field
-        if self.name is None and "name" in self.model_fields_set:
-            _dict['name'] = None
+        if self.fullname is None and "fullname" in self.model_fields_set:
+            _dict['fullname'] = None
 
-        # set to None if value (nullable) is None
+        # set to None if id (nullable) is None
         # and model_fields_set contains the field
-        if self.value is None and "value" in self.model_fields_set:
-            _dict['value'] = None
+        if self.id is None and "id" in self.model_fields_set:
+            _dict['id'] = None
+
+        # set to None if shortname (nullable) is None
+        # and model_fields_set contains the field
+        if self.shortname is None and "shortname" in self.model_fields_set:
+            _dict['shortname'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ModAssignListParticipantsResponseInnerPreferencesInner from a dict"""
+        """Create an instance of CoreUserGetCourseUserProfilesResponseInnerEnrolledcoursesInner from a dict"""
         if obj is None:
             return None
 
-        relaxed = settings.relaxe_all_models or "ModAssignListParticipantsResponseInnerPreferencesInner" in settings.relaxed_models
+        relaxed = settings.relaxe_all_models or "CoreUserGetCourseUserProfilesResponseInnerEnrolledcoursesInner" in settings.relaxed_models
 
         if not isinstance(obj, dict):
             return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
 
         data = {
-            "name": obj.get("name"),
-            "value": obj.get("value")
+            "fullname": obj.get("fullname"),
+            "id": obj.get("id"),
+            "shortname": obj.get("shortname")
         }
         _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj

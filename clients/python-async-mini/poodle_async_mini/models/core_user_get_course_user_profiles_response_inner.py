@@ -21,54 +21,54 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, Strict
 from typing import Any, ClassVar, Dict, List, Optional
 from poodle_async_mini.models.core_user_get_course_user_profiles_response_inner_customfields_inner import CoreUserGetCourseUserProfilesResponseInnerCustomfieldsInner
 from poodle_async_mini.models.core_user_get_course_user_profiles_response_inner_enrolledcourses_inner import CoreUserGetCourseUserProfilesResponseInnerEnrolledcoursesInner
+from poodle_async_mini.models.core_user_get_course_user_profiles_response_inner_groups_inner import CoreUserGetCourseUserProfilesResponseInnerGroupsInner
 from poodle_async_mini.models.core_user_get_course_user_profiles_response_inner_preferences_inner import CoreUserGetCourseUserProfilesResponseInnerPreferencesInner
 from poodle_async_mini.models.core_user_get_course_user_profiles_response_inner_roles_inner import CoreUserGetCourseUserProfilesResponseInnerRolesInner
-from poodle_async_mini.models.mod_assign_list_participants_response_inner_groups_inner import ModAssignListParticipantsResponseInnerGroupsInner
 from typing import Optional, Set
 from typing_extensions import Self
 
 from poodle_async_mini.configuration import settings
 
-class ModAssignListParticipantsResponseInner(BaseModel):
+class CoreUserGetCourseUserProfilesResponseInner(BaseModel):
     """
-    ModAssignListParticipantsResponseInner
+    CoreUserGetCourseUserProfilesResponseInner
     """ # noqa: E501
     address: Optional[StrictStr] = Field(default=None, description="Postal address")
+    auth: Optional[StrictStr] = Field(default=None, description="Auth plugins include manual, ldap, etc")
+    calendartype: Optional[StrictStr] = Field(default=None, description="Calendar type such as \"gregorian\", must exist on server")
     city: Optional[StrictStr] = Field(default=None, description="Home city of the user")
+    confirmed: Optional[StrictBool] = Field(default=None, description="Active user: 1 if confirmed, 0 otherwise")
     country: Optional[StrictStr] = Field(default=None, description="Home country code of the user, such as AU or CZ")
     customfields: Optional[List[CoreUserGetCourseUserProfilesResponseInnerCustomfieldsInner]] = Field(default=None, description="User custom fields (also known as user profile fields)")
     department: Optional[StrictStr] = Field(default=None, description="department")
     description: Optional[StrictStr] = Field(default=None, description="User profile description")
     descriptionformat: Optional[StrictInt] = Field(default=None, description="int format (1 = HTML, 0 = MOODLE, 2 = PLAIN, or 4 = MARKDOWN)")
-    email: Optional[StrictStr] = Field(default=None, description="Email address")
+    email: Optional[StrictStr] = Field(default=None, description="An email address - allow email as root@localhost")
     enrolledcourses: Optional[List[CoreUserGetCourseUserProfilesResponseInnerEnrolledcoursesInner]] = Field(default=None, description="Courses where the user is enrolled - limited by which courses the user is able to see")
     firstaccess: Optional[StrictInt] = Field(default=None, description="first access to the site (0 if never)")
     firstname: Optional[StrictStr] = Field(default=None, description="The first name(s) of the user")
     fullname: Optional[StrictStr] = Field(description="The fullname of the user")
-    grantedextension: Optional[StrictBool] = Field(description="have they been granted an extension")
-    groupid: Optional[StrictInt] = Field(default=None, description="for group assignments this is the group id")
-    groupname: Optional[StrictStr] = Field(default=None, description="for group assignments this is the group name")
-    groups: Optional[List[ModAssignListParticipantsResponseInnerGroupsInner]] = Field(default=None, description="user groups")
+    groups: Optional[List[CoreUserGetCourseUserProfilesResponseInnerGroupsInner]] = Field(default=None, description="user groups")
     id: Optional[StrictInt] = Field(description="ID of the user")
-    idnumber: Optional[StrictStr] = Field(default=None, description="The idnumber of the user")
+    idnumber: Optional[StrictStr] = Field(default=None, description="An arbitrary ID code number perhaps from the institution")
     institution: Optional[StrictStr] = Field(default=None, description="institution")
     interests: Optional[StrictStr] = Field(default=None, description="user interests (separated by commas)")
+    lang: Optional[StrictStr] = Field(default=None, description="Language code such as \"en\", must exist on server")
     lastaccess: Optional[StrictInt] = Field(default=None, description="last access to the site (0 if never)")
     lastname: Optional[StrictStr] = Field(default=None, description="The family name of the user")
+    mailformat: Optional[StrictInt] = Field(default=None, description="Mail format code is 0 for plain text, 1 for HTML etc")
     phone1: Optional[StrictStr] = Field(default=None, description="Phone 1")
     phone2: Optional[StrictStr] = Field(default=None, description="Phone 2")
     preferences: Optional[List[CoreUserGetCourseUserProfilesResponseInnerPreferencesInner]] = Field(default=None, description="Users preferences")
-    profileimageurl: Optional[StrictStr] = Field(default=None, description="User image profile URL - big version")
-    profileimageurlsmall: Optional[StrictStr] = Field(default=None, description="User image profile URL - small version")
-    recordid: Optional[StrictInt] = Field(description="record id")
-    requiregrading: Optional[StrictBool] = Field(description="is their submission waiting for grading")
+    profileimageurl: Optional[StrictStr] = Field(description="User image profile URL - big version")
+    profileimageurlsmall: Optional[StrictStr] = Field(description="User image profile URL - small version")
     roles: Optional[List[CoreUserGetCourseUserProfilesResponseInnerRolesInner]] = Field(default=None, description="user roles")
-    submissionstatus: Optional[StrictStr] = Field(default=None, description="The submission status (new, draft, reopened or submitted).                 Empty when not submitted.")
-    submitted: Optional[StrictBool] = Field(description="have they submitted their assignment")
     suspended: Optional[StrictBool] = Field(default=None, description="Suspend user account, either false to enable user login or true to disable it")
+    theme: Optional[StrictStr] = Field(default=None, description="Theme name such as \"standard\", must exist on server")
+    timezone: Optional[StrictStr] = Field(default=None, description="Timezone code such as Australia/Perth, or 99 for default")
     trackforums: Optional[StrictInt] = Field(default=None, description="Whether the user is tracking forums.")
     username: Optional[StrictStr] = Field(default=None, description="The username")
-    __properties: ClassVar[List[str]] = ["address", "city", "country", "customfields", "department", "description", "descriptionformat", "email", "enrolledcourses", "firstaccess", "firstname", "fullname", "grantedextension", "groupid", "groupname", "groups", "id", "idnumber", "institution", "interests", "lastaccess", "lastname", "phone1", "phone2", "preferences", "profileimageurl", "profileimageurlsmall", "recordid", "requiregrading", "roles", "submissionstatus", "submitted", "suspended", "trackforums", "username"]
+    __properties: ClassVar[List[str]] = ["address", "auth", "calendartype", "city", "confirmed", "country", "customfields", "department", "description", "descriptionformat", "email", "enrolledcourses", "firstaccess", "firstname", "fullname", "groups", "id", "idnumber", "institution", "interests", "lang", "lastaccess", "lastname", "mailformat", "phone1", "phone2", "preferences", "profileimageurl", "profileimageurlsmall", "roles", "suspended", "theme", "timezone", "trackforums", "username"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -88,7 +88,7 @@ class ModAssignListParticipantsResponseInner(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ModAssignListParticipantsResponseInner from a JSON string"""
+        """Create an instance of CoreUserGetCourseUserProfilesResponseInner from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -149,10 +149,25 @@ class ModAssignListParticipantsResponseInner(BaseModel):
         if self.address is None and "address" in self.model_fields_set:
             _dict['address'] = None
 
+        # set to None if auth (nullable) is None
+        # and model_fields_set contains the field
+        if self.auth is None and "auth" in self.model_fields_set:
+            _dict['auth'] = None
+
+        # set to None if calendartype (nullable) is None
+        # and model_fields_set contains the field
+        if self.calendartype is None and "calendartype" in self.model_fields_set:
+            _dict['calendartype'] = None
+
         # set to None if city (nullable) is None
         # and model_fields_set contains the field
         if self.city is None and "city" in self.model_fields_set:
             _dict['city'] = None
+
+        # set to None if confirmed (nullable) is None
+        # and model_fields_set contains the field
+        if self.confirmed is None and "confirmed" in self.model_fields_set:
+            _dict['confirmed'] = None
 
         # set to None if country (nullable) is None
         # and model_fields_set contains the field
@@ -194,21 +209,6 @@ class ModAssignListParticipantsResponseInner(BaseModel):
         if self.fullname is None and "fullname" in self.model_fields_set:
             _dict['fullname'] = None
 
-        # set to None if grantedextension (nullable) is None
-        # and model_fields_set contains the field
-        if self.grantedextension is None and "grantedextension" in self.model_fields_set:
-            _dict['grantedextension'] = None
-
-        # set to None if groupid (nullable) is None
-        # and model_fields_set contains the field
-        if self.groupid is None and "groupid" in self.model_fields_set:
-            _dict['groupid'] = None
-
-        # set to None if groupname (nullable) is None
-        # and model_fields_set contains the field
-        if self.groupname is None and "groupname" in self.model_fields_set:
-            _dict['groupname'] = None
-
         # set to None if id (nullable) is None
         # and model_fields_set contains the field
         if self.id is None and "id" in self.model_fields_set:
@@ -229,6 +229,11 @@ class ModAssignListParticipantsResponseInner(BaseModel):
         if self.interests is None and "interests" in self.model_fields_set:
             _dict['interests'] = None
 
+        # set to None if lang (nullable) is None
+        # and model_fields_set contains the field
+        if self.lang is None and "lang" in self.model_fields_set:
+            _dict['lang'] = None
+
         # set to None if lastaccess (nullable) is None
         # and model_fields_set contains the field
         if self.lastaccess is None and "lastaccess" in self.model_fields_set:
@@ -238,6 +243,11 @@ class ModAssignListParticipantsResponseInner(BaseModel):
         # and model_fields_set contains the field
         if self.lastname is None and "lastname" in self.model_fields_set:
             _dict['lastname'] = None
+
+        # set to None if mailformat (nullable) is None
+        # and model_fields_set contains the field
+        if self.mailformat is None and "mailformat" in self.model_fields_set:
+            _dict['mailformat'] = None
 
         # set to None if phone1 (nullable) is None
         # and model_fields_set contains the field
@@ -259,30 +269,20 @@ class ModAssignListParticipantsResponseInner(BaseModel):
         if self.profileimageurlsmall is None and "profileimageurlsmall" in self.model_fields_set:
             _dict['profileimageurlsmall'] = None
 
-        # set to None if recordid (nullable) is None
-        # and model_fields_set contains the field
-        if self.recordid is None and "recordid" in self.model_fields_set:
-            _dict['recordid'] = None
-
-        # set to None if requiregrading (nullable) is None
-        # and model_fields_set contains the field
-        if self.requiregrading is None and "requiregrading" in self.model_fields_set:
-            _dict['requiregrading'] = None
-
-        # set to None if submissionstatus (nullable) is None
-        # and model_fields_set contains the field
-        if self.submissionstatus is None and "submissionstatus" in self.model_fields_set:
-            _dict['submissionstatus'] = None
-
-        # set to None if submitted (nullable) is None
-        # and model_fields_set contains the field
-        if self.submitted is None and "submitted" in self.model_fields_set:
-            _dict['submitted'] = None
-
         # set to None if suspended (nullable) is None
         # and model_fields_set contains the field
         if self.suspended is None and "suspended" in self.model_fields_set:
             _dict['suspended'] = None
+
+        # set to None if theme (nullable) is None
+        # and model_fields_set contains the field
+        if self.theme is None and "theme" in self.model_fields_set:
+            _dict['theme'] = None
+
+        # set to None if timezone (nullable) is None
+        # and model_fields_set contains the field
+        if self.timezone is None and "timezone" in self.model_fields_set:
+            _dict['timezone'] = None
 
         # set to None if trackforums (nullable) is None
         # and model_fields_set contains the field
@@ -298,18 +298,21 @@ class ModAssignListParticipantsResponseInner(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ModAssignListParticipantsResponseInner from a dict"""
+        """Create an instance of CoreUserGetCourseUserProfilesResponseInner from a dict"""
         if obj is None:
             return None
 
-        relaxed = settings.relaxe_all_models or "ModAssignListParticipantsResponseInner" in settings.relaxed_models
+        relaxed = settings.relaxe_all_models or "CoreUserGetCourseUserProfilesResponseInner" in settings.relaxed_models
 
         if not isinstance(obj, dict):
             return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
 
         data = {
             "address": obj.get("address"),
+            "auth": obj.get("auth"),
+            "calendartype": obj.get("calendartype"),
             "city": obj.get("city"),
+            "confirmed": obj.get("confirmed"),
             "country": obj.get("country"),
             "customfields": [CoreUserGetCourseUserProfilesResponseInnerCustomfieldsInner.from_dict(_item) for _item in obj["customfields"]] if obj.get("customfields") is not None else None,
             "department": obj.get("department"),
@@ -320,27 +323,24 @@ class ModAssignListParticipantsResponseInner(BaseModel):
             "firstaccess": obj.get("firstaccess"),
             "firstname": obj.get("firstname"),
             "fullname": obj.get("fullname"),
-            "grantedextension": obj.get("grantedextension"),
-            "groupid": obj.get("groupid"),
-            "groupname": obj.get("groupname"),
-            "groups": [ModAssignListParticipantsResponseInnerGroupsInner.from_dict(_item) for _item in obj["groups"]] if obj.get("groups") is not None else None,
+            "groups": [CoreUserGetCourseUserProfilesResponseInnerGroupsInner.from_dict(_item) for _item in obj["groups"]] if obj.get("groups") is not None else None,
             "id": obj.get("id"),
             "idnumber": obj.get("idnumber"),
             "institution": obj.get("institution"),
             "interests": obj.get("interests"),
+            "lang": obj.get("lang"),
             "lastaccess": obj.get("lastaccess"),
             "lastname": obj.get("lastname"),
+            "mailformat": obj.get("mailformat"),
             "phone1": obj.get("phone1"),
             "phone2": obj.get("phone2"),
             "preferences": [CoreUserGetCourseUserProfilesResponseInnerPreferencesInner.from_dict(_item) for _item in obj["preferences"]] if obj.get("preferences") is not None else None,
             "profileimageurl": obj.get("profileimageurl"),
             "profileimageurlsmall": obj.get("profileimageurlsmall"),
-            "recordid": obj.get("recordid"),
-            "requiregrading": obj.get("requiregrading"),
             "roles": [CoreUserGetCourseUserProfilesResponseInnerRolesInner.from_dict(_item) for _item in obj["roles"]] if obj.get("roles") is not None else None,
-            "submissionstatus": obj.get("submissionstatus"),
-            "submitted": obj.get("submitted"),
             "suspended": obj.get("suspended"),
+            "theme": obj.get("theme"),
+            "timezone": obj.get("timezone"),
             "trackforums": obj.get("trackforums"),
             "username": obj.get("username")
         }

@@ -17,22 +17,23 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
 from poodle_async_mini.configuration import settings
 
-class ModAssignListParticipantsResponseInnerRolesInner(BaseModel):
+class CoreUserGetCourseUserProfilesResponseInnerCustomfieldsInner(BaseModel):
     """
-    ModAssignListParticipantsResponseInnerRolesInner
+    CoreUserGetCourseUserProfilesResponseInnerCustomfieldsInner
     """ # noqa: E501
-    name: Optional[StrictStr] = Field(description="role name")
-    roleid: Optional[StrictInt] = Field(description="role id")
-    shortname: Optional[StrictStr] = Field(description="role shortname")
-    sortorder: Optional[StrictInt] = Field(description="role sortorder")
-    __properties: ClassVar[List[str]] = ["name", "roleid", "shortname", "sortorder"]
+    displayvalue: Optional[StrictStr] = Field(default=None, description="The value of the custom field for display")
+    name: Optional[StrictStr] = Field(description="The name of the custom field")
+    shortname: Optional[StrictStr] = Field(description="The shortname of the custom field - to be able to build the field class in the code")
+    type: Optional[StrictStr] = Field(description="The type of the custom field - text field, checkbox...")
+    value: Optional[StrictStr] = Field(description="The value of the custom field (as stored in the database)")
+    __properties: ClassVar[List[str]] = ["displayvalue", "name", "shortname", "type", "value"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +53,7 @@ class ModAssignListParticipantsResponseInnerRolesInner(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ModAssignListParticipantsResponseInnerRolesInner from a JSON string"""
+        """Create an instance of CoreUserGetCourseUserProfilesResponseInnerCustomfieldsInner from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,44 +74,50 @@ class ModAssignListParticipantsResponseInnerRolesInner(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if displayvalue (nullable) is None
+        # and model_fields_set contains the field
+        if self.displayvalue is None and "displayvalue" in self.model_fields_set:
+            _dict['displayvalue'] = None
+
         # set to None if name (nullable) is None
         # and model_fields_set contains the field
         if self.name is None and "name" in self.model_fields_set:
             _dict['name'] = None
-
-        # set to None if roleid (nullable) is None
-        # and model_fields_set contains the field
-        if self.roleid is None and "roleid" in self.model_fields_set:
-            _dict['roleid'] = None
 
         # set to None if shortname (nullable) is None
         # and model_fields_set contains the field
         if self.shortname is None and "shortname" in self.model_fields_set:
             _dict['shortname'] = None
 
-        # set to None if sortorder (nullable) is None
+        # set to None if type (nullable) is None
         # and model_fields_set contains the field
-        if self.sortorder is None and "sortorder" in self.model_fields_set:
-            _dict['sortorder'] = None
+        if self.type is None and "type" in self.model_fields_set:
+            _dict['type'] = None
+
+        # set to None if value (nullable) is None
+        # and model_fields_set contains the field
+        if self.value is None and "value" in self.model_fields_set:
+            _dict['value'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ModAssignListParticipantsResponseInnerRolesInner from a dict"""
+        """Create an instance of CoreUserGetCourseUserProfilesResponseInnerCustomfieldsInner from a dict"""
         if obj is None:
             return None
 
-        relaxed = settings.relaxe_all_models or "ModAssignListParticipantsResponseInnerRolesInner" in settings.relaxed_models
+        relaxed = settings.relaxe_all_models or "CoreUserGetCourseUserProfilesResponseInnerCustomfieldsInner" in settings.relaxed_models
 
         if not isinstance(obj, dict):
             return cls.model_construct(**obj) if relaxed else cls.model_validate(obj)
 
         data = {
+            "displayvalue": obj.get("displayvalue"),
             "name": obj.get("name"),
-            "roleid": obj.get("roleid"),
             "shortname": obj.get("shortname"),
-            "sortorder": obj.get("sortorder")
+            "type": obj.get("type"),
+            "value": obj.get("value")
         }
         _obj = cls.model_construct(**data) if relaxed else cls.model_validate(data)
         return _obj
