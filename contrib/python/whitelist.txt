@@ -4,6 +4,7 @@ core_course_get_contents
 core_enrol_get_users_courses
 core_grades_update_grades
 core_group_get_course_groups
+core_user_get_course_user_profiles
 core_webservice_get_site_info
 gradereport_user_get_grade_items
 mod_assign_get_assignments
