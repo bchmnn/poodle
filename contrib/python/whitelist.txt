@@ -9,6 +9,7 @@ core_user_get_course_user_profiles
 core_webservice_get_site_info
 gradereport_user_get_grade_items
 mod_assign_get_assignments
+mod_assign_get_submission_status
 mod_assign_get_submissions
 mod_assign_list_participants
 mod_assign_save_grade
